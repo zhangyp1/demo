@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.GlbDictMapper" >
+  <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbDict" >
+    <result column="DICT_ID" property="dictId" jdbcType="DECIMAL" />
+    <result column="DICT_CODE" property="dictCode" jdbcType="VARCHAR" />
+    <result column="DICT_NAME" property="dictName" jdbcType="VARCHAR" />
+    <result column="DICT_PCODE" property="dictPcode" jdbcType="VARCHAR" />
+    <result column="INURE_DATE" property="inureDate" jdbcType="TIMESTAMP" />
+    <result column="EXPIRE_DATE" property="expireDate" jdbcType="TIMESTAMP" />
+    <result column="DICT_LEVEL" property="dictLevel" jdbcType="INTEGER" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="OPERATOR_ID" property="operatorId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Where_Clause" >
+    <where >
+      <if test="dictCode != null" >
+         and DICT_CODE = #{dictCode,jdbcType=VARCHAR}
+      </if>
+      <if test="dictName != null" >
+         and DICT_NAME = #{dictName,jdbcType=VARCHAR}
+      </if>
+      <if test="dictPcode != null" >
+         and DICT_PCODE = #{dictPcode,jdbcType=VARCHAR}
+      </if>
+      <if test="inureDate != null" >
+         and INURE_DATE = #{inureDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="expireDate != null" >
+         and EXPIRE_DATE = #{expireDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="dictLevel != null" >
+         and DICT_LEVEL = #{dictLevel,jdbcType=INTEGER}
+      </if>
+      <if test="createDate != null" >
+         and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+         and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="operatorId != null" >
+         and OPERATOR_ID = #{operatorId,jdbcType=INTEGER}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    DICT_ID,DICT_CODE, DICT_NAME, DICT_PCODE, INURE_DATE, EXPIRE_DATE, DICT_LEVEL, CREATE_DATE, 
+    CHANGE_DATE, OPERATOR_ID
+  </sql>
+  <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbDict" >
+    select
+    distinct
+    <include refid="Base_Column_List" />
+    from GLB_DICT
+    <include refid="Where_Clause" />
+  </select>
+  <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbDict" >
+    delete from GLB_DICT
+    <include refid="Where_Clause" />
+  </delete>
+  <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbDict" >
+    insert into GLB_DICT (DICT_CODE, DICT_NAME, 
+      DICT_PCODE, INURE_DATE, EXPIRE_DATE, 
+      DICT_LEVEL, CREATE_DATE, CHANGE_DATE, 
+      OPERATOR_ID)
+    values ( #{dictCode,jdbcType=VARCHAR}, #{dictName,jdbcType=VARCHAR},
+      #{dictPcode,jdbcType=VARCHAR}, #{inureDate,jdbcType=TIMESTAMP}, #{expireDate,jdbcType=TIMESTAMP}, 
+      #{dictLevel,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{changeDate,jdbcType=TIMESTAMP},
+      #{operatorId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbDict" >
+     <selectKey keyProperty="dictId" order="BEFORE" resultType="java.lang.Long">
+				SELECT SEQ_GLB_DICT.nextval FROM dual
+	 	</selectKey>
+    insert into GLB_DICT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+    <choose>
+			<when test="dictId != null">
+			   DICT_ID,
+			</when>
+			<otherwise>
+		       DICT_ID,
+			</otherwise>
+		</choose>
+      <if test="dictCode != null" >
+        DICT_CODE,
+      </if>
+      <if test="dictName != null" >
+        DICT_NAME,
+      </if>
+      <if test="dictPcode != null" >
+        DICT_PCODE,
+      </if>
+      <if test="inureDate != null" >
+        INURE_DATE,
+      </if>
+      <if test="expireDate != null" >
+        EXPIRE_DATE,
+      </if>
+      <if test="dictLevel != null" >
+        DICT_LEVEL,
+      </if>
+      <choose>
+			<when test="createDate != null">
+			   CREATE_DATE,
+			</when>
+			<otherwise>
+		       CREATE_DATE,
+			</otherwise>
+		</choose>
+      <!-- <if test="createDate != null" >
+        CREATE_DATE,
+      </if> -->
+      <choose>
+			<when test="changeDate != null">
+			   CHANGE_DATE,
+			</when>
+			<otherwise>
+		       CHANGE_DATE,
+			</otherwise>
+		</choose>
+      <!-- <if test="changeDate != null" >
+        CHANGE_DATE,
+      </if> -->
+      <if test="operatorId != null" >
+        OPERATOR_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <!-- <if test="dictId != null" >
+        #{dictId,jdbcType=INTEGER},
+      </if> -->
+      <choose>
+			<when test="dictId != null">
+			  #{dictId,jdbcType=DECIMAL},
+			</when>
+			<otherwise>
+		       #{dictId,jdbcType=DECIMAL},
+			</otherwise>
+		</choose>
+      <if test="dictCode != null" >
+        #{dictCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dictName != null" >
+        #{dictName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictPcode != null" >
+        #{dictPcode,jdbcType=VARCHAR},
+      </if>
+      <if test="inureDate != null" >
+        #{inureDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expireDate != null" >
+        #{expireDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dictLevel != null" >
+        #{dictLevel,jdbcType=INTEGER},
+      </if>
+      <choose>
+			<when test="createDate != null">
+			   #{createDate,jdbcType=TIMESTAMP},
+			</when>
+			<otherwise>
+		       SYSDATE,
+			</otherwise>
+		</choose>
+      <!-- <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if> -->
+      <choose>
+			<when test="changeDate != null">
+			   #{changeDate,jdbcType=TIMESTAMP},
+			</when>
+			<otherwise>
+		       SYSDATE,
+			</otherwise>
+		</choose>
+      <!-- <if test="changeDate != null" >
+        #{changeDate,jdbcType=TIMESTAMP},
+      </if> -->
+      <if test="operatorId != null" >
+        #{operatorId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbDict" resultType="java.lang.Integer" >
+    select count(*) from GLB_DICT
+    <include refid="Where_Clause" />
+  </select>
+
+  <select id="findBaseAll" resultMap="BaseResultMap" >
+    select DICT_ID,DICT_CODE, DICT_NAME, DICT_PCODE,DICT_LEVEL
+    from GLB_DICT ORDER BY DICT_PCODE
+  </select>
+   <update id="updateByDictCode" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbDict" >
+    update GLB_DICT
+    <set>
+      <if test="dictName != null" >
+        DICT_NAME= #{dictName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictPcode != null" >
+        DICT_PCODE= #{dictPcode,jdbcType=VARCHAR},
+      </if>
+      <if test="changeDate == null" >
+         CHANGE_DATE = SYSDATE,
+      </if>
+    </set>
+    where DICT_CODE = #{dictCode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByDictId" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbDict" >
+    update GLB_DICT
+    <set>
+      <if test="dictCode != null" >
+        DICT_CODE= #{dictCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dictName != null" >
+        DICT_NAME= #{dictName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictPcode != null" >
+        DICT_PCODE= #{dictPcode,jdbcType=VARCHAR},
+      </if>
+      <if test="changeDate == null" >
+         CHANGE_DATE = SYSDATE,
+      </if>
+    </set>
+    where DICT_ID = #{dictId,jdbcType=DECIMAL}
+  </update>
+
+  <select id="selectByDictCode" resultType="java.lang.String" >
+    select DICT_NAME from GLB_DICT
+    where DICT_PCODE = #{dictPcode,jdbcType=VARCHAR}
+    <if test="dictCodes != null">
+      and DICT_CODE in
+      <foreach collection="dictCodes" item="code" open="(" close=")" separator=",">
+        #{code}
+      </foreach>
+    </if>
+    <if test="notInDictCodes != null">
+      and DICT_CODE not in
+      <foreach collection="notInDictCodes" item="code" open="(" close=")" separator=",">
+        #{code}
+      </foreach>
+    </if>
+  </select>
+
+  <select id="selectDetailByDictCode" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbDict" >
+    select DICT_CODE as dictCode, DICT_NAME as dictName, DICT_PCODE as dictPcode from GLB_DICT
+    where DICT_PCODE = #{dictPcode,jdbcType=VARCHAR}
+    <if test="dictCodes != null">
+      and DICT_CODE in
+      <foreach collection="dictCodes" item="code" open="(" close=")" separator=",">
+        #{code}
+      </foreach>
+    </if>
+    <if test="notInDictCodes != null">
+      and DICT_CODE not in
+      <foreach collection="notInDictCodes" item="code" open="(" close=")" separator=",">
+        #{code}
+      </foreach>
+    </if>
+  </select>
+
+    <select id="selectByDictPcode" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbDict" >
+        select DICT_CODE as dictCode, DICT_NAME as dictName, DICT_PCODE as dictPcode from GLB_DICT
+        where DICT_PCODE = #{dictPcode,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

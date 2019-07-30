@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.activitiflowdatamodule.dao.ActHiProcinstMapper" >
+
+  <resultMap id="historicProcessInstanceResultMap" type="org.activiti.engine.impl.persistence.entity.HistoricProcessInstanceEntityImpl">
+    <id property="id" column="ID_" jdbcType="VARCHAR" />
+    <result property="processInstanceId" column="PROC_INST_ID_" jdbcType="VARCHAR" />
+    <result property="businessKey" column="BUSINESS_KEY_" jdbcType="VARCHAR"/>
+    <result property="processDefinitionId" column="PROC_DEF_ID_" jdbcType="VARCHAR" />
+    <result property="processDefinitionName" column="PROC_DEF_NAME_" jdbcType="VARCHAR" />
+    <result property="processDefinitionKey" column="PROC_DEF_KEY_" jdbcType="VARCHAR" />
+    <result property="processDefinitionVersion" column="PROC_DEF_VERSION_" jdbcType="INTEGER" />
+    <result property="deploymentId" column="DEPLOYMENT_ID_" jdbcType="VARCHAR" />
+    <result property="startTime" column="START_TIME_" jdbcType="TIMESTAMP" />
+    <result property="endTime" column="END_TIME_" jdbcType="TIMESTAMP" />
+    <result property="durationInMillis" column="DURATION_" jdbcType="BIGINT" />
+    <result property="startUserId" column="START_USER_ID_" jdbcType="VARCHAR" />
+    <result property="startActivityId" column="START_ACT_ID_" jdbcType="VARCHAR" />
+    <result property="endActivityId" column="END_ACT_ID_" jdbcType="VARCHAR" />
+    <result property="superProcessInstanceId" column="SUPER_PROCESS_INSTANCE_ID_" jdbcType="VARCHAR" />
+    <result property="deleteReason" column="DELETE_REASON_" jdbcType="VARCHAR" />
+    <result property="tenantId" column="TENANT_ID_" jdbcType="VARCHAR" />
+    <result property="name" column="NAME_" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="selectBySelective" resultMap="historicProcessInstanceResultMap" parameterType="com.newland.paas.paasdatamodule.activitiflowdatamodule.model.bo.HistoricProcessInstanceBo" >
+    select distinct RES.*,
+    DEF.KEY_           as PROC_DEF_KEY_,
+    DEF.NAME_          as PROC_DEF_NAME_,
+    DEF.VERSION_       as PROC_DEF_VERSION_,
+    DEF.DEPLOYMENT_ID_ as DEPLOYMENT_ID_
+    from ACT_HI_PROCINST RES
+    left outer join ACT_RE_PROCDEF DEF on RES.PROC_DEF_ID_ = DEF.ID_
+    <where>
+      <if test="isFinished">
+        and RES.END_TIME_ IS NOT NULL
+      </if>
+      <if test="!isFinished">
+        and RES.END_TIME_ IS NULL
+      </if>
+      <if test="processDifintionKey != null and processDifintionKey != ''">
+        and DEF.KEY_ = #{processDifintionKey}
+      </if>
+      <if test="processDefinitionName != null and processDefinitionName != ''">
+        and DEF.NAME_ = #{processDefinitionName}
+      </if>
+      <if test="businessKey != null and businessKey != ''">
+        and RES.BUSINESS_KEY_ like '%' || #{businessKey} || '%'
+      </if>
+      <if test="processInstanceId != null and processInstanceId != ''">
+        and RES.PROC_INST_ID_ = #{processInstanceId}
+      </if>
+      <if test="users != null and users.size()>0">
+        and RES.START_USER_ID_ in
+        <foreach collection="users" item="userId" open="(" close=")" separator=",">
+          #{userId}
+        </foreach>
+      </if>
+    </where>
+    order by RES.START_TIME_ desc
+  </select>
+
+</mapper>

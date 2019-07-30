@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysMenuOperMapper" >
+  <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysMenuOper" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="DECIMAL" />
+    <result column="URL" property="url" jdbcType="VARCHAR" />
+    <result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+    <result column="PARENT_ID" property="parentId" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="DECIMAL" />
+    <result column="ICON" property="icon" jdbcType="VARCHAR" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="ORDER_NUMBER" property="orderNumber" jdbcType="VARCHAR" />
+    <result column="HIDDEN" property="hidden" jdbcType="VARCHAR" />
+    <result column="ADDITION" property="addition" jdbcType="VARCHAR" />
+    
+    <result column="PARENT_NAME" property="parentName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="And_Del_Flag_0" >
+      and DEL_FLAG = 0
+  </sql>
+  <sql id="Where_Clause" >
+    <where >
+      <include refid="And_Del_Flag_0" />
+      <if test="name != null" >
+         and NAME = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="type != null" >
+         and TYPE = #{type,jdbcType=DECIMAL}
+      </if>
+      <if test="url != null" >
+         and URL = #{url,jdbcType=VARCHAR}
+      </if>
+      <if test="description != null" >
+         and DESCRIPTION = #{description,jdbcType=VARCHAR}
+      </if>
+      <if test="parentId != null" >
+         and PARENT_ID = #{parentId,jdbcType=DECIMAL}
+      </if>
+      <if test="createDate != null" >
+         and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+         and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+         and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+      <if test="icon != null" >
+         and ICON = #{icon,jdbcType=VARCHAR}
+      </if>
+      <if test="code != null" >
+         and CODE = #{code,jdbcType=VARCHAR}
+      </if>
+      <if test="orderNumber != null" >
+         and ORDER_NUMBER = #{orderNumber,jdbcType=VARCHAR}
+      </if>
+       <if test="hidden != null" >
+         and HIDDEN = #{hidden,jdbcType=VARCHAR}
+      </if>
+      <if test="addition != null" >
+         and ADDITION = #{addition,jdbcType=VARCHAR}
+      </if>
+      <if test="menuNameLike != null" >
+         and NAME LIKE '%'||#{menuNameLike,jdbcType=VARCHAR}||'%'
+      </if>
+      <if test="noeqId != null" >
+         and id != #{noeqId,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, NAME, TYPE, URL, DESCRIPTION, PARENT_ID,(select t.name from sys_menu_oper t where t.id = X.parent_id) PARENT_NAME, CREATE_DATE, CHANGE_DATE, CREATOR_ID, 
+    DEL_FLAG, ICON, CODE,ORDER_NUMBER,HIDDEN,ADDITION
+  </sql>
+  <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysMenuOperReqBo" >
+    select
+    distinct
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from SYS_MENU_OPER X
+    <include refid="Where_Clause" />
+    order by order_number
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from SYS_MENU_OPER X
+    where ID = #{id,jdbcType=DECIMAL}
+    <include refid="And_Del_Flag_0" />
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    update SYS_MENU_OPER
+    set DEL_FLAG = 1
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysMenuOperReqBo" >
+    update SYS_MENU_OPER
+    set DEL_FLAG = 1
+    <include refid="Where_Clause" />
+  </delete>
+  <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysMenuOper" >
+ 	<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+		select SEQ_SYS_MENU_OPER.nextval as id from sys.dual
+	</selectKey>
+    insert into SYS_MENU_OPER (ID, NAME, TYPE, 
+      URL, DESCRIPTION, PARENT_ID, 
+      CREATE_DATE, CHANGE_DATE, CREATOR_ID, 
+      DEL_FLAG, ICON, CODE, ORDER_NUMBER,HIDDEN,ADDITION
+      )
+    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=DECIMAL}, 
+      #{url,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{parentId,jdbcType=DECIMAL}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{changeDate,jdbcType=TIMESTAMP}, #{creatorId,jdbcType=DECIMAL}, 
+      #{delFlag,jdbcType=DECIMAL}, #{icon,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},#{orderNumber,jdbcType=VARCHAR}
+      ,#{hidden,jdbcType=VARCHAR},#{addition,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysMenuOper" >
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+		select SEQ_SYS_MENU_OPER.nextval as id from sys.dual
+	</selectKey>
+    insert into SYS_MENU_OPER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+      <if test="url != null" >
+        URL,
+      </if>
+      <if test="description != null" >
+        DESCRIPTION,
+      </if>
+      <if test="parentId != null" >
+        PARENT_ID,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE,
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+      <if test="icon != null" >
+        ICON,
+      </if>
+      <if test="code != null" >
+        CODE,
+      </if>
+      <if test="orderNumber != null" >
+        ORDER_NUMBER,
+      </if>
+      <if test="hidden != null" >
+        HIDDEN,
+      </if>
+      <if test="addition != null" >
+        ADDITION,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=DECIMAL},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=DECIMAL},
+      </if>
+      <if test="icon != null" >
+        #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null" >
+        #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="hidden != null" >
+        #{hidden,jdbcType=VARCHAR},
+      </if>
+      <if test="addition != null" >
+        #{addition,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysMenuOperReqBo" resultType="java.lang.Integer" >
+    select count(*) from SYS_MENU_OPER
+    <include refid="Where_Clause" />
+  </select>
+
+  <select id="countByMenuCode"
+          parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysMenuOperReqBo" resultType="java.lang.Integer">
+    select count(1) from SYS_MENU_OPER
+    where del_flag = 0
+    and CODE = #{code,jdbcType=VARCHAR}
+      <if test="id != null" >
+       and  id !=  #{id,jdbcType=DECIMAL}
+      </if>
+
+  </select>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysMenuOper" >
+    update SYS_MENU_OPER
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=DECIMAL},
+      </if>
+      <if test="url != null" >
+        URL = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        DESCRIPTION = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        PARENT_ID = #{parentId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+      </if>
+      <if test="icon != null" >
+        ICON = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null" >
+        ORDER_NUMBER = #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="hidden != null" >
+        HIDDEN = #{hidden,jdbcType=VARCHAR},
+      </if>
+      <if test="addition != null" >
+        ADDITION = #{addition,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysMenuOper" >
+    update SYS_MENU_OPER
+    set NAME = #{name,jdbcType=VARCHAR},
+      TYPE = #{type,jdbcType=DECIMAL},
+      URL = #{url,jdbcType=VARCHAR},
+      DESCRIPTION = #{description,jdbcType=VARCHAR},
+      PARENT_ID = #{parentId,jdbcType=DECIMAL},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+      ICON = #{icon,jdbcType=VARCHAR},
+      CODE = #{code,jdbcType=VARCHAR},
+      ORDER_NUMBER = #{orderNumber,jdbcType=VARCHAR},
+      HIDDEN = #{hidden,jdbcType=VARCHAR},
+      ADDITION = #{addition,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="getMenusByUserId" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.MenuBO" >
+    select distinct menu.id menuId,menu.name menuName,icon icon,menu.url,menu.parent_id parentId,menu.order_number orderNumber,
+    menu.hidden
+    from sys_menu_oper menu where menu.id in
+	(select t2.menu_oper_id from sys_role_user t 
+	inner join sys_menu_oper_role t2 on t.role_id = t2.role_id
+	where t.user_id = #{userId,jdbcType=DECIMAL} and t.tenant_id = #{tenantId,jdbcType=DECIMAL} and t.status = 1
+	and t.del_flag = 0 and t2.del_flag = 0
+	) 
+	and menu.del_flag = 0 and menu.type = 1
+	order by menu.order_number
+  </select>
+  <select id="getOpersByUserId" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.OperBO" parameterType="java.lang.Long" >
+    select distinct menu.id operateId,menu.name name,icon icon,menu.code code,menu.parent_id parentId,menu.order_number orderNumber
+    from sys_menu_oper menu where menu.id in
+	(select t2.menu_oper_id from sys_role_user t 
+	inner join sys_menu_oper_role t2 on t.role_id = t2.role_id
+	where t.user_id = #{userId,jdbcType=DECIMAL} and t.tenant_id = #{tenantId,jdbcType=DECIMAL} and t.status = 1
+	and t.del_flag = 0 and t2.del_flag = 0
+	) 
+	and menu.del_flag = 0 and menu.type = 2
+	order by menu.order_number
+  </select>
+
+
+  <select id="getMenusList" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.MenuBO" >
+    select menu.id menuId,menu.type menuType,menu.name menuName,icon icon,menu.url,menu.parent_id parentId,
+    menu.order_number orderNumber,menu.addition addition
+    from sys_menu_oper menu
+    where menu.del_flag = 0
+    and (menu.hidden != 'true' or menu.hidden is null)
+    order by menu.order_number
+  </select>
+
+  <select id="selectAllMenuIdList4Tree" resultType="Long">
+    select distinct t.id from sys_menu_oper t where t.del_flag = 0
+    start with t.id in
+    <foreach collection="menuIdList" index="index" item="item" open="(" separator="," close=")">
+      #{item,jdbcType=DECIMAL}
+    </foreach>
+    connect by t.id = prior t.parent_id and t.id &lt;&gt; -1
+  </select>
+
+  <select id="selectMenuByUrl" resultMap="BaseResultMap" >
+    select a.ID, a.NAME, a.TYPE, a.URL
+    from SYS_MENU_OPER a
+    left join SYS_MENU_URL b on b.MENU_ID = a.ID
+    WHERE b.URL_ID = #{urlId}
+    and a.del_flag = 0
+  </select>
+
+</mapper>

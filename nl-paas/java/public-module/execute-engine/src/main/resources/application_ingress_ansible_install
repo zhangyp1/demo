@@ -1,0 +1,7 @@
+        - name: do ingress_{{LOAD_BALANCE_ID}}
+          local_action: shell '/usr/bin/java -jar ${WORKSPACE}/{{application_name}}-{{application_version}}/appModules/script/ingress-manager-1.0.0-SNAPSHOT.jar {{APPLICATION_INGRESS_PARAMETER}}'
+          register: ingress_result_{{LOAD_BALANCE_ID}}
+
+        - name: throw error if do ingress error_{{LOAD_BALANCE_ID}}
+          fail: msg="do ingress error"
+          when: (ingress_result_{{LOAD_BALANCE_ID}}.stdout_lines.0 != "0" )

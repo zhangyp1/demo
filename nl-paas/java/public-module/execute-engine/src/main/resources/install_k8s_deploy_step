@@ -1,0 +1,24 @@
+          stage('install k8s') {
+              steps {    
+ sh &apos;&apos;&apos;if [ ! -d ${WORKSPACE} ]; then
+                    mkdir ${WORKSPACE}
+                fi&apos;&apos;&apos;
+                
+sh &apos;&apos;&apos;scp root@{{tenant_harbor_path}}/k8s.tar.gz .;tar -zxvf k8s.tar.gz                 &apos;&apos;&apos;
+                
+sh &apos;&apos;&apos;echo \&apos;[k8s_master]
+{{k8s_master_each_line_data}}
+
+[k8s_worker]
+{{k8s_worker_each_line_data}}
+
+[all:vars]
+K8S_HOME={{k8s_home}}
+MASTER_IP={{k8s_master_float_ip}}
+ETCD_SERVERS={{etcd_initial_cluster}}
+DOCKER_IMAGE_REPOSITY={{docker_image_reposity}}\&apos; &gt; k8s/install_hosts&apos;&apos;&apos;
+                
+                
+                ansiblePlaybook installation: &apos;{{ansible_alias}}&apos;, inventory: &apos;k8s/install_hosts&apos;, playbook: &apos;k8s/install.yaml&apos;
+              }
+          }                     

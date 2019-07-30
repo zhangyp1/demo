@@ -1,0 +1,33 @@
+        stage('create workspace') {
+            steps {
+                sh '''if [ -d ${WORKSPACE} ]; then
+                    rm -rf ${WORKSPACE}
+                fi
+                mkdir ${WORKSPACE} '''
+            }
+        }
+
+        stage('copy file') {
+            steps {
+                sh "/usr/bin/sshpass -p ${params.ast_sshd_password} scp ${params.ast_sshd_user}@${params.tenant_harbor_path}/resource_prepare.tar.gz ."
+                sh "tar -zxvf resource_prepare.tar.gz --strip-components 1"
+            }
+        }
+
+        stage('generate hosts') {
+            steps {
+                sh "echo '[k8s_master_float]'>>hosts"
+                sh "echo '${params.target_ip}'>>hosts";
+                sh "echo [all:vars]>>hosts"
+                sh "echo 'DOCKER_IMAGE_REPOSITY=${params.docker_image_reposity}'>>hosts"
+                sh "echo 'NTP_SERVER=${params.ntp_server}'>>hosts"
+                sh "echo -n '${params.ip_host_map}'>>${WORKSPACE}/update_host.yaml"
+                sh "echo '}'>>${WORKSPACE}/update_host.yaml"
+            }
+        }
+
+        stage('install k8s prepare') {
+            steps {
+                ansiblePlaybook installation: "${params.ansible_alias}", inventory: 'hosts', playbook: "all.yaml"
+            }
+        }

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/test" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test" id="m1542010055078" name="">
+  <process id="SvrSubscribeOrder" name="服务订阅流程" isExecutable="true" isClosed="false" processType="None">
+    <startEvent id="startevent1" name="StartSubscribe" activiti:initiator="applyUserId">
+      <documentation>StartSubscribe</documentation>
+    </startEvent>
+    <userTask id="svrSubscribeTask" name="服务订阅" activiti:candidateGroups="${groupId}">
+      <documentation>ServiceOrderApprove</documentation>
+    </userTask>
+    <sequenceFlow id="flow1" sourceRef="processDraft" targetRef="svrSubscribeTask"></sequenceFlow>
+    <serviceTask id="Agree" name="同意" activiti:class="com.newland.paas.paasservice.activitiflow.delegate.SvrSubscribeAgreeDelegate"></serviceTask>
+    <serviceTask id="Disagree" name="不同意" activiti:class="com.newland.paas.paasservice.activitiflow.delegate.SvrSubscribeDisagreeDelegate"></serviceTask>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow2" sourceRef="svrSubscribeTask" targetRef="exclusivegateway1"></sequenceFlow>
+    <sequenceFlow id="flow3" sourceRef="exclusivegateway1" targetRef="Disagree">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approve==false}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow4" sourceRef="exclusivegateway1" targetRef="Agree">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approve==true}]]></conditionExpression>
+    </sequenceFlow>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <sequenceFlow id="flow6" sourceRef="Disagree" targetRef="endevent1"></sequenceFlow>
+    <userTask id="createSvrSubscribeTask" name="生成订阅实例">
+      <documentation>createSvrSubscribeTask</documentation>
+    </userTask>
+    <sequenceFlow id="_5" sourceRef="Agree" targetRef="createSvrSubscribeTask"></sequenceFlow>
+    <sequenceFlow id="_6" sourceRef="createSvrSubscribeTask" targetRef="endevent1"></sequenceFlow>
+    <userTask id="processDraft" name="流程草拟" activiti:assignee="${applyUserId}">
+      <documentation>ServiceOrderApprove</documentation>
+    </userTask>
+    <sequenceFlow id="flow7" sourceRef="startevent1" targetRef="processDraft"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_SvrSubscribeOrder">
+    <bpmndi:BPMNPlane bpmnElement="SvrSubscribeOrder" id="BPMNPlane_SvrSubscribeOrder">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="510.0" y="70.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="svrSubscribeTask" id="BPMNShape_svrSubscribeTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="475.0" y="255.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Agree" id="BPMNShape_Agree">
+        <omgdc:Bounds height="55.0" width="105.0" x="325.0" y="410.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Disagree" id="BPMNShape_Disagree">
+        <omgdc:Bounds height="55.0" width="105.0" x="620.0" y="400.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="507.0" y="345.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="510.0" y="595.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="createSvrSubscribeTask" id="BPMNShape_createSvrSubscribeTask">
+        <omgdc:Bounds height="55.0" width="85.0" x="330.0" y="495.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="processDraft" id="BPMNShape_processDraft">
+        <omgdc:Bounds height="55.0" width="105.0" x="475.0" y="140.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="527.0" y="195.0"></omgdi:waypoint>
+        <omgdi:waypoint x="527.0" y="255.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="527.0" y="310.0"></omgdi:waypoint>
+        <omgdi:waypoint x="527.0" y="345.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="527.0" y="385.0"></omgdi:waypoint>
+        <omgdi:waypoint x="672.0" y="400.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="527.0" y="385.0"></omgdi:waypoint>
+        <omgdi:waypoint x="377.0" y="410.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="672.0" y="455.0"></omgdi:waypoint>
+        <omgdi:waypoint x="527.0" y="595.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_5" id="BPMNEdge__5">
+        <omgdi:waypoint x="377.0" y="465.0"></omgdi:waypoint>
+        <omgdi:waypoint x="372.0" y="495.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_6" id="BPMNEdge__6">
+        <omgdi:waypoint x="372.0" y="550.0"></omgdi:waypoint>
+        <omgdi:waypoint x="527.0" y="595.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="527.0" y="105.0"></omgdi:waypoint>
+        <omgdi:waypoint x="527.0" y="140.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

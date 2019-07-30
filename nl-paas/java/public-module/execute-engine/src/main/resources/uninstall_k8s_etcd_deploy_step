@@ -1,0 +1,38 @@
+        stage('create workspace') {
+            steps {
+                sh '''if [ -d ${WORKSPACE} ]; then
+                    rm -rf ${WORKSPACE}
+                fi
+                mkdir ${WORKSPACE} '''
+            }
+        }
+        
+        stage('copy file') {
+            steps {
+                sh "/usr/bin/sshpass -p ${params.ast_sshd_password} scp ${params.ast_sshd_user}@${params.tenant_harbor_path}/k8s_uninstall.tar.gz ."
+                sh "tar -zxvf k8s_uninstall.tar.gz --strip-components 1"
+            }
+        }
+        
+        stage('generate hosts') {
+            steps { 
+                writeFile file: 'k8s_worker_ip', text: "${params.k8s_worker_ip}"
+                writeFile file: 'k8s_master_ip', text: "${params.k8s_master_ip}"
+                writeFile file: 'etcd_ip', text: "${params.etcd_ip}"                            
+                sh "chmod 755 generate_host.sh; sh generate_host.sh"
+                sh "echo 'ETCD_HOME=${params.etcd_home}'>>hosts"
+                sh "echo 'K8S_HOME=${params.k8s_home}'>>hosts"
+            }
+        }
+        
+        stage('uninstall_k8s') {
+            steps { 
+                ansiblePlaybook installation: '${params.ansible_alias}', inventory: 'hosts', playbook: 'k8s_uninstall/k8s_uninstall.yaml'
+            }
+        }
+        
+        stage('uninstall_etcd') {
+            steps { 
+                ansiblePlaybook installation: '${params.ansible_alias}', inventory: 'hosts', playbook: 'etcd_uninstall/etcd_uninstall.yaml'
+            }
+        }

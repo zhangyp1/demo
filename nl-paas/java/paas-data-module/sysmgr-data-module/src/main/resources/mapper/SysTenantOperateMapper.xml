@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysTenantOperateMapper" >
+  <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantOperate" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL" />
+    <result column="OPERATE_DETAIL" property="operateDetail" jdbcType="VARCHAR" />
+    <result column="BEGIN_TIME" property="beginTime" jdbcType="TIMESTAMP" />
+    <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="DECIMAL" />
+    <result column="PARENT_ID" property="parentId" jdbcType="DECIMAL" />
+  </resultMap>
+
+  <resultMap id="ResultMapEx" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.CreateTenantDetail">
+    <result column="activeStep" property="activeStep" jdbcType="DECIMAL" />
+    <collection property="statusInfos"
+                ofType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.StatusInfosBo"
+                select="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysTenantOperateMapper.listMainOps"
+                column="{id=ID, tenantId=TENANT_ID}">
+    </collection>
+  </resultMap>
+
+  <resultMap id="ResultMapEx2" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.StatusInfosBo">
+    <result column="PROGRESS" property="progress" jdbcType="VARCHAR" />
+    <result column="OPERATE_DETAIL" property="description" jdbcType="VARCHAR" />
+    <result column="step" property="step" jdbcType="DECIMAL" />
+    <collection property="detailInfos"
+                ofType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.DetailInfosBo"
+                select="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysTenantOperateMapper.listSubOps"
+                column="{id=ID, tenantId=TENANT_ID, childNum=CHILDNUM}">
+    </collection>
+  </resultMap>
+
+  <resultMap id="ResultMapEx3" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.DetailInfosBo">
+    <result column="OPERATE_DETAIL" property="title" jdbcType="VARCHAR" />
+    <result column="BEGIN_TIME" property="startTime" jdbcType="VARCHAR" />
+    <result column="END_TIME" property="endTime" jdbcType="VARCHAR" />
+    <result column="STATUS" property="statusCode" jdbcType="VARCHAR" />
+    <result column="STATUS_NAME" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Where_Clause" >
+    <where >
+      DEL_FLAG = 0
+      <if test="tenantId != null" >
+         and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+      <if test="operateDetail != null" >
+         and OPERATE_DETAIL = #{operateDetail,jdbcType=VARCHAR}
+      </if>
+      <if test="beginTime != null" >
+         and BEGIN_TIME = #{beginTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="endTime != null" >
+         and END_TIME = #{endTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="status != null" >
+         and STATUS = #{status,jdbcType=VARCHAR}
+      </if>
+      <if test="createDate != null" >
+         and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+         and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+         and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+      <if test="delFlag != null" >
+         and DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+      </if>
+      <if test="parentId != null" >
+        and PARENT_ID = #{parentId,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, TENANT_ID, OPERATE_DETAIL, BEGIN_TIME, END_TIME, STATUS, CREATE_DATE, CHANGE_DATE, 
+    CREATOR_ID, DEL_FLAG, PARENT_ID
+  </sql>
+  <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantOperate" >
+    select
+    distinct
+    <include refid="Base_Column_List" />
+    from SYS_TENANT_OPERATE
+    <include refid="Where_Clause" />
+    order by ID asc
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from SYS_TENANT_OPERATE
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from SYS_TENANT_OPERATE
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantOperate" >
+    delete from SYS_TENANT_OPERATE
+    <include refid="Where_Clause" />
+  </delete>
+  <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantOperate" >
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      select SEQ_SYS_TENANT_OPERATE.nextval as id from sys.dual
+    </selectKey>
+    insert into SYS_TENANT_OPERATE (ID, TENANT_ID, OPERATE_DETAIL, 
+      BEGIN_TIME, END_TIME, STATUS, 
+      CREATE_DATE, CHANGE_DATE, CREATOR_ID, 
+      DEL_FLAG, PARENT_ID)
+    values (#{id,jdbcType=DECIMAL}, #{tenantId,jdbcType=DECIMAL}, #{operateDetail,jdbcType=VARCHAR}, 
+      #{beginTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{changeDate,jdbcType=TIMESTAMP}, #{creatorId,jdbcType=DECIMAL}, 
+      0, #{parentId,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantOperate" >
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      select SEQ_SYS_TENANT_OPERATE.nextval as id from sys.dual
+    </selectKey>
+    insert into SYS_TENANT_OPERATE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="tenantId != null" >
+        TENANT_ID,
+      </if>
+      <if test="operateDetail != null" >
+        OPERATE_DETAIL,
+      </if>
+      <if test="beginTime != null" >
+        BEGIN_TIME,
+      </if>
+      <if test="endTime != null" >
+        END_TIME,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE,
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID,
+      </if>
+      DEL_FLAG,
+      <if test="parentId != null" >
+        PARENT_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="tenantId != null" >
+        #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="operateDetail != null" >
+        #{operateDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="beginTime != null" >
+        #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=DECIMAL},
+      </if>
+      0,
+      <if test="parentId != null" >
+        #{parentId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantOperate" resultType="java.lang.Integer" >
+    select count(*) from SYS_TENANT_OPERATE
+    <include refid="Where_Clause" />
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantOperate" >
+    update SYS_TENANT_OPERATE
+    <set >
+      <if test="tenantId != null" >
+        TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="operateDetail != null" >
+        OPERATE_DETAIL = #{operateDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="beginTime != null" >
+        BEGIN_TIME = #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        END_TIME = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+      </if>
+      <if test="parentId != null" >
+        PARENT_ID = #{parentId,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantOperate" >
+    update SYS_TENANT_OPERATE
+    set TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      OPERATE_DETAIL = #{operateDetail,jdbcType=VARCHAR},
+      BEGIN_TIME = #{beginTime,jdbcType=TIMESTAMP},
+      END_TIME = #{endTime,jdbcType=TIMESTAMP},
+      STATUS = #{status,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+      PARENT_ID = #{parentId,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+
+  <update id="updateStatusSuccess" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantOperate" >
+    update SYS_TENANT_OPERATE
+    set
+      END_TIME = sysdate,
+      STATUS = 'success'
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+
+  <update id="updateStatusFailure" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantOperate" >
+    update SYS_TENANT_OPERATE
+    set
+      STATUS = 'failure'
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+
+  <select id="getCreateTenantDetailInfo" resultMap="ResultMapEx" parameterType="java.lang.Long">
+    select
+      (sum(case STATUS
+        when 'success' then 1
+		when 'failure' then 1
+		else 0 end ) - 1) as activeStep,
+		-1 as ID,
+		#{tenantId,jdbcType=DECIMAL} as TENANT_ID
+      from SYS_TENANT_OPERATE
+      where TENANT_ID = #{tenantId,jdbcType=DECIMAL} and DEL_FLAG = 0 and PARENT_ID = -1
+  </select>
+
+  <select id="listMainOps" resultMap="ResultMapEx2"
+          parameterType="java.util.Map">
+      select
+      (rownum - 1) as step, t.OPERATE_DETAIL, t.ID as ID,
+		#{tenantId,jdbcType=DECIMAL} as TENANT_ID,
+		(
+          select count(id)
+            from SYS_TENANT_OPERATE
+          connect by prior id = parent_id
+           start with parent_id = t.ID
+		) as CHILDNUM,
+		case
+      　　when t.STATUS='start' then '开始'
+      　　when t.STATUS='run' then '运行中'
+      　　when t.STATUS='success' then '成功'
+      　　when t.STATUS='failure' then '失败'
+      　　else ''
+      　end as PROGRESS
+      from SYS_TENANT_OPERATE t
+      where t.TENANT_ID = #{tenantId,jdbcType=DECIMAL} and t.PARENT_ID = #{id,jdbcType=DECIMAL} and t.DEL_FLAG = 0
+  </select>
+
+  <select id="listSubOps" resultMap="ResultMapEx3"
+          parameterType="java.util.Map">
+      select OPERATE_DETAIL, to_char(BEGIN_TIME, 'yyyy-MM-dd   HH24:mm:ss ')  as BEGIN_TIME,
+      to_char(END_TIME, 'yyyy-MM-dd   HH24:mm:ss ')  as END_TIME, STATUS,
+      case
+    　　when STATUS='start' then '开始'
+    　　when STATUS='run' then '运行中'
+    　　when STATUS='success' then '成功'
+    　　when STATUS='failure' then '失败'
+    　　else ''
+    　end as STATUS_NAME
+      from SYS_TENANT_OPERATE
+      <where>
+        TENANT_ID = #{tenantId,jdbcType=DECIMAL} and DEL_FLAG = 0
+        <if test="childNum > 0" >
+           and PARENT_ID = #{id,jdbcType=DECIMAL}
+        </if>
+        <if test="childNum == 0" >
+           and ID = #{id,jdbcType=DECIMAL}
+        </if>
+      </where>
+  </select>
+</mapper>

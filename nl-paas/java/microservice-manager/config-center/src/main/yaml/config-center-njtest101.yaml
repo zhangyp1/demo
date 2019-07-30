@@ -1,0 +1,73 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: config-center
+  namespace: manage
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: config-center-app
+        track: stable
+    spec:
+      securityContext:
+        runAsUser: 2000
+      containers:
+      - name: config-center
+        image: 172.32.150.15/newland/nl.paas.config-center:image_version
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /info
+            port: 8888
+            scheme: HTTP
+          initialDelaySeconds: 300
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /info
+            port: 8888
+            scheme: HTTP
+          initialDelaySeconds: 180
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3 
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: njtest101
+        - name: JVM_OPTS
+          value: "-XX:MaxRAMFraction=2"
+        - name: LOG_PATH
+          value: "/nl/paas/jdklogs"
+        ports:
+        - containerPort: 8888
+        resources:
+           requests:
+             cpu: 0.5
+             memory: 2Gi
+           limits:
+             cpu: 1
+             memory: 3Gi
+        volumeMounts:
+        - name: localtime
+          mountPath: /etc/localtime
+        - name: localpath
+          mountPath: /nl/paas
+        securityContext:
+          runAsUser: 2000
+          allowPrivilegeEscalation: false
+      volumes:
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+      - name: localpath
+        hostPath:
+          path: /dcoslog/nl/paas

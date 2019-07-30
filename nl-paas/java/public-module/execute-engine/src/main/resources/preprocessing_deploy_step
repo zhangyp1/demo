@@ -1,0 +1,9 @@
+stage('预处理-建立workspace和拷贝文件'){
+            steps {
+                sh '''if [ ! -d ${WORKSPACE} ];then
+                    mkdir ${WORKSPACE}
+                fi'''
+
+                sh '''/usr/bin/sshpass -p {{ast_sshd_password}}  scp {{ast_sshd_user}}@{{tenant_harbor_path}}/{{application_name}}-{{application_version}}.tar.gz .;tar -zxvf {{application_name}}-{{application_version}}.tar.gz                 '''
+            }
+        }

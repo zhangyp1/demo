@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysObjViewMapper" >
+
+  <!-- V_SYS_OBJ -->
+  <resultMap id="SysObjMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysObj" >
+    <result column="OBJ_ID" property="objId" jdbcType="DECIMAL" />
+    <result column="OBJ_NAME" property="objName" jdbcType="VARCHAR" />
+    <result column="OBJ_TYPE" property="objType" jdbcType="VARCHAR" />
+    <result column="SYS_CATEGORY_ID" property="sysCategoryId" jdbcType="DECIMAL" />
+    <result column="GROUP_ID" property="groupId" jdbcType="DECIMAL" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Where_Clause_SysObj" >
+    <where >
+      <if test="objId != null" >
+         and OBJ_ID = #{objId,jdbcType=DECIMAL}
+      </if>
+      <if test="objName != null" >
+         and OBJ_NAME = #{objName,jdbcType=VARCHAR}
+      </if>
+      <if test="objType != null" >
+         and OBJ_TYPE = #{objType,jdbcType=VARCHAR}
+      </if>
+      <if test="sysCategoryId != null" >
+         and SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL}
+      </if>
+      <if test="groupId != null" >
+        and GROUP_ID = #{groupId,jdbcType=DECIMAL}
+      </if>
+      <if test="tenantId != null" >
+         and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+      <if test="createDate != null" >
+         and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+         and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+         and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List_SysObj" >
+    OBJ_ID, OBJ_NAME, OBJ_TYPE, SYS_CATEGORY_ID, GROUP_ID,
+    TENANT_ID, CREATE_DATE, CHANGE_DATE, CREATOR_ID
+  </sql>
+  <select id="selectObjBySelective" resultMap="SysObjMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysObj" >
+    select
+    <include refid="Base_Column_List_SysObj" />
+    from V_SYS_OBJ
+    <include refid="Where_Clause_SysObj" />
+  </select>
+  <select id="countBySelectiveSysObj" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysObj" resultType="java.lang.Integer" >
+    select count(*) from V_SYS_OBJ
+    <include refid="Where_Clause_SysObj" />
+  </select>
+
+  <!-- V_SYS_OBJ_NOT_GRANT -->
+  <resultMap id="SysObjNotGrantMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysObjNotGrant" >
+    <result column="OBJ_ID" property="objId" jdbcType="DECIMAL" />
+    <result column="OBJ_NAME" property="objName" jdbcType="VARCHAR" />
+    <result column="OBJ_TYPE" property="objType" jdbcType="VARCHAR" />
+    <result column="CATEGORY_ID" property="categoryId" jdbcType="DECIMAL" />
+    <result column="GROUP_ID" property="groupId" jdbcType="DECIMAL" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Where_Clause_SysObjNotGrant" >
+    <where >
+      <if test="objId != null" >
+        and OBJ_ID = #{objId,jdbcType=DECIMAL}
+      </if>
+      <if test="objName != null" >
+        and OBJ_NAME = #{objName,jdbcType=VARCHAR}
+      </if>
+      <if test="objType != null" >
+        and OBJ_TYPE = #{objType,jdbcType=VARCHAR}
+      </if>
+      <if test="sysCategoryId != null" >
+        and SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL}
+      </if>
+      <if test="groupId != null" >
+        and GROUP_ID = #{groupId,jdbcType=DECIMAL}
+      </if>
+      <if test="tenantId != null" >
+        and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+      <if test="createDate != null" >
+        and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+        and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+        and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List_SysObjNotGrant" >
+    OBJ_ID, OBJ_NAME, OBJ_TYPE, SYS_CATEGORY_ID, GROUP_ID,
+    TENANT_ID, CREATE_DATE, CHANGE_DATE, CREATOR_ID
+  </sql>
+  <select id="selectObjNotGrantBySelective" resultMap="SysObjNotGrantMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysObjNotGrant" >
+    select
+    <include refid="Base_Column_List_SysObjNotGrant" />
+    from V_SYS_OBJ_NOT_GRANT
+    <include refid="Where_Clause_SysObjNotGrant" />
+  </select>
+  <select id="countObjNotGrantBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysObjNotGrant" resultType="java.lang.Integer" >
+    select count(*) from V_SYS_OBJ_NOT_GRANT
+    <include refid="Where_Clause_SysObjNotGrant" />
+  </select>
+
+  <!-- V_SYS_OBJ_GRANT -->
+  <resultMap id="SysObjGrantMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysObjGrant" >
+    <result column="OBJ_ID" property="objId" jdbcType="DECIMAL" />
+    <result column="OBJ_NAME" property="objName" jdbcType="VARCHAR" />
+    <result column="OBJ_TYPE" property="objType" jdbcType="VARCHAR" />
+    <result column="GROUP_ID" property="groupId" jdbcType="DECIMAL" />
+    <result column="OPERATES" property="operates" jdbcType="VARCHAR" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Where_Clause_SysObjGrant" >
+    <where >
+      <if test="objId != null" >
+        and OBJ_ID = #{objId,jdbcType=DECIMAL}
+      </if>
+      <if test="objName != null" >
+        and OBJ_NAME = #{objName,jdbcType=VARCHAR}
+      </if>
+      <if test="objType != null" >
+        and OBJ_TYPE = #{objType,jdbcType=VARCHAR}
+      </if>
+      <if test="groupId != null" >
+        and GROUP_ID = #{groupId,jdbcType=DECIMAL}
+      </if>
+      <if test="operates != null" >
+        and OPERATES = #{operates,jdbcType=VARCHAR}
+      </if>
+      <if test="tenantId != null" >
+        and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+      <if test="createDate != null" >
+        and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+        and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+        and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List_SysObjGrant" >
+    OBJ_ID, OBJ_NAME, OBJ_TYPE, GROUP_ID, OPERATES,
+    TENANT_ID, CREATE_DATE, CHANGE_DATE, CREATOR_ID
+  </sql>
+  <select id="selectObjGrantBySelective" resultMap="SysObjGrantMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysObjGrant" >
+    select
+    <include refid="Base_Column_List_SysObjGrant" />
+    from V_SYS_OBJ_GRANT
+    <include refid="Where_Clause_SysObjGrant" />
+  </select>
+  <select id="countObjGrantBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysObjGrant" resultType="java.lang.Integer" >
+    select count(*) from V_SYS_OBJ_GRANT
+    <include refid="Where_Clause_SysObjGrant" />
+  </select>
+
+  <!-- V_SYS_OBJ_EMPOWER -->
+  <resultMap id="SysObjEmpowerMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysObjEmpower" >
+    <result column="OBJ_ID" property="objId" jdbcType="DECIMAL" />
+    <result column="OBJ_NAME" property="objName" jdbcType="VARCHAR" />
+    <result column="OBJ_TYPE" property="objType" jdbcType="VARCHAR" />
+    <result column="GROUP_ROLE_ID" property="groupRoleId" jdbcType="DECIMAL" />
+    <result column="OPERATES" property="operates" jdbcType="VARCHAR" />
+    <result column="GROUP_ID" property="groupId" jdbcType="DECIMAL" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Where_Clause_SysObjEmpower" >
+    <where >
+      <if test="objId != null" >
+        and OBJ_ID = #{objId,jdbcType=DECIMAL}
+      </if>
+      <if test="objName != null" >
+        and OBJ_NAME = #{objName,jdbcType=VARCHAR}
+      </if>
+      <if test="objType != null" >
+        and OBJ_TYPE = #{objType,jdbcType=VARCHAR}
+      </if>
+      <if test="groupRoleId != null" >
+        and GROUP_ROLE_ID = #{groupRoleId,jdbcType=DECIMAL}
+      </if>
+      <if test="operates != null" >
+        and OPERATES = #{operates,jdbcType=VARCHAR}
+      </if>
+      <if test="groupId != null" >
+        and GROUP_ID = #{groupId,jdbcType=DECIMAL}
+      </if>
+      <if test="tenantId != null" >
+        and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+      <if test="createDate != null" >
+        and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+        and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+        and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List_SysObjEmpower" >
+    OBJ_ID, OBJ_NAME, OBJ_TYPE, GROUP_ROLE_ID, OPERATES, GROUP_ID
+    TENANT_ID, CREATE_DATE, CHANGE_DATE, CREATOR_ID
+  </sql>
+  <select id="selectObjEmpowerBySelective" resultMap="SysObjEmpowerMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysObjEmpower" >
+    select
+    <include refid="Base_Column_List_SysObjEmpower" />
+    from V_SYS_OBJ_EMPOWER
+    <include refid="Where_Clause_SysObjEmpower" />
+  </select>
+  <select id="countObjEmpowerBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysObjEmpower" resultType="java.lang.Integer" >
+    select count(*) from V_SYS_OBJ_EMPOWER
+    <include refid="Where_Clause_SysObjEmpower" />
+  </select>
+
+  <!-- V_SYS_USER_GROUP_OBJ-->
+  <resultMap id="SysUserGroupObjMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysUserObj" >
+    <result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+    <result column="OBJ_ID" property="objId" jdbcType="DECIMAL" />
+    <result column="OBJ_NAME" property="objName" jdbcType="VARCHAR" />
+    <result column="OBJ_TYPE" property="objType" jdbcType="VARCHAR" />
+    <result column="GROUP_ID" property="groupId" jdbcType="DECIMAL" />
+    <result column="SYS_CATEGORY_ID" property="sysCategoryId" jdbcType="DECIMAL" />
+    <result column="OPERATES" property="operates" jdbcType="VARCHAR" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Where_Clause_SysUserGroupObj" >
+    <where >
+      <if test="userId != null" >
+        and USER_ID = #{userId,jdbcType=DECIMAL}
+      </if>
+      <if test="objId != null" >
+        and OBJ_ID = #{objId,jdbcType=DECIMAL}
+      </if>
+      <if test="objName != null" >
+        and OBJ_NAME = #{objName,jdbcType=VARCHAR}
+      </if>
+      <if test="objType != null" >
+        and OBJ_TYPE = #{objType,jdbcType=VARCHAR}
+      </if>
+      <if test="groupId != null" >
+        and GROUP_ID = #{groupId,jdbcType=DECIMAL}
+      </if>
+      <if test="sysCategoryId != null" >
+        and SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL}
+      </if>
+      <if test="operates != null" >
+        and OPERATES = #{operates,jdbcType=VARCHAR}
+      </if>
+      <if test="tenantId != null" >
+        and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List_SysUserGroupObj" >
+    USER_ID, OBJ_ID, OBJ_NAME, OBJ_TYPE, GROUP_ID, SYS_CATEGORY_ID, OPERATES, TENANT_ID
+  </sql>
+  <select id="selectUserGroupObjBySelective" resultMap="SysUserObjMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysUserObj" >
+    select
+    <include refid="Base_Column_List_SysUserGrantObj" />
+    from V_SYS_USER_GROUP_OBJ
+    <include refid="Where_Clause_SysUserGroupObj" />
+  </select>
+  <select id="selectUserGroupObjByCategoryAndUser" resultMap="SysUserObjMap" >
+    select
+    <include refid="Base_Column_List_SysUserGrantObj" />
+    from V_SYS_USER_GROUP_OBJ
+    where USER_ID = #{userId,jdbcType=DECIMAL}
+    and SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL}
+    <if test="likeObjName != null and likeObjName != ''" >
+      and OBJ_NAME like '%' || #{likeObjName,jdbcType=VARCHAR} || '%'
+    </if>
+    <if test="objType != null and objType != ''" >
+      and OBJ_TYPE = #{objType,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="selectUserGroupObjByCategoryAndUser_Merged" resultMap="SysUserObjMap" >
+    select
+    USER_ID, OBJ_ID, OBJ_NAME, OBJ_TYPE, GROUP_ID, SYS_CATEGORY_ID,
+    LISTAGG(OPERATES, ',') WITHIN GROUP(ORDER BY OBJ_ID) AS OPERATES,
+    TENANT_ID
+    from V_SYS_USER_GROUP_OBJ
+    where USER_ID = #{userId,jdbcType=DECIMAL}
+    and SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL}
+    <if test="likeObjName != null and likeObjName != ''" >
+      and OBJ_NAME like '%' || #{likeObjName,jdbcType=VARCHAR} || '%'
+    </if>
+    <if test="objType != null and objType != ''" >
+      and OBJ_TYPE = #{objType,jdbcType=VARCHAR}
+    </if>
+    <if test="inObjTypes != null and inObjTypes.size > 0" >
+      and OBJ_TYPE in
+      <foreach collection="inObjTypes" index="index" item="inObjType" open="(" close=")" separator=",">
+        #{inObjType}
+      </foreach>
+    </if>
+    GROUP BY USER_ID, OBJ_ID, OBJ_NAME, OBJ_TYPE, GROUP_ID, SYS_CATEGORY_ID, TENANT_ID
+  </select>
+
+  <!-- V_SYS_USER_GRANT_OBJ-->
+  <resultMap id="SysUserGrantObjMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysUserObj" >
+    <result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+    <result column="OBJ_ID" property="objId" jdbcType="DECIMAL" />
+    <result column="OBJ_NAME" property="objName" jdbcType="VARCHAR" />
+    <result column="OBJ_TYPE" property="objType" jdbcType="VARCHAR" />
+    <result column="GROUP_ID" property="groupId" jdbcType="DECIMAL" />
+    <result column="SYS_CATEGORY_ID" property="sysCategoryId" jdbcType="DECIMAL" />
+    <result column="OPERATES" property="operates" jdbcType="VARCHAR" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Where_Clause_SysUserGrantObj" >
+    <where >
+      <if test="userId != null" >
+        and USER_ID = #{userId,jdbcType=DECIMAL}
+      </if>
+      <if test="objId != null" >
+        and OBJ_ID = #{objId,jdbcType=DECIMAL}
+      </if>
+      <if test="objName != null" >
+        and OBJ_NAME = #{objName,jdbcType=VARCHAR}
+      </if>
+      <if test="objType != null" >
+        and OBJ_TYPE = #{objType,jdbcType=VARCHAR}
+      </if>
+      <if test="groupId != null" >
+        and GROUP_ID = #{groupId,jdbcType=DECIMAL}
+      </if>
+      <if test="sysCategoryId != null" >
+        and SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL}
+      </if>
+      <if test="operates != null" >
+        and OPERATES = #{operates,jdbcType=VARCHAR}
+      </if>
+      <if test="tenantId != null" >
+        and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List_SysUserGrantObj" >
+    USER_ID, OBJ_ID, OBJ_NAME, OBJ_TYPE, GROUP_ID, SYS_CATEGORY_ID, OPERATES, TENANT_ID
+  </sql>
+  <select id="selectUserGrantObjBySelective" resultMap="SysUserObjMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysUserObj" >
+    select
+    <include refid="Base_Column_List_SysUserGrantObj" />
+    from V_SYS_USER_GRANT_OBJ
+    <include refid="Where_Clause_SysUserGrantObj" />
+  </select>
+  <select id="selectUserGrantObjCategoryId" resultType="java.lang.Long" >
+    select distinct SYS_CATEGORY_ID
+    from V_SYS_USER_GRANT_OBJ
+    where USER_ID = #{userId,jdbcType=DECIMAL}
+    and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+    <if test="notInSysCategoryIds != null and notInSysCategoryIds.size > 0" >
+      and SYS_CATEGORY_ID not in
+      <foreach collection="notInSysCategoryIds" index="index" item="categoryId" open="(" close=")" separator=",">
+        #{categoryId}
+      </foreach>
+    </if>
+    <if test="objType != null and objType != ''">
+      and OBJ_Type = #{objType,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="selectUserGrantObjByCategoryAndUser" resultMap="SysUserObjMap" >
+    select
+    <include refid="Base_Column_List_SysUserGrantObj" />
+    from V_SYS_USER_GRANT_OBJ
+    where USER_ID = #{userId,jdbcType=DECIMAL}
+    and SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL}
+    <if test="likeObjName != null and likeObjName != ''" >
+      and OBJ_NAME like '%' || #{likeObjName,jdbcType=VARCHAR} || '%'
+    </if>
+    <if test="objType != null and objType != ''" >
+      and OBJ_TYPE = #{objType,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="selectUserGrantObjByCategoryAndUser_Merged" resultMap="SysUserObjMap" >
+    select
+    USER_ID, OBJ_ID, OBJ_NAME, OBJ_TYPE, GROUP_ID, SYS_CATEGORY_ID,
+    LISTAGG(OPERATES, ',') WITHIN GROUP(ORDER BY OBJ_ID) AS OPERATES,
+    TENANT_ID
+    from V_SYS_USER_GRANT_OBJ
+    where OPERATES is not null
+    and USER_ID = #{userId,jdbcType=DECIMAL}
+    and SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL}
+    <if test="likeObjName != null and likeObjName != ''" >
+      and OBJ_NAME like '%' || #{likeObjName,jdbcType=VARCHAR} || '%'
+    </if>
+    <if test="objType != null and objType != ''" >
+      and OBJ_TYPE = #{objType,jdbcType=VARCHAR}
+    </if>
+    GROUP BY USER_ID, OBJ_ID, OBJ_NAME, OBJ_TYPE, GROUP_ID, SYS_CATEGORY_ID, TENANT_ID
+  </select>
+
+  <!-- V_SYS_USER_OBJ-->
+  <resultMap id="SysUserObjMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysUserObj" >
+    <result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+    <result column="OBJ_ID" property="objId" jdbcType="DECIMAL" />
+    <result column="OBJ_NAME" property="objName" jdbcType="VARCHAR" />
+    <result column="OBJ_TYPE" property="objType" jdbcType="VARCHAR" />
+    <result column="GROUP_ID" property="groupId" jdbcType="DECIMAL" />
+    <result column="SYS_CATEGORY_ID" property="sysCategoryId" jdbcType="DECIMAL" />
+    <result column="OPERATES" property="operates" jdbcType="VARCHAR" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Where_Clause_SysUserObj" >
+    <where >
+      <if test="userId != null" >
+        and USER_ID = #{userId,jdbcType=DECIMAL}
+      </if>
+      <if test="objId != null" >
+        and OBJ_ID = #{objId,jdbcType=DECIMAL}
+      </if>
+      <if test="objName != null" >
+        and OBJ_NAME = #{objName,jdbcType=VARCHAR}
+      </if>
+      <if test="objType != null" >
+        and OBJ_TYPE = #{objType,jdbcType=VARCHAR}
+      </if>
+      <if test="groupId != null" >
+        and GROUP_ID = #{groupId,jdbcType=DECIMAL}
+      </if>
+      <if test="sysCategoryId != null" >
+        and SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL}
+      </if>
+      <if test="operates != null" >
+        and OPERATES = #{operates,jdbcType=VARCHAR}
+      </if>
+      <if test="tenantId != null" >
+        and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List_SysUserObj" >
+    USER_ID, OBJ_ID, OBJ_NAME, OBJ_TYPE, GROUP_ID, SYS_CATEGORY_ID, OPERATES, TENANT_ID
+  </sql>
+  <select id="selectUserObjBySelective" resultMap="SysUserObjMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysUserObj" >
+    select
+    <include refid="Base_Column_List_SysUserObj" />
+    from V_SYS_USER_OBJ
+    <include refid="Where_Clause_SysUserObj" />
+  </select>
+  <select id="selectUserObjByCategoryAndUser_Merged" resultMap="SysUserObjMap" >
+    select
+    USER_ID, OBJ_ID, OBJ_NAME, OBJ_TYPE, GROUP_ID, SYS_CATEGORY_ID,
+    LISTAGG(OPERATES, ',') WITHIN GROUP(ORDER BY OBJ_ID) AS OPERATES,
+    TENANT_ID
+    from V_SYS_USER_OBJ
+    where USER_ID = #{userId,jdbcType=DECIMAL}
+    and SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL}
+    <if test="likeObjName != null and likeObjName != ''" >
+      and OBJ_NAME like '%' || #{likeObjName,jdbcType=VARCHAR} || '%'
+    </if>
+    <if test="objType != null and objType != ''" >
+      and OBJ_TYPE = #{objType,jdbcType=VARCHAR}
+    </if>
+    <if test="inObjTypes != null and inObjTypes.size > 0" >
+      and OBJ_TYPE in
+      <foreach collection="inObjTypes" index="index" item="inObjType" open="(" close=")" separator=",">
+        #{inObjType}
+      </foreach>
+    </if>
+    GROUP BY USER_ID, OBJ_ID, OBJ_NAME, OBJ_TYPE, GROUP_ID, SYS_CATEGORY_ID, TENANT_ID
+  </select>
+</mapper>

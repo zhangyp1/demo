@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.GlbLabelValueMapper" >
+  <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbLabelValue" >
+    <id column="GLB_LABEL_VALUE_ID" property="glbLabelValueId" jdbcType="DECIMAL" />
+    <result column="GLB_LABEL_ID" property="glbLabelId" jdbcType="DECIMAL" />
+    <result column="LABEL_VALUE" property="labelValue" jdbcType="VARCHAR" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Where_Clause" >
+    <where >
+      and DEL_FLAG = 0
+      <if test="glbLabelId != null" >
+         and GLB_LABEL_ID = #{glbLabelId,jdbcType=DECIMAL}
+      </if>
+      <if test="labelValue != null" >
+         and LABEL_VALUE = #{labelValue,jdbcType=VARCHAR}
+      </if>
+      <if test="createDate != null" >
+         and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+         and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+         and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+      <if test="delFlag != null" >
+         and DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+      </if>
+      <if test="tenantId != null" >
+          and TENANT_ID in (#{tenantId,jdbcType=DECIMAL}, -1)
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    GLB_LABEL_VALUE_ID, GLB_LABEL_ID, LABEL_VALUE, TENANT_ID, CREATE_DATE, CHANGE_DATE, 
+    CREATOR_ID, DEL_FLAG
+  </sql>
+  <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbLabelValue" >
+    select
+    distinct
+    <include refid="Base_Column_List" />
+    from GLB_LABEL_VALUE
+    <include refid="Where_Clause" />
+    order by CREATE_DATE asc
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from GLB_LABEL_VALUE
+    where GLB_LABEL_VALUE_ID = #{glbLabelValueId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from GLB_LABEL_VALUE
+    where GLB_LABEL_VALUE_ID = #{glbLabelValueId,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbLabelValue" >
+    delete from GLB_LABEL_VALUE
+    <include refid="Where_Clause" />
+  </delete>
+  <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbLabelValue" >
+    <selectKey keyProperty="glbLabelValueId" order="BEFORE" resultType="java.lang.Long">
+      select SEQ_GLB_LABEL_VALUE.nextval as glbLabelValueId from sys.dual
+    </selectKey>
+    insert into GLB_LABEL_VALUE (GLB_LABEL_VALUE_ID, GLB_LABEL_ID, LABEL_VALUE, 
+      TENANT_ID,
+      CREATOR_ID)
+    values (#{glbLabelValueId,jdbcType=DECIMAL}, #{glbLabelId,jdbcType=DECIMAL}, #{labelValue,jdbcType=VARCHAR}, 
+      #{tenantId,jdbcType=DECIMAL},
+      #{creatorId,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbLabelValue" >
+    <selectKey keyProperty="glbLabelValueId" order="BEFORE" resultType="java.lang.Long">
+      select SEQ_GLB_LABEL_VALUE.nextval as glbLabelValueId from sys.dual
+    </selectKey>
+    insert into GLB_LABEL_VALUE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="glbLabelValueId != null" >
+        GLB_LABEL_VALUE_ID,
+      </if>
+      <if test="glbLabelId != null" >
+        GLB_LABEL_ID,
+      </if>
+      <if test="labelValue != null" >
+        LABEL_VALUE,
+      </if>
+      <if test="tenantId != null" >
+        TENANT_ID,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE,
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="glbLabelValueId != null" >
+        #{glbLabelValueId,jdbcType=DECIMAL},
+      </if>
+      <if test="glbLabelId != null" >
+        #{glbLabelId,jdbcType=DECIMAL},
+      </if>
+      <if test="labelValue != null" >
+        #{labelValue,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null" >
+        #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbLabelValue" resultType="java.lang.Integer" >
+    select count(*) from GLB_LABEL_VALUE
+    <include refid="Where_Clause" />
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbLabelValue" >
+    update GLB_LABEL_VALUE
+    <set >
+      <if test="glbLabelId != null" >
+        GLB_LABEL_ID = #{glbLabelId,jdbcType=DECIMAL},
+      </if>
+      <if test="labelValue != null" >
+        LABEL_VALUE = #{labelValue,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null" >
+        TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where GLB_LABEL_VALUE_ID = #{glbLabelValueId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbLabelValue" >
+    update GLB_LABEL_VALUE
+    set GLB_LABEL_ID = #{glbLabelId,jdbcType=DECIMAL},
+      LABEL_VALUE = #{labelValue,jdbcType=VARCHAR},
+      TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+    where GLB_LABEL_VALUE_ID = #{glbLabelValueId,jdbcType=DECIMAL}
+  </update>
+</mapper>

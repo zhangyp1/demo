@@ -1,0 +1,56 @@
+        stage('create workspace') {
+            steps {
+                sh '''if [ -d ${WORKSPACE} ]; then
+                    rm -rf ${WORKSPACE}
+                fi
+                mkdir ${WORKSPACE} '''
+            }
+        }
+        
+        stage('copy file') {
+            steps {
+                sh "/usr/bin/sshpass -p ${params.ast_sshd_password} scp ${params.ast_sshd_user}@${params.tenant_harbor_path}/k8s_ingress.tar.gz ."
+                sh "tar -zxvf k8s_ingress.tar.gz --strip-components 1"
+            }
+        }       
+        
+        stage('generate hosts') {
+            steps {
+                sh "echo '[k8s_master_float]'>>hosts"
+                sh "echo '${params.k8s_master_float_ip}'>>hosts"
+                sh "echo '[k8s_worker]'>>hosts"
+                sh "echo '${params.k8s_worker_ip}'>>hosts"
+                sh "echo '[load_balance_node]'>>hosts"
+                sh "echo '${params.load_balance_node}'>>hosts"
+                sh "echo [all:vars]>>hosts"
+                sh "echo 'K8S_MASTER_FLOAT_IP=${params.k8s_master_float_ip}'>>hosts"
+                sh "echo 'K8S_HOME=${params.k8s_home}'>>hosts"                
+                sh "echo 'DOCKER_IMAGEUSERNAME=${params.pub_imageusername}'>>hosts"        
+                sh "echo 'DOCKER_IMAGEPASSWORD=${params.pub_imagepassword}'>>hosts"        
+                sh "echo 'DOCKER_IMAGE_REPOSITY=${params.docker_image_reposity}'>>hosts"
+                sh "echo 'NAME_SPACE=${params.name_space}'>>hosts"
+                sh "echo 'HTTP_PORT=${params.http_port}'>>hosts"
+                sh "echo 'HTTPS_PORT=${params.https_port}'>>hosts"
+                sh "echo 'DEFAULT_BACKEND_LIMIT_CPU=${params.default_back_end_limit_cpu}'>>hosts"
+                sh "echo 'DEFAULT_BACKEND_LIMIT_MEMORY=${params.default_back_end_limit_memory}'>>hosts"
+                sh "echo 'NGINX_INGRESS_CONTROLLER_LIMIT_CPU=${params.nginx_ingress_controller_limit_cpu}'>>hosts"
+                sh "echo 'NGINX_INGRESS_CONTROLLER_LIMIT_MEMORY=${params.nginx_ingress_controller_limit_memory}'>>hosts"
+                sh "echo 'LOAD_BALANCE_NODE=${params.load_balance_node}'>>hosts"
+                sh "echo 'LOAD_BALANCE_ID=${params.load_balance_id}'>>hosts"
+                sh "echo 'STATUS_PORT=${params.status_port}'>>hosts"
+                sh "echo 'APP_LOG_PATH=${params.app_log_path}'>>hosts"
+                sh "echo 'TRACE_LOG_PATH=${params.trace_log_path}'>>hosts"
+                sh "echo 'REGISTRY_HOST=${params.registry_host}'>>hosts"
+                sh "echo 'IMAGE_PROJECT_DIR=${params.image_project_dir}'>>hosts"
+                sh "echo 'IMAGE_USER_NAME=${params.image_user_name}'>>hosts"
+                sh "echo 'IMAGE_PASSWORD=${params.image_password}'>>hosts"
+                sh "echo 'LOAD_BALANCE_HOSTNAME=${params.load_balance_hostname}'>>hosts"
+            }
+        } 
+        
+        stage('{{params.install_step_name}}') {
+            steps {
+                //echo "${params.install_yaml_file}" 
+                ansiblePlaybook installation: "${params.ansible_alias}", inventory: 'hosts', playbook: "${params.install_yaml_file}"
+            }
+        }

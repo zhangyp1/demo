@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="dmpPlanRollBack" name="方案创建流程" isExecutable="true">
+    <startEvent id="startevent1" name="Start" activiti:initiator="startUserId"></startEvent>
+    <userTask id="rollback_audit" name="审批" activiti:candidateGroups="${group.groupId}">
+      <documentation>rollback_audit</documentation>
+      <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="${groups}" activiti:elementVariable="group">
+        <completionCondition>${auditResult == false || (auditResult == true &amp;&amp; nrOfCompletedInstances == nrOfInstances)}</completionCondition>
+      </multiInstanceLoopCharacteristics>
+    </userTask>
+    <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="rollback_audit"></sequenceFlow>
+    <serviceTask id="rollback_destroy" name="销毁流程" activiti:class="com.newland.paas.paasservice.activitiflow.delegate.DynamicDestroyProcess">
+      <documentation>rollback_destroy</documentation>
+    </serviceTask>
+    <userTask id="rollback_exec" name="回退人工单" activiti:assignee="${startUserId}">
+      <documentation>rollback_exec</documentation>
+    </userTask>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <sequenceFlow id="flow4" sourceRef="rollback_exec" targetRef="endevent1"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow5" sourceRef="rollback_audit" targetRef="exclusivegateway1"></sequenceFlow>
+    <sequenceFlow id="flow6" sourceRef="exclusivegateway1" targetRef="rollback_destroy">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${auditResult == true && nrOfCompletedInstances == nrOfInstances}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow7" sourceRef="exclusivegateway1" targetRef="endevent1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${auditResult == false}]]></conditionExpression>
+    </sequenceFlow>
+    <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow8" sourceRef="rollback_destroy" targetRef="exclusivegateway2"></sequenceFlow>
+    <sequenceFlow id="flow9" sourceRef="exclusivegateway2" targetRef="rollback_exec">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isFinished == false}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow10" sourceRef="exclusivegateway2" targetRef="endevent1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isFinished == true}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_dmpPlanRollBack">
+    <bpmndi:BPMNPlane bpmnElement="dmpPlanRollBack" id="BPMNPlane_dmpPlanRollBack">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="100.0" y="210.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="rollback_audit" id="BPMNShape_rollback_audit">
+        <omgdc:Bounds height="55.0" width="105.0" x="180.0" y="200.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="rollback_destroy" id="BPMNShape_rollback_destroy">
+        <omgdc:Bounds height="55.0" width="105.0" x="298.0" y="110.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="rollback_exec" id="BPMNShape_rollback_exec">
+        <omgdc:Bounds height="55.0" width="105.0" x="580.0" y="110.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="750.0" y="209.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="330.0" y="208.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="BPMNShape_exclusivegateway2">
+        <omgdc:Bounds height="40.0" width="40.0" x="448.0" y="118.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="135.0" y="227.0"></omgdi:waypoint>
+        <omgdi:waypoint x="180.0" y="227.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="685.0" y="137.0"></omgdi:waypoint>
+        <omgdi:waypoint x="767.0" y="137.0"></omgdi:waypoint>
+        <omgdi:waypoint x="767.0" y="209.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="285.0" y="227.0"></omgdi:waypoint>
+        <omgdi:waypoint x="330.0" y="228.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="350.0" y="208.0"></omgdi:waypoint>
+        <omgdi:waypoint x="350.0" y="165.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="350.0" y="248.0"></omgdi:waypoint>
+        <omgdi:waypoint x="349.0" y="310.0"></omgdi:waypoint>
+        <omgdi:waypoint x="525.0" y="310.0"></omgdi:waypoint>
+        <omgdi:waypoint x="767.0" y="310.0"></omgdi:waypoint>
+        <omgdi:waypoint x="767.0" y="244.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="403.0" y="137.0"></omgdi:waypoint>
+        <omgdi:waypoint x="448.0" y="138.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
+        <omgdi:waypoint x="488.0" y="138.0"></omgdi:waypoint>
+        <omgdi:waypoint x="580.0" y="137.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow10" id="BPMNEdge_flow10">
+        <omgdi:waypoint x="468.0" y="158.0"></omgdi:waypoint>
+        <omgdi:waypoint x="468.0" y="226.0"></omgdi:waypoint>
+        <omgdi:waypoint x="750.0" y="226.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

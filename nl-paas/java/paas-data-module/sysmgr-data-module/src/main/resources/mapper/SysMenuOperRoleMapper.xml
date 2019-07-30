@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysMenuOperRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysMenuOperRole" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ROLE_ID" property="roleId" jdbcType="DECIMAL" />
+    <result column="MENU_OPER_ID" property="menuOperId" jdbcType="DECIMAL" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="And_Del_Flag_0" >
+      and DEL_FLAG = 0
+  </sql>
+  <sql id="Where_Clause" >
+    <where >
+      <include refid="And_Del_Flag_0" />
+      <if test="id != null" >
+         and ID = #{id,jdbcType=DECIMAL}
+      </if>
+      <if test="roleId != null" >
+         and ROLE_ID = #{roleId,jdbcType=DECIMAL}
+      </if>
+      <if test="menuOperId != null" >
+         and MENU_OPER_ID = #{menuOperId,jdbcType=DECIMAL}
+      </if>
+      <if test="tenantId != null" >
+         and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+      <if test="createDate != null" >
+         and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+         and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+         and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+      <if test="delFlag != null" >
+         and DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, ROLE_ID, MENU_OPER_ID, TENANT_ID, CREATE_DATE, CHANGE_DATE, CREATOR_ID, DEL_FLAG
+  </sql>
+  <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysMenuOperRole" >
+    select
+    distinct
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from SYS_MENU_OPER_ROLE
+    <include refid="Where_Clause" />
+  </select>
+  <select id="selectByRoleId" resultMap="BaseResultMap">
+    select t1.ID, t1.ROLE_ID, t1.MENU_OPER_ID, t1.TENANT_ID, t1.CREATE_DATE, t1.CHANGE_DATE, t1.CREATOR_ID, t1.DEL_FLAG
+    from SYS_MENU_OPER_ROLE t1, SYS_MENU_OPER t2
+    where t1.MENU_OPER_ID = t2.ID
+    and t1.ROLE_ID = #{roleId,jdbcType=DECIMAL}
+    and t1.DEL_FLAG = 0 and t2.DEL_FLAG = 0
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from SYS_MENU_OPER_ROLE
+    where ID = #{id,jdbcType=DECIMAL}
+    <include refid="And_Del_Flag_0" />
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    update SYS_MENU_OPER_ROLE
+    set DEL_FLAG = 1
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysMenuOperRole" >
+    update SYS_MENU_OPER_ROLE
+    set DEL_FLAG = 1
+    <include refid="Where_Clause" />
+  </delete>
+  <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysMenuOperRole" >
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      select SEQ_SYS_MENU_OPER_ROLE.nextval as id from sys.dual
+    </selectKey>
+    insert into SYS_MENU_OPER_ROLE (ID, ROLE_ID, MENU_OPER_ID,
+      TENANT_ID, CREATE_DATE, CHANGE_DATE, 
+      CREATOR_ID, DEL_FLAG)
+    values (#{id,jdbcType=DECIMAL}, #{roleId,jdbcType=DECIMAL}, #{menuOperId,jdbcType=DECIMAL}, 
+      #{tenantId,jdbcType=DECIMAL}, #{createDate,jdbcType=TIMESTAMP}, #{changeDate,jdbcType=TIMESTAMP}, 
+      #{creatorId,jdbcType=DECIMAL}, #{delFlag,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysMenuOperRole" >
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      select SEQ_SYS_MENU_OPER_ROLE.nextval as id from sys.dual
+    </selectKey>
+    insert into SYS_MENU_OPER_ROLE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="roleId != null" >
+        ROLE_ID,
+      </if>
+      <if test="menuOperId != null" >
+        MENU_OPER_ID,
+      </if>
+      <if test="tenantId != null" >
+        TENANT_ID,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE,
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=DECIMAL},
+      </if>
+      <if test="menuOperId != null" >
+        #{menuOperId,jdbcType=DECIMAL},
+      </if>
+      <if test="tenantId != null" >
+        #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysMenuOperRole" resultType="java.lang.Integer" >
+    select count(*) from SYS_MENU_OPER_ROLE
+    <include refid="Where_Clause" />
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysMenuOperRole" >
+    update SYS_MENU_OPER_ROLE
+    <set >
+      <if test="id != null" >
+        and ID = #{id,jdbcType=DECIMAL}
+      </if>
+      <if test="roleId != null" >
+        and ROLE_ID = #{roleId,jdbcType=DECIMAL}
+      </if>
+      <if test="menuOperId != null" >
+        and MENU_OPER_ID = #{menuOperId,jdbcType=DECIMAL}
+      </if>
+      <if test="tenantId != null" >
+        and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+      <if test="createDate != null" >
+        and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+        and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+        and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+      <if test="delFlag != null" >
+        and DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <insert id="batchInsert">
+    insert into SYS_MENU_OPER_ROLE (ID, ROLE_ID, MENU_OPER_ID,
+    TENANT_ID, CREATE_DATE, CHANGE_DATE,
+    CREATOR_ID, DEL_FLAG)
+    SELECT SEQ_SYS_MENU_OPER_ROLE.nextval as id ,A.*
+    FROM(
+    <foreach item="item" index="index" collection="list" separator="UNION ALL">
+      SELECT
+      #{roleId,jdbcType=DECIMAL} as ROLE_ID,
+      #{item,jdbcType=DECIMAL} as MENU_OPER_ID, 1 as TENANT_ID,
+      sysdate as CREATE_DATE, sysdate as CHANGE_DATE, 1 as CREATOR_ID,
+      0 as DEL_FLAG
+      FROM dual
+    </foreach>
+    ) A
+  </insert>
+
+</mapper>

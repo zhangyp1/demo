@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysCategoryMapper" >
+  <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategory" >
+    <id column="SYS_CATEGORY_ID" property="sysCategoryId" jdbcType="DECIMAL" />
+    <result column="SYS_CATEGORY_CODE" property="sysCategoryCode" jdbcType="VARCHAR" />
+    <result column="SYS_CATEGORY_NAME" property="sysCategoryName" jdbcType="VARCHAR" />
+    <result column="SYS_CATEGORY_PID" property="sysCategoryPid" jdbcType="DECIMAL" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="DECIMAL" />
+    <result column="GROUP_ID" property="groupId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Where_Clause" >
+    <where >
+      DEL_FLAG = 0
+      <if test="sysCategoryCode != null" >
+         and SYS_CATEGORY_CODE = #{sysCategoryCode,jdbcType=VARCHAR}
+      </if>
+      <if test="sysCategoryName != null" >
+         and SYS_CATEGORY_NAME = #{sysCategoryName,jdbcType=VARCHAR}
+      </if>
+      <if test="sysCategoryPid != null" >
+         and SYS_CATEGORY_PID = #{sysCategoryPid,jdbcType=DECIMAL}
+      </if>
+      <if test="tenantId != null" >
+         and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+      <if test="createDate != null" >
+         and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+         and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+         and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+      <if test="groupId != null" >
+         and GROUP_ID = #{groupId,jdbcType=DECIMAL}
+      </if>
+      <!--<if test="delFlag != null" >
+         and DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+      </if>-->
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    SYS_CATEGORY_ID, SYS_CATEGORY_CODE, SYS_CATEGORY_NAME, SYS_CATEGORY_PID, TENANT_ID, CREATE_DATE, CHANGE_DATE, 
+    CREATOR_ID, DEL_FLAG, GROUP_ID
+  </sql>
+  <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategory" >
+    select
+    distinct
+    <include refid="Base_Column_List" />
+    from SYS_CATEGORY
+    <include refid="Where_Clause" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from SYS_CATEGORY
+    where SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL} and DEL_FLAG = 0
+  </select>
+  <select id="selectByCategoryIds" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategory" >
+    select
+    <include refid="Base_Column_List" />
+    from SYS_CATEGORY
+    where SYS_CATEGORY_ID in
+    <foreach collection="sysCategoryIds" index="index" item="sysCategoryId" open="(" close=")" separator=",">
+      #{sysCategoryId}
+    </foreach>
+    and DEL_FLAG = 0
+  </select>
+  <select id="selectByGroupIds" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategory" >
+    select
+    <include refid="Base_Column_List" />
+    from SYS_CATEGORY
+    where GROUP_ID in
+    <foreach collection="groupIds" index="index" item="groupId" open="(" close=")" separator=",">
+      #{groupId}
+    </foreach>
+    <if test="likeCategoryName != null" >
+      and SYS_CATEGORY_NAME like concat('%', concat(#{likeCategoryName,jdbcType=VARCHAR}, '%'))
+    </if>
+    and DEL_FLAG = 0
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from SYS_CATEGORY
+    where SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategory" >
+    delete from SYS_CATEGORY
+    <include refid="Where_Clause" />
+  </delete>
+  <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategory" >
+    <selectKey keyProperty="sysCategoryId" order="BEFORE" resultType="java.lang.Long">
+      select SEQ_SYS_CATEGORY.nextval as sysCategoryId from sys.dual
+    </selectKey>
+    insert into SYS_CATEGORY (SYS_CATEGORY_ID, SYS_CATEGORY_CODE, SYS_CATEGORY_NAME, SYS_CATEGORY_PID, 
+      TENANT_ID, CREATE_DATE, CHANGE_DATE, 
+      CREATOR_ID, DEL_FLAG, GROUP_ID)
+    values (#{sysCategoryId,jdbcType=DECIMAL}, #{sysCategoryCode,jdbcType=VARCHAR}, #{sysCategoryName,jdbcType=VARCHAR}, #{sysCategoryPid,jdbcType=DECIMAL}, 
+      #{tenantId,jdbcType=DECIMAL}, #{createDate,jdbcType=TIMESTAMP}, #{changeDate,jdbcType=TIMESTAMP}, 
+      #{creatorId,jdbcType=DECIMAL}, #{delFlag,jdbcType=DECIMAL}, #{groupId,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategory" >
+    <selectKey keyProperty="sysCategoryId" order="BEFORE" resultType="java.lang.Long">
+      select SEQ_SYS_CATEGORY.nextval as sysCategoryId from sys.dual
+    </selectKey>
+    insert into SYS_CATEGORY
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sysCategoryId != null" >
+        SYS_CATEGORY_ID,
+      </if>
+      <if test="sysCategoryCode != null" >
+        SYS_CATEGORY_CODE,
+      </if>
+      <if test="sysCategoryName != null" >
+        SYS_CATEGORY_NAME,
+      </if>
+      <if test="sysCategoryPid != null" >
+        SYS_CATEGORY_PID,
+      </if>
+      <if test="tenantId != null" >
+        TENANT_ID,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE,
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+      <if test="groupId != null" >
+        GROUP_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sysCategoryId != null" >
+        #{sysCategoryId,jdbcType=DECIMAL},
+      </if>
+      <if test="sysCategoryCode != null" >
+        #{sysCategoryCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sysCategoryName != null" >
+        #{sysCategoryName,jdbcType=VARCHAR},
+      </if>
+      <if test="sysCategoryPid != null" >
+        #{sysCategoryPid,jdbcType=DECIMAL},
+      </if>
+      <if test="tenantId != null" >
+        #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=DECIMAL},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategory" resultType="java.lang.Integer" >
+    select count(*) from SYS_CATEGORY
+    <include refid="Where_Clause" />
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategory" >
+    update SYS_CATEGORY
+    <set >
+      <if test="sysCategoryCode != null" >
+        SYS_CATEGORY_CODE = #{sysCategoryCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sysCategoryName != null" >
+        SYS_CATEGORY_NAME = #{sysCategoryName,jdbcType=VARCHAR},
+      </if>
+      <if test="sysCategoryPid != null" >
+        SYS_CATEGORY_PID = #{sysCategoryPid,jdbcType=DECIMAL},
+      </if>
+      <if test="tenantId != null" >
+        TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+      </if>
+      <if test="groupId != null" >
+        GROUP_ID = #{groupId,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategory" >
+    update SYS_CATEGORY
+    set SYS_CATEGORY_CODE = #{sysCategoryCode,jdbcType=VARCHAR},
+      SYS_CATEGORY_NAME = #{sysCategoryName,jdbcType=VARCHAR},
+      SYS_CATEGORY_PID = #{sysCategoryPid,jdbcType=DECIMAL},
+      TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+      GROUP_ID = #{groupId,jdbcType=DECIMAL}
+    where SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL}
+  </update>
+
+  <select id="getSysCategoryTree" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.BaseTreeDo">
+    select to_char(SYS_CATEGORY_ID) as ID, SYS_CATEGORY_NAME as NAME, to_char(SYS_CATEGORY_PID) AS PARENTID
+    from SYS_CATEGORY
+    where DEL_FLAG = 0 and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+    and GROUP_ID IN
+    <foreach item="item" index="index" collection="groupIdList" separator="," open="(" close=")">
+    	#{item}
+    </foreach>
+  </select>
+
+  <select id="listSubSysCategory" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategory" >
+    select *
+    from SYS_CATEGORY
+    where DEL_FLAG = 0
+    start with SYS_CATEGORY_PID = #{sysCategoryId,jdbcType=DECIMAL}
+    connect by prior SYS_CATEGORY_ID=SYS_CATEGORY_PID
+  </select>
+
+  <update id="delSubSysCategory" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategory" >
+    update SYS_CATEGORY
+    set DEL_FLAG = 1
+    where SYS_CATEGORY_ID in
+    (
+      select SYS_CATEGORY_ID
+      from SYS_CATEGORY
+      where DEL_FLAG = 0
+      start with SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL}
+      connect by prior SYS_CATEGORY_ID=SYS_CATEGORY_PID
+    )
+  </update>
+
+  <select id="listSubsSysCategory" resultMap="BaseResultMap" >
+    select
+    distinct
+    <include refid="Base_Column_List"/>
+    from SYS_CATEGORY
+    <where>
+      <if test="list != null and list.size() > 0">
+        and SYS_CATEGORY_ID in
+        (
+          select SYS_CATEGORY_ID
+          from SYS_CATEGORY
+          where DEL_FLAG = 0
+          start with SYS_CATEGORY_ID in
+          <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item.sysCategoryId,jdbcType=DECIMAL}
+          </foreach>
+          connect by prior SYS_CATEGORY_ID=SYS_CATEGORY_PID
+        )
+      </if>
+    </where>
+  </select>
+
+  <select id="listCurSysCategory" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysCategoryBo" >
+    select
+    distinct
+    <include refid="Base_Column_List"/>
+    from SYS_CATEGORY
+    <where>
+      DEL_FLAG = 0
+      <if test="record != null and record.groupIds != null and record.groupIds.size() > 0">
+        and GROUP_ID in
+        (
+        <foreach item="item" index="index" collection="record.groupIds" separator="union">
+          select GROUP_ID
+          from SYS_GROUP
+          where DEL_FLAG = 0
+          start with GROUP_ID = #{item,jdbcType=DECIMAL}
+          connect by prior GROUP_ID=PARENT_GROUP_ID
+        </foreach>
+        )
+      </if>
+    </where>
+  </select>
+
+  <select id="findBaseAll" resultMap="BaseResultMap" >
+    select SYS_CATEGORY_ID, SYS_CATEGORY_NAME
+    from SYS_CATEGORY
+  </select>
+
+  <select id="listSubAndCurSysCategory" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategory" >
+    select *
+    from SYS_CATEGORY
+    where DEL_FLAG = 0
+    start with SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL}
+    connect by prior SYS_CATEGORY_ID=SYS_CATEGORY_PID
+  </select>
+
+  <select id="listParentAndCurSysCategory" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategory" >
+    select *
+    from SYS_CATEGORY
+    where DEL_FLAG = 0
+    start with SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL}
+    connect by prior SYS_CATEGORY_PID=SYS_CATEGORY_ID
+  </select>
+
+  <select id="getCurLevel" parameterType="java.lang.Long" resultType="java.lang.Integer" >
+    select count(1)
+    from SYS_CATEGORY
+    where DEL_FLAG = 0
+    start with SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL}
+    connect by prior SYS_CATEGORY_PID=SYS_CATEGORY_ID
+  </select>
+
+  <select id="getTopSysCategory" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategory"
+          parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategory" >
+    select distinct connect_by_root SYS_CATEGORY_ID as sysCategoryId, connect_by_root SYS_CATEGORY_PID as sysCategoryPid
+    from SYS_CATEGORY
+    where DEL_FLAG = 0 and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+    start with SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL}
+    connect by prior SYS_CATEGORY_PID=SYS_CATEGORY_ID
+  </select>
+
+  <select id="countSysCategoryByTenantId" parameterType="java.lang.Long" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategoryCount" >
+    SELECT levelNum, COUNT(1) AS countNum
+    FROM (
+      SELECT level AS levelNum, t.SYS_CATEGORY_ID AS id, t.SYS_CATEGORY_PID AS pid
+      FROM SYS_CATEGORY t
+      WHERE 1 = 1
+      <if test="tenantId != 0">
+        and t.TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+      AND t.DEL_FLAG = 0
+      START WITH t.SYS_CATEGORY_PID = '-1'
+      CONNECT BY PRIOR t.SYS_CATEGORY_ID = t.SYS_CATEGORY_PID
+    )
+    GROUP BY levelNum
+    ORDER BY levelNum
+  </select>
+
+</mapper>

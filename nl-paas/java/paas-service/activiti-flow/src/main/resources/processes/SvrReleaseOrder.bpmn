@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/test" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test" id="m1541755567771" name="">
+  <process id="SvrReleaseOrder" name="服务发布流程" isExecutable="true" isClosed="false" processType="None">
+    <startEvent id="startevent1" name="StartRelease" activiti:initiator="applyUserId"></startEvent>
+    <endEvent id="svrRelEnd" name="EndRelease"></endEvent>
+    <userTask id="svrTempTask" name="服务模板编排" activiti:async="true" activiti:candidateGroups="${groupId}">
+      <documentation>ServiceLayout</documentation>
+    </userTask>
+    <userTask id="svrToSysGroupTask" name="指派系统组" activiti:async="true" activiti:candidateGroups="${groupId}">
+      <documentation>ServiceSysCategorySelect</documentation>
+    </userTask>
+    <sequenceFlow id="flow2" sourceRef="svrToSysGroupTask" targetRef="svrTempTask"></sequenceFlow>
+    <sequenceFlow id="flow3" sourceRef="svrTempTask" targetRef="svrRelEnd"></sequenceFlow>
+    <userTask id="processDraft" name="流程草拟" activiti:assignee="${applyUserId}">
+      <documentation>ServiceCreate</documentation>
+    </userTask>
+    <sequenceFlow id="flow4" sourceRef="startevent1" targetRef="processDraft"></sequenceFlow>
+    <sequenceFlow id="flow5" sourceRef="processDraft" targetRef="svrToSysGroupTask"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_SvrReleaseOrder">
+    <bpmndi:BPMNPlane bpmnElement="SvrReleaseOrder" id="BPMNPlane_SvrReleaseOrder">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="380.0" y="20.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="svrRelEnd" id="BPMNShape_svrRelEnd">
+        <omgdc:Bounds height="35.0" width="35.0" x="380.0" y="460.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="svrTempTask" id="BPMNShape_svrTempTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="345.0" y="340.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="svrToSysGroupTask" id="BPMNShape_svrToSysGroupTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="345.0" y="210.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="processDraft" id="BPMNShape_processDraft">
+        <omgdc:Bounds height="55.0" width="105.0" x="345.0" y="100.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="397.0" y="265.0"></omgdi:waypoint>
+        <omgdi:waypoint x="397.0" y="340.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="397.0" y="395.0"></omgdi:waypoint>
+        <omgdi:waypoint x="397.0" y="460.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="397.0" y="55.0"></omgdi:waypoint>
+        <omgdi:waypoint x="397.0" y="100.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="397.0" y="155.0"></omgdi:waypoint>
+        <omgdi:waypoint x="397.0" y="210.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

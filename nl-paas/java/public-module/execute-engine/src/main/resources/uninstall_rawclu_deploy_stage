@@ -1,0 +1,29 @@
+
+        stage('create workspace') {
+            steps {
+                sh '''if [ -d ${WORKSPACE} ]; then
+                    rm -rf ${WORKSPACE}
+                fi
+                mkdir ${WORKSPACE} '''
+            }
+        }
+        
+       stage('uninstall rawk8s prometheus') {
+             steps {
+                 sh "/usr/bin/sshpass -p ${params.ast_sshd_password} scp ${params.ast_sshd_user}@${params.tenant_harbor_path}/prometheus_raw_host_uninstall.tar.gz ."
+                 sh "tar -zxvf prometheus_raw_host_uninstall.tar.gz"
+                 sh "cd prometheus_raw_host_uninstall;chmod 755 ./ansible_run.sh;sh ./ansible_run.sh --hostIp='${params.k8s_master_float_ip}'"
+             }
+        }
+        
+        stage('uninstall rawk8s fluented') {
+             steps {
+                 sh "/usr/bin/sshpass -p ${params.ast_sshd_password} scp ${params.ast_sshd_user}@${params.tenant_harbor_path}/fluentd_physicscluster_uninstall.tar.gz ."
+                 sh "tar -zxvf fluentd_physicscluster_uninstall.tar.gz"
+                 sh "cd fluentd_physicscluster_uninstall;chmod 755 ./ansible_run.sh;sh ./ansible_run.sh '${params.clusterId}' '${params.k8s_master_float_ip}'"
+             }
+        }
+       
+
+
+

@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: config-tool
+  namespace: manage
+spec:
+  type: ClusterIP
+  selector:
+    app: config-tool-app
+  ports:
+  - name: config-toolapphttp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: config-tool
+  namespace: manage
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: config-tool-app
+        track: stable
+    spec:
+      containers:
+      - name: config-tool
+        image: harbor.paas.nl:5000/paas_platform/nl.paas.config-tool:2.3
+        imagePullPolicy: Always
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: dev93
+        - name: JVM_OPTS
+          value: "-XX:MaxRAMFraction=2"
+        - name: LOG_PATH
+          value: "/nl/paas/jdklogs"
+        ports:
+        - containerPort: 8080
+        resources:
+           requests:
+             cpu: 1
+             memory: 3Gi
+           limits:
+             cpu: 1
+             memory: 3Gi
+        volumeMounts:
+        - name: localtime
+          mountPath: /etc/localtime
+        - name: localpath
+          mountPath: /nl/paas
+      volumes:
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+      - name: localpath
+        hostPath:
+          path: /dcoslog/nl/paas

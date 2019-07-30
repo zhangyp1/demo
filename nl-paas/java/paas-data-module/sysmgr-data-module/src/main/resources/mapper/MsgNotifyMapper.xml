@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.MsgNotifyMapper">
+    <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgNotify">
+        <id column="NOTIFY_ID" property="notifyId" jdbcType="DECIMAL"/>
+        <result column="MSG_ID" property="msgId" jdbcType="DECIMAL"/>
+        <result column="RECEIVER_ID" property="receiverId" jdbcType="DECIMAL"/>
+        <result column="READ_FLAG" property="readFlag" jdbcType="DECIMAL"/>
+        <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP"/>
+        <result column="DEL_FLAG" property="delFlag" jdbcType="DECIMAL"/>
+    </resultMap>
+    <sql id="Where_Clause">
+        <where>
+            <if test="msgId != null">
+                and MSG_ID = #{msgId,jdbcType=DECIMAL}
+            </if>
+            <if test="receiverId != null">
+                and RECEIVER_ID = #{receiverId,jdbcType=DECIMAL}
+            </if>
+            <if test="readFlag != null">
+                and READ_FLAG = #{readFlag,jdbcType=DECIMAL}
+            </if>
+            <if test="tenantId != null">
+                and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+            </if>
+            <if test="creatorId != null">
+                and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+            </if>
+            <if test="createDate != null">
+                and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="changeDate != null">
+                and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="delFlag != null">
+                and DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+            </if>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    NOTIFY_ID, MSG_ID, RECEIVER_ID, READ_FLAG, TENANT_ID, CREATOR_ID, CREATE_DATE, CHANGE_DATE, 
+    DEL_FLAG
+  </sql>
+    <select id="selectBySelective" resultMap="BaseResultMap"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgNotify">
+        select
+        distinct
+        <include refid="Base_Column_List"/>
+        from MSG_NOTIFY
+        <include refid="Where_Clause"/>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from MSG_NOTIFY
+        where NOTIFY_ID = #{notifyId,jdbcType=DECIMAL}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from MSG_NOTIFY
+    where NOTIFY_ID = #{notifyId,jdbcType=DECIMAL}
+  </delete>
+    <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgNotify">
+        delete from MSG_NOTIFY
+        <include refid="Where_Clause"/>
+    </delete>
+    <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgNotify">
+        <selectKey keyProperty="notifyId" order="BEFORE" resultType="java.lang.Long">
+            select SEQ_MSG_NOTIFY.nextval as notifyId from sys.dual
+        </selectKey>
+        insert into MSG_NOTIFY (NOTIFY_ID, MSG_ID, RECEIVER_ID,
+        READ_FLAG, TENANT_ID, CREATOR_ID,
+        CREATE_DATE, CHANGE_DATE, DEL_FLAG
+        )
+        values (#{notifyId,jdbcType=DECIMAL}, #{msgId,jdbcType=DECIMAL}, #{receiverId,jdbcType=DECIMAL},
+        #{readFlag,jdbcType=DECIMAL}, #{tenantId,jdbcType=DECIMAL}, #{creatorId,jdbcType=DECIMAL},
+        #{createDate,jdbcType=TIMESTAMP}, #{changeDate,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=DECIMAL}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgNotify">
+        <selectKey keyProperty="notifyId" order="BEFORE" resultType="java.lang.Long">
+            select SEQ_MSG_NOTIFY.nextval as notifyId from sys.dual
+        </selectKey>
+        insert into MSG_NOTIFY
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="notifyId != null">
+                NOTIFY_ID,
+            </if>
+            <if test="msgId != null">
+                MSG_ID,
+            </if>
+            <if test="receiverId != null">
+                RECEIVER_ID,
+            </if>
+            <if test="readFlag != null">
+                READ_FLAG,
+            </if>
+            <if test="tenantId != null">
+                TENANT_ID,
+            </if>
+            <if test="creatorId != null">
+                CREATOR_ID,
+            </if>
+            <if test="createDate != null">
+                CREATE_DATE,
+            </if>
+            <if test="changeDate != null">
+                CHANGE_DATE,
+            </if>
+            <if test="delFlag != null">
+                DEL_FLAG,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="notifyId != null">
+                #{notifyId,jdbcType=DECIMAL},
+            </if>
+            <if test="msgId != null">
+                #{msgId,jdbcType=DECIMAL},
+            </if>
+            <if test="receiverId != null">
+                #{receiverId,jdbcType=DECIMAL},
+            </if>
+            <if test="readFlag != null">
+                #{readFlag,jdbcType=DECIMAL},
+            </if>
+            <if test="tenantId != null">
+                #{tenantId,jdbcType=DECIMAL},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=DECIMAL},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="changeDate != null">
+                #{changeDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgNotify"
+            resultType="java.lang.Integer">
+        select count(*) from MSG_NOTIFY
+        <include refid="Where_Clause"/>
+    </select>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgNotify">
+        update MSG_NOTIFY
+        <set>
+            <if test="msgId != null">
+                MSG_ID = #{msgId,jdbcType=DECIMAL},
+            </if>
+            <if test="receiverId != null">
+                RECEIVER_ID = #{receiverId,jdbcType=DECIMAL},
+            </if>
+            <if test="readFlag != null">
+                READ_FLAG = #{readFlag,jdbcType=DECIMAL},
+            </if>
+            <if test="tenantId != null">
+                TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+            </if>
+            <if test="creatorId != null">
+                CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+            </if>
+            <if test="createDate != null">
+                CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="changeDate != null">
+                CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where NOTIFY_ID = #{notifyId,jdbcType=DECIMAL}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgNotify">
+    update MSG_NOTIFY
+    set MSG_ID = #{msgId,jdbcType=DECIMAL},
+      RECEIVER_ID = #{receiverId,jdbcType=DECIMAL},
+      READ_FLAG = #{readFlag,jdbcType=DECIMAL},
+      TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+    where NOTIFY_ID = #{notifyId,jdbcType=DECIMAL}
+  </update>
+
+    <sql id="MsgNotifyBO_Column">
+        a.NOTIFY_ID as notifyId, a.MSG_ID as msgId, a.RECEIVER_ID as receiverId, a.READ_FLAG as readFlag, a.TENANT_ID as tenantId,
+        a.CREATOR_ID as creatorId, a.CREATE_DATE as createDate, a.CHANGE_DATE as changeDate, a.DEL_FLAG as delFlag,
+        b.msg_title as msgTitle, b.msg_type_id as msgTypeId, b.receiver_range as receiverRange, b.receivers as receivers,
+        c.type_name as typeName, c.type_desc as typeDesc
+    </sql>
+
+    <select id="selectMsgNotify" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.MsgNotifyBO"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.MsgNotifyBO">
+        select
+        <include refid="MsgNotifyBO_Column"/>
+        from (select row_number() over(partition by msg_id order by notify_id desc) num, m.* from MSG_NOTIFY m
+        where m.receiver_id=#{receiverId,jdbcType=DECIMAL}
+        and (m.tenant_id=#{tenantId,jdbcType=DECIMAL} or m.tenant_id is null)
+        and m.del_flag = 0
+        <if test="readFlag != null">and m.read_flag = #{readFlag,jdbcType=DECIMAL}</if>
+        <if test="notifyId != null">and m.notify_id = #{notifyId,jdbcType=DECIMAL}</if>
+        ) a
+        left join MSG_INFO b on b.msg_id = a.msg_id
+        left join MSG_TYPE c on c.msg_type_id = b.msg_type_id
+        where a.num = 1
+        <if test="msgTypeId != null">
+            and b.msg_type_id = #{msgTypeId,jdbcType=DECIMAL}
+        </if>
+        <if test="msgTitle != null and msgTitle != ''">
+            and b.msg_title like '%'||#{msgTitle,jdbcType=VARCHAR}||'%'
+        </if>
+        order by a.read_flag asc, a.create_date desc
+    </select>
+
+    <select id="countMsgTypeUnreadNum"
+            resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.MsgTypeUnreadCount"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.MsgNotifyBO">
+        select i.msg_type_id as msgTypeId, i.type_name as typeName, i.type_desc as typeDesc, j.num as num
+        from msg_type i
+        left join (
+            select t.msg_type_id, count(t.msg_type_id) as num from (
+            select a.NOTIFY_ID,
+            a.MSG_ID,
+            b.msg_type_id
+            from (select row_number() over(partition by msg_id order by notify_id desc) num, m.* from MSG_NOTIFY m
+                where m.receiver_id=#{receiverId,jdbcType=DECIMAL}
+                and (m.tenant_id=#{tenantId,jdbcType=DECIMAL} or m.tenant_id is null)
+                and m.del_flag = 0
+                and m.read_flag = 0) a
+            left join MSG_INFO b on b.msg_id = a.msg_id
+            where a.num = 1) t group by msg_type_id ) j on j.msg_type_id = i.msg_type_id
+         where i.del_flag = 0
+         order by i.msg_type_id asc
+    </select>
+
+    <update id="markMsgRead" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.MsgNotifyBO">
+        update MSG_NOTIFY m
+        set m.READ_FLAG = 1
+        where m.receiver_id=#{receiverId,jdbcType=DECIMAL}
+        and (m.tenant_id=#{tenantId,jdbcType=DECIMAL} or m.tenant_id is null)
+        and m.read_flag = 0
+        <if test="msgIds != null and msgIds.size() > 0">
+            and m.msg_id in
+            <foreach collection="msgIds" item="msgId" open="(" close=")" separator=",">
+                #{msgId,jdbcType=DECIMAL}
+            </foreach>
+        </if>
+    </update>
+
+    <update id="deleteReadMsg" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.MsgNotifyBO">
+        update MSG_NOTIFY m
+        set m.DEL_FLAG = 1
+        where m.receiver_id=#{receiverId,jdbcType=DECIMAL}
+        and (m.tenant_id=#{tenantId,jdbcType=DECIMAL} or m.tenant_id is null)
+        and m.read_flag = 1
+        <if test="msgIds != null and msgIds.size() > 0">
+            and m.msg_id in
+            <foreach collection="msgIds" item="msgId" open="(" close=")" separator=",">
+                #{msgId,jdbcType=DECIMAL}
+            </foreach>
+        </if>
+    </update>
+
+</mapper>

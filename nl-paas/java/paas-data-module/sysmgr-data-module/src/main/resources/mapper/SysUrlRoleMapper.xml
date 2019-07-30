@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysUrlRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysUrlRoleRespBo" >
+    <id column="URL_ROLE_ID" property="urlRoleId" jdbcType="DECIMAL" />
+    <result column="ROLE_ID" property="roleId" jdbcType="DECIMAL" />
+    <result column="URL" property="url" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Where_Clause" >
+    <where >
+      <if test="roleId != null" >
+         and ROLE_ID = #{roleId,jdbcType=DECIMAL}
+      </if>
+      <if test="url != null" >
+         and URL = #{url,jdbcType=VARCHAR}
+      </if>
+      <if test="createDate != null" >
+         and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+         and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+         and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    URL_ROLE_ID, ROLE_ID, URL, CREATE_DATE, CHANGE_DATE, CREATOR_ID
+  </sql>
+  <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysUrlRoleReqBo" >
+    select
+    distinct
+    <include refid="Base_Column_List" />
+    from SYS_URL_ROLE
+    <include refid="Where_Clause" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from SYS_URL_ROLE
+    where URL_ROLE_ID = #{urlRoleId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from SYS_URL_ROLE
+    where URL_ROLE_ID = #{urlRoleId,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysUrlRoleReqBo" >
+    delete from SYS_URL_ROLE
+    <include refid="Where_Clause" />
+  </delete>
+  <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysUrlRole" >
+  	<selectKey keyProperty="urlRoleId" order="BEFORE" resultType="java.lang.Long">
+		select SEQ_SYS_URL_ROLE.nextval as id from sys.dual
+	</selectKey>
+    insert into SYS_URL_ROLE (URL_ROLE_ID, ROLE_ID, URL, 
+      CREATE_DATE, CHANGE_DATE, CREATOR_ID
+      )
+    values (#{urlRoleId,jdbcType=DECIMAL}, #{roleId,jdbcType=DECIMAL}, #{url,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{changeDate,jdbcType=TIMESTAMP}, #{creatorId,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysUrlRole" >
+  	<selectKey keyProperty="urlRoleId" order="BEFORE" resultType="java.lang.Long">
+		select SEQ_SYS_URL_ROLE.nextval as id from sys.dual
+	</selectKey>
+    insert into SYS_URL_ROLE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="urlRoleId != null" >
+        URL_ROLE_ID,
+      </if>
+      <if test="roleId != null" >
+        ROLE_ID,
+      </if>
+      <if test="url != null" >
+        URL,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE,
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="urlRoleId != null" >
+        #{urlRoleId,jdbcType=DECIMAL},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=DECIMAL},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysUrlRoleReqBo" resultType="java.lang.Integer" >
+    select count(*) from SYS_URL_ROLE
+    <include refid="Where_Clause" />
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysUrlRole" >
+    update SYS_URL_ROLE
+    <set >
+      <if test="roleId != null" >
+        ROLE_ID = #{roleId,jdbcType=DECIMAL},
+      </if>
+      <if test="url != null" >
+        URL = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where URL_ROLE_ID = #{urlRoleId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysUrlRole" >
+    update SYS_URL_ROLE
+    set ROLE_ID = #{roleId,jdbcType=DECIMAL},
+      URL = #{url,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+    where URL_ROLE_ID = #{urlRoleId,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="getUrlsByRole" resultMap="BaseResultMap">
+    select t.url from sys_url_role t inner join sys_role r on r.role_id = t.role_id
+	where t.role_id = #{roleId}
+  </select>
+</mapper>

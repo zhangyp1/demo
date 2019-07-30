@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<groupId>com.newland.paas</groupId>
+		<artifactId>paas-parent</artifactId>
+		<version>1.1.0-SNAPSHOT</version>
+		<relativePath>./paas-parent/pom.xml</relativePath>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>paas-all</artifactId>
+	<name>paas-all-2.3</name>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>paas-parent</module>
+		<module>paas-tool</module>
+		<module>public-module</module>
+		<module>paas-data-module</module>
+		<module>paas-data-module-nj</module>
+		<module>paas-service</module>
+		<module>paas-service-nj</module>
+		<module>microservice-manager</module>
+	</modules>
+
+</project>

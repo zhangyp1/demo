@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysGroupMapper">
+    <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysGroup">
+        <id column="GROUP_ID" property="groupId" jdbcType="DECIMAL"/>
+        <result column="GROUP_CODE" property="groupCode" jdbcType="VARCHAR"/>
+        <result column="GROUP_NAME" property="groupName" jdbcType="VARCHAR"/>
+        <result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+        <result column="PARENT_GROUP_ID" property="parentGroupId" jdbcType="DECIMAL"/>
+        <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL"/>
+        <result column="DEL_FLAG" property="delFlag" jdbcType="DECIMAL"/>
+        <result column="WHOLE_PATH" property="wholePath" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="BoResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysGroupRespBo">
+        <id column="GROUP_ID" property="groupId" jdbcType="DECIMAL"/>
+        <result column="GROUP_CODE" property="groupCode" jdbcType="VARCHAR"/>
+        <result column="GROUP_NAME" property="groupName" jdbcType="VARCHAR"/>
+        <result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+        <result column="PARENT_GROUP_ID" property="parentGroupId" jdbcType="DECIMAL"/>
+        <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL"/>
+        <result column="DEL_FLAG" property="delFlag" jdbcType="DECIMAL"/>
+        <result column="WHOLE_PATH" property="wholePath" jdbcType="VARCHAR"/>
+        <result column="CREATOR_NAME" property="creatorName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Where_Clause">
+        <where>
+            and del_flag = 0
+            and exists(select * from sys_tenant tenant where tenant.id = tenant_id and tenant.del_flag = 0 and tenant.id
+            not in (-1))
+            <if test="groupCode != null">
+                and GROUP_CODE = #{groupCode,jdbcType=VARCHAR}
+            </if>
+            <if test="groupName != null">
+                and GROUP_NAME = #{groupName,jdbcType=VARCHAR}
+            </if>
+            <if test="description != null">
+                and DESCRIPTION = #{description,jdbcType=VARCHAR}
+            </if>
+            <if test="parentGroupId != null">
+                and PARENT_GROUP_ID = #{parentGroupId,jdbcType=DECIMAL}
+            </if>
+            <if test="tenantId != null">
+                and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+            </if>
+            <if test="createDate != null">
+                and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="changeDate != null">
+                and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="creatorId != null">
+                and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+            </if>
+            <if test="delFlag != null">
+                and DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+            </if>
+            <if test="wholePath != null">
+                and WHOLE_PATH = #{wholePath,jdbcType=VARCHAR}
+            </if>
+            <if test="neqId != null">
+                and GROUP_ID &lt;&gt; #{neqId,jdbcType=DECIMAL}
+            </if>
+            <if test="groupNameLike != null and groupNameLike != ''">
+                and GROUP_NAME like '%'||#{groupNameLike,jdbcType=VARCHAR}||'%'
+            </if>
+            <choose>
+                <when test="parentGroupNames != null">
+                    <choose>
+                        <when test="parentGroupNames.size() > 0">
+                            and
+                            <foreach collection="parentGroupNames" index="index" item="item" open="(" separator="or"
+                                     close=")">
+                                WHOLE_PATH like '%'||#{item}||'%'
+                            </foreach>
+                        </when>
+                        <otherwise>
+                            and 1 = 2
+                        </otherwise>
+                    </choose>
+                </when>
+            </choose>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    GROUP_ID, GROUP_CODE, GROUP_NAME, DESCRIPTION, PARENT_GROUP_ID, TENANT_ID, CREATE_DATE, CHANGE_DATE, 
+    CREATOR_ID, DEL_FLAG,WHOLE_PATH
+  </sql>
+    <select id="selectBySelective" resultMap="BaseResultMap"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysGroupReqBo">
+        select
+        distinct
+        <include refid="Base_Column_List"/>
+        from SYS_GROUP x
+        <include refid="Where_Clause"/>
+        order by whole_path
+    </select>
+    <select id="selectGroupRespBoBySelective" resultMap="BoResultMap"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysGroupReqBo">
+        select
+        distinct
+        (SELECT U.USERNAME FROM SYS_USER U WHERE U.USER_ID = x.CREATOR_ID) CREATOR_NAME,
+        <include refid="Base_Column_List"/>
+        from SYS_GROUP x
+        <include refid="Where_Clause"/>
+        order by whole_path
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from SYS_GROUP x
+        where GROUP_ID = #{groupId,jdbcType=DECIMAL} and del_flag = 0
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+      update SYS_GROUP
+      set DEL_FLAG = 1
+      where GROUP_ID = #{groupId,jdbcType=DECIMAL}
+    </delete>
+    <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysGroup">
+        delete from SYS_GROUP
+        <include refid="Where_Clause"/>
+    </delete>
+    <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysGroup">
+        <selectKey keyProperty="groupId" order="BEFORE" resultType="java.lang.Long">
+            select SEQ_SYS_GROUP.nextval as id from sys.dual
+        </selectKey>
+        insert into SYS_GROUP (GROUP_ID, GROUP_CODE, GROUP_NAME, DESCRIPTION,
+        PARENT_GROUP_ID, TENANT_ID, CREATE_DATE,
+        CHANGE_DATE, CREATOR_ID, DEL_FLAG
+        )
+        values (#{groupId,jdbcType=DECIMAL}, #{groupCode,jdbcType=VARCHAR}, #{groupName,jdbcType=VARCHAR},
+        #{description,jdbcType=VARCHAR},
+        #{parentGroupId,jdbcType=DECIMAL}, #{tenantId,jdbcType=DECIMAL}, sysdate,
+        #{changeDate,jdbcType=TIMESTAMP}, #{creatorId,jdbcType=DECIMAL}, #{delFlag,jdbcType=DECIMAL}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysGroup">
+        <selectKey keyProperty="groupId" order="BEFORE" resultType="java.lang.Long">
+            select SEQ_SYS_GROUP.nextval as id from sys.dual
+        </selectKey>
+        insert into SYS_GROUP
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="groupId != null">
+                GROUP_ID,
+            </if>
+            <if test="groupCode != null">
+                GROUP_CODE,
+            </if>
+            <if test="groupName != null">
+                GROUP_NAME,
+            </if>
+            <if test="description != null">
+                DESCRIPTION,
+            </if>
+            <if test="parentGroupId != null">
+                PARENT_GROUP_ID,
+            </if>
+            <if test="tenantId != null">
+                TENANT_ID,
+            </if>
+            CREATE_DATE,
+            <if test="changeDate != null">
+                CHANGE_DATE,
+            </if>
+            <if test="creatorId != null">
+                CREATOR_ID,
+            </if>
+            <if test="delFlag != null">
+                DEL_FLAG,
+            </if>
+            <if test="wholePath != null">
+                WHOLE_PATH,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="groupId != null">
+                #{groupId,jdbcType=DECIMAL},
+            </if>
+            <if test="groupCode != null">
+                #{groupCode,jdbcType=VARCHAR},
+            </if>
+            <if test="groupName != null">
+                #{groupName,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="parentGroupId != null">
+                #{parentGroupId,jdbcType=DECIMAL},
+            </if>
+            <if test="tenantId != null">
+                #{tenantId,jdbcType=DECIMAL},
+            </if>
+            sysdate,
+            <if test="changeDate != null">
+                #{changeDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=DECIMAL},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=DECIMAL},
+            </if>
+            <if test="wholePath != null">
+                #{wholePath,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countBySelective"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysGroupReqBo"
+            resultType="java.lang.Integer">
+        select count(*) from SYS_GROUP
+        <include refid="Where_Clause"/>
+    </select>
+    <select id="groupCount"
+            resultType="java.lang.Integer">
+        select count(*) from SYS_GROUP
+        where del_flag = 0
+        and exists(select * from sys_tenant tenant where tenant.id = tenant_id and tenant.del_flag = 0 and tenant.id not in (-1,0))
+    </select>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysGroup">
+        update SYS_GROUP
+        <set>
+            <if test="groupCode != null">
+                GROUP_CODE = #{groupCode,jdbcType=VARCHAR},
+            </if>
+            <if test="groupName != null">
+                GROUP_NAME = #{groupName,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                DESCRIPTION = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="parentGroupId != null">
+                PARENT_GROUP_ID = #{parentGroupId,jdbcType=DECIMAL},
+            </if>
+            <if test="tenantId != null">
+                TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+            </if>
+            <if test="createDate != null">
+                CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="changeDate != null">
+                CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creatorId != null">
+                CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+            </if>
+            <if test="delFlag != null">
+                DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+            </if>
+            <if test="wholePath != null">
+                WHOLE_PATH = #{wholePath,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where GROUP_ID = #{groupId,jdbcType=DECIMAL} and del_flag = 0
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysGroup">
+    update SYS_GROUP
+    set GROUP_CODE = #{groupCode,jdbcType=VARCHAR},
+      GROUP_NAME = #{groupName,jdbcType=VARCHAR},
+      DESCRIPTION = #{description,jdbcType=VARCHAR},
+      PARENT_GROUP_ID = #{parentGroupId,jdbcType=DECIMAL},
+      TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+      WHOLE_PATH = #{wholePath,jdbcType=VARCHAR}
+    where GROUP_ID = #{groupId,jdbcType=DECIMAL} and del_flag = 0
+  </update>
+
+    <select id="findBaseAll" resultMap="BaseResultMap">
+    select GROUP_ID, GROUP_NAME
+    from SYS_GROUP ORDER BY GROUP_ID
+  </select>
+
+    <select id="getCategorysByGroup"
+            resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysGroupForCategoryRespBo">
+  	  select t.sys_category_id categoryId, t.sys_category_name categoryName, t.sys_category_pid categoryPId, t2.sys_category_name categoryPName,
+         t.create_date createDate
+      from sys_category t
+	  left join sys_category t2 on t.sys_category_pid = t2.sys_category_id
+	  where t.group_id = #{groupId,jdbcType=DECIMAL}
+	  and t.del_flag = 0
+  </select>
+
+    <select id="getSubGroupById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from SYS_GROUP x
+        start with parent_group_id= #{id,jdbcType=DECIMAL}
+        connect by prior group_id= parent_group_id
+    </select>
+
+    <select id="selectByUserId"
+            resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysGroupForMemberRespBO"
+            parameterType="java.lang.Long">
+        select
+        distinct
+        t1.GROUP_ID groupId,t1.GROUP_NAME groupName,t1.DESCRIPTION description,t2.USER_ID userId, t2.IS_ADMIN
+        isGroupAdmin, t3.TENANT_NAME tenantName
+        from SYS_GROUP_USER t2
+        left join SYS_GROUP t1 on t1.GROUP_ID = t2.GROUP_ID
+        left join SYS_TENANT t3 on t2.TENANT_ID = t3.ID
+        where 1 = 1 and t1.DEL_FLAG = 0 and t3.DEL_FLAG = 0
+        <if test="userId != null">
+            and t2.USER_ID = #{userId}
+        </if>
+    </select>
+
+    <select id="selectOtherByUserId"
+            resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysGroupForMemberRespBO">
+        select
+        distinct
+        t1.GROUP_ID groupId,t1.GROUP_NAME groupName,t1.DESCRIPTION description
+        from SYS_GROUP t1
+        where 1 = 1
+        <if test="userId != null">
+            and t1.GROUP_ID not in (select t2.GROUP_ID from SYS_GROUP_USER t2 where t2.USER_ID = #{userId} and
+            t2.DEL_FLAG = 0)
+        </if>
+        <if test="groupName != null">
+            <bind name="groupName" value="'%'+groupName+'%'"/>
+            and t1.GROUP_NAME like #{groupName}
+        </if>
+    </select>
+
+    <select id="selectRoleByParams"
+            resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysGroupRoleBO">
+        SELECT DISTINCT
+        t2.GROUP_ROLE_ID roleId,
+        t2.GROUP_ROLE_NAME roleName
+        FROM
+        SYS_USER_GROUP_ROLE t1
+        JOIN SYS_GROUP_ROLE t2 ON t1.GROUP_ROLE_ID = t2.GROUP_ROLE_ID
+        WHERE
+        t1.DEL_FLAG = 0
+        AND t2.DEL_FLAG = 0
+        <if test="userId != null">
+            AND t1.USER_ID = #{userId}
+        </if>
+        <if test="groupId != null">
+            AND t2.GROUP_ID = #{groupId}
+        </if>
+    </select>
+
+    <delete id="deleteByUserId" parameterType="java.lang.Long">
+      delete from SYS_GROUP_USER
+      where USER_ID = #{userId}
+    </delete>
+
+    <select id="selectAll"
+            resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysGroupForMemberRespBO">
+        select
+        distinct
+        t1.GROUP_ID groupId,t1.PARENT_GROUP_ID parentGroupId,t1.GROUP_NAME groupName,t1.DESCRIPTION description
+        from SYS_GROUP t1
+        where 1=1
+        <if test="tenantId != null">
+            and t1.tenant_id = #{tenantId}
+        </if>
+        and t1.del_flag = 0
+        order by t1.PARENT_GROUP_ID,t1.GROUP_ID
+
+    </select>
+
+    <select id="selectGroupId"
+            resultType="java.lang.Long">
+        select
+        distinct
+        t1.GROUP_ID groupId
+        from SYS_GROUP t1 join SYS_GROUP_USER t2 on t1.GROUP_ID = t2.GROUP_ID
+        where 1 = 1
+        <if test="userId != null">
+            and t2.USER_ID = #{userId}
+        </if>
+        <if test="tenantId != null">
+            and t2.TENANT_ID = #{tenantId}
+        </if>
+    </select>
+
+    <update id="updateRole" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysUserGroupRole">
+        update SYS_GROUP
+        set GROUP_NAME = #{groupName,jdbcType=VARCHAR},
+          DESCRIPTION = #{description,jdbcType=VARCHAR},
+          PARENT_GROUP_ID = #{parentGroupId,jdbcType=DECIMAL},
+          TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+          CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+          CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+          CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+          DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+          WHOLE_PATH = #{wholePath,jdbcType=VARCHAR}
+        where GROUP_ID = #{groupId,jdbcType=DECIMAL} and del_flag = 0
+    </update>
+
+    <select id="getSysGroupTree" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.BaseTreeDo"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysGroup">
+        select  to_char(GROUP_ID) as ID, GROUP_NAME as NAME, to_char(PARENT_GROUP_ID) AS PARENTID
+        from SYS_GROUP
+        where DEL_FLAG = 0 and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+        start with GROUP_ID = #{groupId,jdbcType=DECIMAL}
+        connect by prior GROUP_ID=PARENT_GROUP_ID
+    </select>
+
+    <select id="listSubSysGroup" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.BaseTreeDo"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysGroup">
+        select  to_char(GROUP_ID) as ID, GROUP_NAME as NAME, to_char(PARENT_GROUP_ID) AS PARENTID
+        from SYS_GROUP
+        where DEL_FLAG = 0 and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+        start with PARENT_GROUP_ID = #{groupId,jdbcType=DECIMAL}
+            connect by prior GROUP_ID=PARENT_GROUP_ID
+    </select>
+    <select id="selectGroupByGroupIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from SYS_GROUP x
+        <where>
+            <if test="list != null">
+                and GROUP_ID in
+                <foreach collection="list" item="groupId" open="(" close=")" separator=",">
+                    #{groupId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="selectGroupRespBoByGroupIds" resultMap="BoResultMap"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysGroupReqBo">
+        select
+        distinct
+        (SELECT U.USERNAME FROM SYS_USER U WHERE U.USER_ID = x.CREATOR_ID) CREATOR_NAME,
+        <include refid="Base_Column_List"/>
+        from SYS_GROUP x
+        where x.DEL_FLAG = 0
+        <if test="groupIds != null and groupIds.size > 0">
+            and GROUP_ID in
+            <foreach collection="groupIds" item="groupId" open="(" close=")" separator=",">
+                #{groupId}
+            </foreach>
+        </if>
+        order by whole_path
+    </select>
+    <select id="getParentGroupById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from SYS_GROUP x
+        where group_id != #{id,jdbcType=DECIMAL}
+        start with group_id = #{id,jdbcType=DECIMAL}
+        connect by prior parent_group_id = group_id
+    </select>
+
+    <select id="findAllTenantGroup" resultMap="BaseResultMap">
+        select a.GROUP_ID as GROUP_ID, b.TENANT_NAME || '_' || a.GROUP_NAME as GROUP_NAME
+        from SYS_GROUP a
+        LEFT JOIN SYS_TENANT b ON b.ID = a.TENANT_ID
+        WHERE b.ID is not null
+        ORDER BY a.TENANT_ID
+    </select>
+
+    <select id="getCurLevel" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select count(1)
+        from SYS_GROUP
+        where DEL_FLAG = 0
+        start with GROUP_ID = #{id,jdbcType=DECIMAL}
+        connect by prior PARENT_GROUP_ID = GROUP_ID
+    </select>
+
+    <select id="selectByUserIdAndTenantId"
+            resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysGroupForMemberRespBO">
+        select
+        distinct
+        t1.GROUP_ID groupId,t1.GROUP_NAME groupName,t1.DESCRIPTION description,t2.USER_ID userId, t2.IS_ADMIN isGroupAdmin, t3.TENANT_NAME tenantName
+        from SYS_GROUP_USER t2
+        left join SYS_GROUP t1 on t1.GROUP_ID = t2.GROUP_ID
+        left join SYS_TENANT t3 on t2.TENANT_ID = t3.ID
+        where 1 = 1 and t1.DEL_FLAG = 0 and t3.DEL_FLAG = 0 and t2.DEL_FLAG = 0
+        <if test="userId != null">
+            and t2.USER_ID = #{userId}
+        </if>
+        <if test="tenantId != null">
+            and t3.ID = #{tenantId}
+        </if>
+    </select>
+
+</mapper>

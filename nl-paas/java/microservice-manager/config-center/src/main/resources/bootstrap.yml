@@ -1,0 +1,37 @@
+server:
+  port: 8888
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: config-center
+  cloud:
+    config:
+      server:
+        default-label: master
+        jdbc:
+          sql: SELECT CONFIG_KEY, NVL(CONFIG_VALUE, ' ') as CONFIG_VALUE from CONFIG_PROPERTIES where APPLICATION=? and PROFILE=? and LABEL=?
+
+eureka:
+  instance:
+    # 续约更新时间间隔（默认30秒）
+    lease-renewal-interval-in-seconds: ${LEASE_RENEWAL_INTERVAL_IN_SECONDS:30}
+    # 续约到期时间（默认90秒）
+    lease-expiration-duration-in-seconds: ${LEASE_EXPIRATION_DURATION_IN_SECONDS:90}
+  client:
+    # 客户端从Eureka Server集群里更新Eureka Server信息的频率（默认300秒）
+    eureka-service-url-poll-interval-seconds: ${EUREKA_SERVICE_URL_POLL_INTERVAL_SECONDS:300}
+    # 定义从注册中心获取实例注册服务的信息（默认30秒）
+    registry-fetch-interval-seconds: ${REGISTRY_FETCH_INTERVAL_SECONDS:30}
+
+management:
+  security:
+    enabled: false
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  config: classpath:mybatis-config.xml
+
+pagehelper:
+  helper-dialect: oracle

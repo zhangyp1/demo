@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysRole" >
+    <id column="ROLE_ID" property="roleId" jdbcType="DECIMAL" />
+    <result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+    <result column="ROLE_TYPE" property="roleType" jdbcType="DECIMAL" />
+    <result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+    <result column="PARENT_ROLE_ID" property="parentRoleId" jdbcType="DECIMAL" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="And_Del_Flag_0" >
+      and DEL_FLAG = 0
+  </sql>
+  <sql id="Where_Clause" >
+    <where >
+      <include refid="And_Del_Flag_0" />
+      <if test="roleId != null" >
+        and ROLE_ID = #{roleId,jdbcType=DECIMAL}
+      </if>
+      <if test="roleName != null" >
+         and ROLE_NAME = #{roleName,jdbcType=VARCHAR}
+      </if>
+      <if test="roleType != null" >
+         and ROLE_TYPE = #{roleType,jdbcType=DECIMAL}
+      </if>
+      <if test="description != null" >
+         and DESCRIPTION = #{description,jdbcType=VARCHAR}
+      </if>
+      <if test="parentRoleId != null" >
+        and PARENT_ROLE_ID = #{parentRoleId,jdbcType=DECIMAL}
+      </if>
+      <if test="tenantId != null" >
+         and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+      <if test="createDate != null" >
+         and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+         and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+         and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+      <if test="delFlag != null" >
+         and DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ROLE_ID, ROLE_NAME, ROLE_TYPE, DESCRIPTION, PARENT_ROLE_ID, TENANT_ID, CREATE_DATE, CHANGE_DATE,
+    CREATOR_ID, DEL_FLAG
+  </sql>
+  <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysRole" >
+    select
+    distinct
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from SYS_ROLE
+    <include refid="Where_Clause" />
+  </select>
+  <select id="selectForTenant" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysRole" >
+    select
+    <include refid="Base_Column_List" />
+    from SYS_ROLE
+    <where >
+      <include refid="And_Del_Flag_0" />
+      <if test="roleName != null and roleName != ''"  >
+        and ROLE_NAME like '%'||#{roleName,jdbcType=VARCHAR}||'%'
+      </if>
+      <if test="roleType != null" >
+        and ROLE_TYPE = #{roleType,jdbcType=DECIMAL}
+      </if>
+      <if test="description != null" >
+        and DESCRIPTION = #{description,jdbcType=VARCHAR}
+      </if>
+      <if test="parentRoleId != null" >
+        and PARENT_ROLE_ID = #{parentRoleId,jdbcType=DECIMAL}
+      </if>
+      <if test="tenantId != null" >
+        and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+      <if test="createDate != null" >
+        and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+        and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+        and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+      <if test="delFlag != null" >
+        and DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </select>
+  <select id="selectForAdmin" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysRole" >
+    select
+    <include refid="Base_Column_List" />
+    from SYS_ROLE
+    <where >
+      and ROLE_TYPE != 2
+      <include refid="And_Del_Flag_0" />
+      <if test="roleName != null and roleName != ''"  >
+        and ROLE_NAME like '%'||#{roleName,jdbcType=VARCHAR}||'%'
+      </if>
+      <if test="roleType != null" >
+        and ROLE_TYPE = #{roleType,jdbcType=DECIMAL}
+      </if>
+      <if test="description != null" >
+        and DESCRIPTION = #{description,jdbcType=VARCHAR}
+      </if>
+      <if test="parentRoleId != null" >
+        and PARENT_ROLE_ID = #{parentRoleId,jdbcType=DECIMAL}
+      </if>
+      <if test="tenantId != null" >
+        and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+      <if test="createDate != null" >
+        and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+        and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+        and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+      <if test="delFlag != null" >
+        and DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </select>
+  <select id="selectByRoleIds" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from SYS_ROLE
+    where DEL_FLAG = 0
+    <if test="null != roleIds and 0 != roleIds.size()">
+      and ROLE_ID in
+      <foreach collection="roleIds" open=" (" close=") " separator=", " index="index" item="item">
+        #{item,jdbcType=DECIMAL}
+      </foreach>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from SYS_ROLE
+    where ROLE_ID = #{roleId,jdbcType=DECIMAL}
+    <include refid="And_Del_Flag_0" />
+  </select>
+  <select id="selectByMenuOperId" resultMap="BaseResultMap" >
+    select t1.ROLE_ID, t1.ROLE_NAME, t1.ROLE_TYPE, t1.DESCRIPTION, t1.PARENT_ROLE_ID,
+      t1.TENANT_ID, t1.CREATE_DATE, t1.CHANGE_DATE, t1.CREATOR_ID, t1.DEL_FLAG
+    from SYS_ROLE t1 inner join SYS_MENU_OPER_ROLE t2
+    on t1.ROLE_ID = t2.ROLE_ID
+    and t1.TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+    and t2.MENU_OPER_ID = #{menuOperId,jdbcType=DECIMAL}
+    and t1.ROLE_TYPE = 2
+    and t1.DEL_FLAG = 0 and t2.DEL_FLAG = 0
+  </select>
+  <select id="selectByMenuOperCode" resultMap="BaseResultMap" >
+    select t1.ROLE_ID, t1.ROLE_NAME, t1.ROLE_TYPE, t1.DESCRIPTION, t1.PARENT_ROLE_ID,
+      t1.TENANT_ID, t1.CREATE_DATE, t1.CHANGE_DATE, t1.CREATOR_ID, t1.DEL_FLAG
+    from SYS_ROLE t1 inner join SYS_MENU_OPER_ROLE t2 on t1.ROLE_ID = t2.ROLE_ID
+    inner join SYS_MENU_OPER t3 on t2.MENU_OPER_ID = t3.ID
+    and t1.TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+    and t3.CODE = #{menuOperCode,jdbcType=VARCHAR}
+    and t1.ROLE_TYPE = 2
+    and t1.DEL_FLAG = 0 and t2.DEL_FLAG = 0 and t3.DEL_FLAG = 0
+  </select>
+  <select id = "listSysRoleByUserId" resultMap="BaseResultMap">
+    select distinct r.ROLE_ID, r.ROLE_NAME, r.ROLE_TYPE, r.DESCRIPTION, r.PARENT_ROLE_ID,
+      r.TENANT_ID, r.CREATE_DATE, r.CHANGE_DATE, r.CREATOR_ID, r.DEL_FLAG
+    from SYS_ROLE_USER l, SYS_ROLE r
+    where l.ROLE_ID = r.ROLE_ID and l.USER_ID = #{userId,jdbcType=DECIMAL}
+    and r.ROLE_TYPE != 2
+    and l.DEL_FLAG = 0 and r.DEL_FLAG = 0
+  </select>
+  <select id = "listSysRole" resultMap="BaseResultMap">
+    select distinct r.ROLE_ID, r.ROLE_NAME, r.ROLE_TYPE, r.DESCRIPTION, r.PARENT_ROLE_ID,
+      r.TENANT_ID, r.CREATE_DATE, r.CHANGE_DATE, r.CREATOR_ID, r.DEL_FLAG
+    from SYS_ROLE_USER l, SYS_ROLE r
+    where l.ROLE_ID = r.ROLE_ID
+    and l.TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+    and l.USER_ID = #{userId,jdbcType=DECIMAL}
+    and r.ROLE_TYPE != 2
+    and l.DEL_FLAG = 0 and r.DEL_FLAG = 0
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    update SYS_ROLE
+    set DEL_FLAG = 1
+    where ROLE_ID = #{roleId,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysRole" >
+    update SYS_ROLE
+    set DEL_FLAG = 1
+    <include refid="Where_Clause" />
+  </delete>
+  <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysRole" >
+    <selectKey keyProperty="roleId" order="BEFORE" resultType="java.lang.Long">
+      select SEQ_SYS_ROLE.nextval as roleId from sys.dual
+    </selectKey>
+    insert into SYS_ROLE (ROLE_ID, ROLE_NAME, ROLE_TYPE,
+      DESCRIPTION, PARENT_ROLE_ID, TENANT_ID, CREATE_DATE,
+      CHANGE_DATE, CREATOR_ID, DEL_FLAG
+      )
+    values (#{roleId,jdbcType=DECIMAL}, #{roleName,jdbcType=VARCHAR}, #{roleType,jdbcType=DECIMAL}, 
+      #{description,jdbcType=VARCHAR}, #{parentRoleId,jdbcType=DECIMAL}, #{tenantId,jdbcType=DECIMAL}, #{createDate,jdbcType=TIMESTAMP},
+      #{changeDate,jdbcType=TIMESTAMP}, #{creatorId,jdbcType=DECIMAL}, #{delFlag,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysRole" >
+    <selectKey keyProperty="roleId" order="BEFORE" resultType="java.lang.Long">
+      select SEQ_SYS_ROLE.nextval as roleId from sys.dual
+    </selectKey>
+    insert into SYS_ROLE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roleId != null" >
+        ROLE_ID,
+      </if>
+      <if test="roleName != null" >
+        ROLE_NAME,
+      </if>
+      <if test="roleType != null" >
+        ROLE_TYPE,
+      </if>
+      <if test="description != null" >
+        DESCRIPTION,
+      </if>
+      <if test="parentRoleId != null" >
+        PARENT_ROLE_ID,
+      </if>
+      <if test="tenantId != null" >
+        TENANT_ID,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE,
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="roleId != null" >
+        #{roleId,jdbcType=DECIMAL},
+      </if>
+      <if test="roleName != null" >
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleType != null" >
+        #{roleType,jdbcType=DECIMAL},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="parentRoleId != null" >
+        #{parentRoleId,jdbcType=DECIMAL},
+      </if>
+      <if test="tenantId != null" >
+        #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysRole" resultType="java.lang.Integer" >
+    select count(*) from SYS_ROLE
+    <include refid="Where_Clause" />
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysRole" >
+    update SYS_ROLE
+    <set >
+      <if test="roleName != null" >
+        ROLE_NAME = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleType != null" >
+        ROLE_TYPE = #{roleType,jdbcType=DECIMAL},
+      </if>
+      <if test="description != null" >
+        DESCRIPTION = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="parentRoleId != null" >
+        PARENT_ROLE_ID = #{parentRoleId,jdbcType=DECIMAL},
+      </if>
+      <if test="tenantId != null" >
+        TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ROLE_ID = #{roleId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysRole" >
+    update SYS_ROLE
+    set ROLE_NAME = #{roleName,jdbcType=VARCHAR},
+      ROLE_TYPE = #{roleType,jdbcType=DECIMAL},
+      DESCRIPTION = #{description,jdbcType=VARCHAR},
+      PARENT_ROLE_ID = #{parentRoleId,jdbcType=DECIMAL},
+      TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+    where ROLE_ID = #{roleId,jdbcType=DECIMAL}
+  </update>
+  <select id="listRoleIdOfHasChild" resultType="java.lang.Long">
+    select distinct t.PARENT_ROLE_ID
+    from SYS_ROLE t
+    where t.PARENT_ROLE_ID is not NULL
+    and t.DEL_FLAG = 0
+  </select>
+</mapper>

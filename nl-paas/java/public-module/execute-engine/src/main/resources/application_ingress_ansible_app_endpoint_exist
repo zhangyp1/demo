@@ -1,0 +1,6 @@
+---
+    - hosts: k8s_master_float
+      tasks:
+
+          - name: echo load balance value
+            debug: msg="APP_ENDPOINT_EXISTS = {{APP_ENDPOINT_EXISTS}}"

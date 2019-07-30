@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.newland.paas</groupId>
+		<artifactId>paas-all</artifactId>
+		<version>1.1.0-SNAPSHOT</version>
+	</parent>
+	<groupId>com.newland.paas.paasdatamodule</groupId>
+	<artifactId>paas-data-module</artifactId>
+	<packaging>pom</packaging>
+
+	<!-- 子模块 -->
+	<modules>
+		<module>data-common-module</module>
+		<module>appmgr-data-module</module>
+		<module>astmgr-data-module</module>
+		<module>clumgr-data-module</module>
+		<module>resmgr-data-module</module>
+		<module>svrmgr-data-module</module>
+		<module>sysmgr-data-module</module>
+		<module>activiti-flow-data-module</module>
+		<module>execengn-data-module</module>
+		<module>config-center-data-module</module>
+        <module>framework-data-module</module>
+        <module>scpmgr-data-module</module>
+		<module>jobmgr-data-module</module>
+		<module>harbormgr-data-module</module>
+	</modules>
+</project>

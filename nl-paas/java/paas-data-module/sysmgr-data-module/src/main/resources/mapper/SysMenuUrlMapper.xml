@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysMenuUrlMapper" >
+  <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysMenuUrl" >
+    <result column="MENU_URL_ID" property="menuUrlId" jdbcType="DECIMAL" />
+    <result column="MENU_ID" property="menuId" jdbcType="DECIMAL" />
+    <result column="URL_ID" property="urlId" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CREATE_ID" property="createId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Where_Clause" >
+    <where >
+      <if test="menuUrlId != null" >
+         and MENU_URL_ID = #{menuUrlId,jdbcType=DECIMAL}
+      </if>
+      <if test="menuId != null" >
+         and MENU_ID = #{menuId,jdbcType=DECIMAL}
+      </if>
+      <if test="urlId != null" >
+         and URL_ID = #{urlId,jdbcType=VARCHAR}
+      </if>
+      <if test="createDate != null" >
+         and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+         and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="createId != null" >
+         and CREATE_ID = #{createId,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    MENU_URL_ID, MENU_ID, URL_ID, CREATE_DATE, CHANGE_DATE, CREATE_ID
+  </sql>
+  <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysMenuUrl" >
+    select
+    distinct
+    <include refid="Base_Column_List" />
+    from SYS_MENU_URL
+    <include refid="Where_Clause" />
+  </select>
+  <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysMenuUrl" >
+    delete from SYS_MENU_URL
+    <include refid="Where_Clause" />
+  </delete>
+  <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysMenuUrl" >
+    <selectKey keyProperty="menuUrlId" order="BEFORE" resultType="java.lang.Long">
+      select SEQ_SYS_MENU_OPER_ROLE.nextval as menuUrlId from sys.dual
+    </selectKey>
+    insert into SYS_MENU_URL (MENU_URL_ID, MENU_ID, URL_ID, 
+      CREATE_DATE, CHANGE_DATE, CREATE_ID
+      )
+    values (#{menuUrlId,jdbcType=DECIMAL}, #{menuId,jdbcType=DECIMAL}, #{urlId,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{changeDate,jdbcType=TIMESTAMP}, #{createId,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysMenuUrl" >
+    <selectKey keyProperty="menuUrlId" order="BEFORE" resultType="java.lang.Long">
+      select SEQ_SYS_MENU_OPER_ROLE.nextval as menuUrlId from sys.dual
+    </selectKey>
+    insert into SYS_MENU_URL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="menuUrlId != null" >
+        MENU_URL_ID,
+      </if>
+      <if test="menuId != null" >
+        MENU_ID,
+      </if>
+      <if test="urlId != null" >
+        URL_ID,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE,
+      </if>
+      <if test="createId != null" >
+        CREATE_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="menuUrlId != null" >
+        #{menuUrlId,jdbcType=DECIMAL},
+      </if>
+      <if test="menuId != null" >
+        #{menuId,jdbcType=DECIMAL},
+      </if>
+      <if test="urlId != null" >
+        #{urlId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysMenuUrl" resultType="java.lang.Integer" >
+    select count(*) from SYS_MENU_URL
+    <include refid="Where_Clause" />
+  </select>
+
+  <select id="selectSysMenuUrlBOBySelective" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysMenuUrlBO" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysMenuUrlBO" >
+    select t1.MENU_ID as menuId, t1.URL_ID as urlId, t2.SERVICE_ID as serviceId, t2.METHOD as method, t2.URI as uri, t2.CLASS_METHOD as classMethod
+    from SYS_MENU_URL t1
+    LEFT JOIN SYS_INTERFACE_URL t2 ON t1.URL_ID = t2.URL_ID
+      <where >
+          <if test="menuId != null" >
+              and t1.MENU_ID = #{menuId,jdbcType=DECIMAL}
+          </if>
+          <if test="urlId != null" >
+              and t1.URL_ID = #{urlId,jdbcType=VARCHAR}
+          </if>
+          <if test="serviceId != null" >
+              and t2.SERVICE_ID = #{serviceId,jdbcType=VARCHAR}
+          </if>
+          <if test="uri != null" >
+              and t2.URI = #{uri,jdbcType=VARCHAR}
+          </if>
+          <if test="classMethod != null" >
+              and t2.CLASS_METHOD = #{classMethod,jdbcType=VARCHAR}
+          </if>
+      </where>
+  </select>
+
+  <select id="selectSysMenuUrlBOByMenuIds" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysMenuUrlBO">
+    select t1.MENU_ID as menuId, t1.URL_ID as urlId, t2.SERVICE_ID as serviceId, t2.METHOD as method, t2.URI as uri, t2.CLASS_METHOD as classMethod
+    from SYS_MENU_URL t1
+    LEFT JOIN SYS_INTERFACE_URL t2 ON t1.URL_ID = t2.URL_ID
+    where t1.MENU_ID in
+    <foreach collection="menuIds" index="index" item="menuId" open="(" separator="," close=")">
+      #{menuId}
+    </foreach>
+  </select>
+
+</mapper>

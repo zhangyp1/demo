@@ -1,0 +1,23 @@
+          stage('{{stage_prefix}} etcd_k8s') {
+              steps {    
+ sh '''if [ ! -d ${WORKSPACE} ]; then
+                    mkdir ${WORKSPACE}
+                fi'''
+                
+sh '''/usr/bin/sshpass -p {{ast_sshd_password}} scp {{ast_sshd_user}}@{{tenant_harbor_path}}/k8s_start_stop.tar.gz .;tar -zxvf k8s_start_stop.tar.gz --strip-components 1                '''
+                
+sh '''echo \'[k8s_master]
+{{k8s_master_each_line_data}}
+
+[k8s_worker]
+{{k8s_worker_each_line_data}}
+
+[etcd]
+{{etcd_each_line_data}}
+
+\' &gt; hosts'''
+                
+                
+                ansiblePlaybook installation: '{{ansible_alias}}', inventory: 'hosts', playbook: '{{deploy_yaml_file}}'
+              }
+          }                     

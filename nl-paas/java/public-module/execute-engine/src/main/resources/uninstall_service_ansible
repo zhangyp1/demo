@@ -1,0 +1,7 @@
+---
+    - hosts: k8s_master_float
+      tasks:
+
+       - name: delete service
+         shell: "/usr/local/bin/kubectl -n {{NAME_SPACE}} delete services {{POD_NAME}}"
+         ignore_errors: True

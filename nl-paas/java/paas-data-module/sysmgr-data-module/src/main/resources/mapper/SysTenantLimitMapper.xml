@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysTenantLimitMapper" >
+  <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantLimit" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL" />
+    <result column="QUOTA_ITEM" property="quotaItem" jdbcType="VARCHAR" />
+    <result column="QUOTA_VALUE" property="quotaValue" jdbcType="DECIMAL" />
+    <result column="QUOTA_CALC_TYPE" property="quotaCalcType" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="DECIMAL" />
+  </resultMap>
+
+  <resultMap id="BaseResultMapEx" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysTenantLimitBo"
+             extends="BaseResultMap">
+    <result column="RESLIMIT_UNIT" property="resLimitUnit" jdbcType="VARCHAR" />
+    <result column="ITEM_CHECKED" property="itemChecked" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Where_Clause" >
+    <where >
+      DEL_FLAG = 0
+      <if test="tenantId != null" >
+         and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+      <if test="quotaItem != null" >
+         and QUOTA_ITEM = #{quotaItem,jdbcType=VARCHAR}
+      </if>
+      <if test="quotaValue != null" >
+         and QUOTA_VALUE = #{quotaValue,jdbcType=DECIMAL}
+      </if>
+      <if test="quotaCalcType != null" >
+         and QUOTA_CALC_TYPE = #{quotaCalcType,jdbcType=DECIMAL}
+      </if>
+      <if test="createDate != null" >
+         and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+         and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+         and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+      <!--<if test="delFlag != null" >
+         and DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+      </if>-->
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, TENANT_ID, QUOTA_ITEM, QUOTA_VALUE, QUOTA_CALC_TYPE, CREATE_DATE, CHANGE_DATE, 
+    CREATOR_ID, DEL_FLAG
+  </sql>
+  <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantLimit" >
+    select
+    distinct
+    <include refid="Base_Column_List" />
+    from SYS_TENANT_LIMIT
+    <include refid="Where_Clause" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from SYS_TENANT_LIMIT
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from SYS_TENANT_LIMIT
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantLimit" >
+    delete from SYS_TENANT_LIMIT
+    <include refid="Where_Clause" />
+  </delete>
+  <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantLimit" >
+    insert into SYS_TENANT_LIMIT (ID, TENANT_ID, QUOTA_ITEM, 
+      QUOTA_VALUE, QUOTA_CALC_TYPE, CREATE_DATE, 
+      CHANGE_DATE, CREATOR_ID, DEL_FLAG
+      )
+    values (#{id,jdbcType=DECIMAL}, #{tenantId,jdbcType=DECIMAL}, #{quotaItem,jdbcType=VARCHAR}, 
+      #{quotaValue,jdbcType=DECIMAL}, #{quotaCalcType,jdbcType=DECIMAL}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{changeDate,jdbcType=TIMESTAMP}, #{creatorId,jdbcType=DECIMAL}, #{delFlag,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantLimit" >
+    insert into SYS_TENANT_LIMIT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="tenantId != null" >
+        TENANT_ID,
+      </if>
+      <if test="quotaItem != null" >
+        QUOTA_ITEM,
+      </if>
+      <if test="quotaValue != null" >
+        QUOTA_VALUE,
+      </if>
+      <if test="quotaCalcType != null" >
+        QUOTA_CALC_TYPE,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE,
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="tenantId != null" >
+        #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="quotaItem != null" >
+        #{quotaItem,jdbcType=VARCHAR},
+      </if>
+      <if test="quotaValue != null" >
+        #{quotaValue,jdbcType=DECIMAL},
+      </if>
+      <if test="quotaCalcType != null" >
+        #{quotaCalcType,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantLimit" resultType="java.lang.Integer" >
+    select count(*) from SYS_TENANT_LIMIT
+    <include refid="Where_Clause" />
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantLimit" >
+    update SYS_TENANT_LIMIT
+    <set >
+      <if test="tenantId != null" >
+        TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="quotaItem != null" >
+        QUOTA_ITEM = #{quotaItem,jdbcType=VARCHAR},
+      </if>
+      <if test="quotaValue != null" >
+        QUOTA_VALUE = #{quotaValue,jdbcType=DECIMAL},
+      </if>
+      <if test="quotaCalcType != null" >
+        QUOTA_CALC_TYPE = #{quotaCalcType,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantLimit" >
+    update SYS_TENANT_LIMIT
+    set TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      QUOTA_ITEM = #{quotaItem,jdbcType=VARCHAR},
+      QUOTA_VALUE = #{quotaValue,jdbcType=DECIMAL},
+      QUOTA_CALC_TYPE = #{quotaCalcType,jdbcType=DECIMAL},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+
+  <!--批量新增 -->
+  <insert id="batchInsert">
+    insert into SYS_TENANT_LIMIT (ID, TENANT_ID, QUOTA_ITEM, QUOTA_VALUE,
+    QUOTA_CALC_TYPE, CREATE_DATE, CHANGE_DATE,
+    CREATOR_ID, DEL_FLAG)
+    SELECT SEQ_SYS_TENANT_LIMIT.nextval ID, A.*
+    FROM(
+    <foreach item="item" index="index" collection="list" separator="UNION ALL">
+      SELECT
+      #{tenantId,jdbcType=DECIMAL} as TENANT_ID,
+      #{item.quotaItem,jdbcType=VARCHAR} as QUOTA_ITEM,
+      #{item.quotaValue,jdbcType=DECIMAL} as QUOTA_VALUE,
+      #{item.quotaCalcType,jdbcType=DECIMAL} as QUOTA_CALC_TYPE,
+      sysdate as CREATE_DATE,
+      sysdate as CHANGE_DATE,
+      #{item.creatorId,jdbcType=DECIMAL} as CREATOR_ID,
+      0 as DEL_FLAG
+      FROM dual
+    </foreach>
+    ) A
+  </insert>
+  <!--批量更新 -->
+  <update id="batchUpdate">
+    begin
+    update SYS_TENANT_LIMIT set DEL_FLAG = 1 where TENANT_ID = #{tenantId,jdbcType=DECIMAL};
+    Merge into SYS_TENANT_LIMIT a
+    USING
+    (
+    <foreach close="" collection="list" index="index" item="item" open="" separator="union">
+      <if test="item.id != null">
+        select  #{item.id,jdbcType=DECIMAL} as ID, #{item.quotaItem,jdbcType=VARCHAR} as QUOTA_ITEM,
+        #{item.quotaValue,jdbcType=DECIMAL} as QUOTA_VALUE, #{item.quotaCalcType,jdbcType=DECIMAL} as QUOTA_CALC_TYPE,
+        #{item.creatorId,jdbcType=DECIMAL} as CREATOR_ID  from dual
+      </if>
+      <if test="item.id == null">
+        select  null as ID, #{item.quotaItem,jdbcType=VARCHAR} as QUOTA_ITEM,
+        #{item.quotaValue,jdbcType=DECIMAL} as QUOTA_VALUE, #{item.quotaCalcType,jdbcType=DECIMAL} as QUOTA_CALC_TYPE,
+        #{item.creatorId,jdbcType=DECIMAL} as CREATOR_ID  from dual
+      </if>
+
+    </foreach>
+    ) b
+    ON
+    (
+    b.ID is not null and a.ID = b.ID
+    )
+    When matched then
+    update set
+    a.QUOTA_ITEM = b.QUOTA_ITEM,
+    a.QUOTA_VALUE = b.QUOTA_VALUE,
+    a.QUOTA_CALC_TYPE = b.QUOTA_CALC_TYPE,
+    a.CHANGE_DATE = sysdate,
+    a.CREATOR_ID = b.CREATOR_ID,
+    a.DEL_FLAG = 0
+    When not matched then
+    insert (ID, TENANT_ID, QUOTA_ITEM, QUOTA_VALUE,
+    QUOTA_CALC_TYPE, CREATE_DATE, CHANGE_DATE,
+    CREATOR_ID)
+    values (SEQ_SYS_TENANT_LIMIT.nextval,
+    #{tenantId,jdbcType=DECIMAL},
+    b.QUOTA_ITEM, b.QUOTA_VALUE, b.QUOTA_CALC_TYPE,
+    SYSDATE, SYSDATE, b.CREATOR_ID);
+    end;
+  </update>
+
+  <select id="getLimitsByTenantId" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysTenantLimitInfoVo" parameterType="java.lang.Long" >
+    SELECT
+      STORAGENUM as storageNum,
+      CPUNUM as cpuNum,
+      MEMORYNUM as memoryNum,
+      MACHINENUM as  machineNum
+    FROM
+    (
+      select
+      a.dict_code as QUOTA_ITEM, nvl(b.QUOTA_VALUE, 100) as QUOTA_VALUE
+      from
+      (select dict_code from GLB_DICT where dict_pcode='RESOURCE_LIMIT_CATEGORY') a
+      left join SYS_TENANT_LIMIT b
+      on a.dict_code = b.quota_item and b.tenant_id = #{tenantId,jdbcType=DECIMAL} and b.del_flag = 0
+    )
+    PIVOT
+    (
+        SUM(QUOTA_VALUE) FOR
+        QUOTA_ITEM IN ('storage' as STORAGENUM,'cpu' as CPUNUM,'memory' as MEMORYNUM,'machine' as MACHINENUM)
+    )
+  </select>
+
+  <select id="listLimitsByTenantId" resultMap="BaseResultMapEx" parameterType="java.lang.Long" >
+    select b.ID as ID,
+    a.dict_code as QUOTA_ITEM,
+    nvl(b.QUOTA_VALUE, case a.dict_code when   'storage' then 102400
+                            when 'cpu' then 200
+                            when 'memory' then 400
+                            when 'machine' then 100
+                            else 100
+    end) as QUOTA_VALUE,
+    nvl(b.QUOTA_CALC_TYPE, 2) as QUOTA_CALC_TYPE,
+    nvl2(b.QUOTA_VALUE, 1, 0) as ITEM_CHECKED
+    from
+    (select dict_code from GLB_DICT where dict_pcode='RESOURCE_LIMIT_CATEGORY') a
+    left join SYS_TENANT_LIMIT b
+    on a.dict_code = b.quota_item and b.tenant_id = #{tenantId,jdbcType=DECIMAL} and b.del_flag = 0
+  </select>
+  
+      <!--批量删除 -->
+  <update id="deletbatch" parameterType="java.lang.Long">
+    update SYS_TENANT_LIMIT set DEL_FLAG = 1 where TENANT_ID = #{tenantId,jdbcType=DECIMAL}  and DEL_FLAG = 0
+  </update>
+</mapper>

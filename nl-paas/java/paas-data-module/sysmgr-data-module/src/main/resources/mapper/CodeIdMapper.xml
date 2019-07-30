@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.CodeIdMapper">
+    <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.CodeId">
+        <result column="TABLE_NAME" property="tableName" jdbcType="VARCHAR"/>
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="CODE" property="code" jdbcType="VARCHAR"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="TYPE" property="type" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Where_Clause">
+        <where>
+            <if test="tableName != null and tableName != ''">
+                and TABLE_NAME = #{tableName,jdbcType=VARCHAR}
+            </if>
+            <if test="id != null and id != ''">
+                and ID = #{id,jdbcType=VARCHAR}
+            </if>
+            <if test="code != null and code != ''">
+                and CODE = #{code,jdbcType=VARCHAR}
+            </if>
+            <if test="name != null and name != ''">
+                and NAME like '%'||#{name}||'%'
+            </if>
+            <if test="type != null and type != ''">
+                and TYPE = #{type,jdbcType=VARCHAR}
+            </if>
+            <if test="tenantId != null">
+                and TENANT_ID = #{tenantId,jdbcType=INTEGER}
+            </if>
+            <if test="codeNotNull">
+                and CODE is not null
+            </if>
+        </where>
+    </sql>
+
+    <sql id="Base_Column_List">
+      TABLE_NAME, ID, CODE, NAME, TYPE
+    </sql>
+
+    <select id="selectBySelective" resultMap="BaseResultMap"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.CodeId">
+        select <include refid="Base_Column_List"/>
+        from V_CODE_ID
+        <include refid="Where_Clause"/>
+    </select>
+
+</mapper>

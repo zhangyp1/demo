@@ -1,0 +1,28 @@
+
+        stage('create workspace') {
+            steps {
+                sh '''if [ -d ${WORKSPACE} ]; then
+                    rm -rf ${WORKSPACE}
+                fi
+                mkdir ${WORKSPACE} '''
+            }
+        }
+        
+        stage('install rawk8s monitor') {
+            steps {
+                sh "/usr/bin/sshpass -p ${params.ast_sshd_password} scp ${params.ast_sshd_user}@${params.tenant_harbor_path}/prometheus_raw_host_install.tar.gz ."
+                sh "tar -zxvf prometheus_raw_host_install.tar.gz --strip-components 1"
+                sh "chmod 755 ansible_run.sh; sh ansible_run.sh --hostIp='${params.k8s_master_float_ip}'"
+            }
+        }
+        
+        stage('install rawk8s fluented') {
+             steps {
+                 sh "/usr/bin/sshpass -p ${params.ast_sshd_password} scp ${params.ast_sshd_user}@${params.tenant_harbor_path}/fluentd_physicscluster_install.tar.gz ."
+                 sh "tar -zxvf fluentd_physicscluster_install.tar.gz"
+                 sh "cd fluentd_physicscluster_install;chmod 755 ./ansible_run.sh;sh ./ansible_run.sh '${params.clusterId}'  '${params.logClusterKafkaClusterBrokerList}' '${params.k8s_master_float_ip}'  '${params.rawHostName}' "
+             }
+        }
+
+
+

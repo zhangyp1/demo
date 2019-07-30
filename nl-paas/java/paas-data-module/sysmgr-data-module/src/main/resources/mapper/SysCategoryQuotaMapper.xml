@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysCategoryQuotaMapper" >
+  <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategoryQuota" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="SYS_CATEGORY_ID" property="sysCategoryId" jdbcType="DECIMAL" />
+    <result column="CPU_QUOTA" property="cpuQuota" jdbcType="DECIMAL" />
+    <result column="MEMORY_QUOTA" property="memoryQuota" jdbcType="DECIMAL" />
+    <result column="STORAGE_QUOTA" property="storageQuota" jdbcType="DECIMAL" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Where_Clause" >
+    <where >
+      DEL_FLAG = 0
+      <if test="sysCategoryId != null" >
+         and SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL}
+      </if>
+      <if test="cpuQuota != null" >
+         and CPU_QUOTA = #{cpuQuota,jdbcType=DECIMAL}
+      </if>
+      <if test="memoryQuota != null" >
+         and MEMORY_QUOTA = #{memoryQuota,jdbcType=DECIMAL}
+      </if>
+      <if test="storageQuota != null" >
+         and STORAGE_QUOTA = #{storageQuota,jdbcType=DECIMAL}
+      </if>
+      <if test="tenantId != null" >
+         and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+      <if test="createDate != null" >
+         and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+         and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+         and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+      <if test="delFlag != null" >
+         and DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, SYS_CATEGORY_ID, CPU_QUOTA, MEMORY_QUOTA, STORAGE_QUOTA, TENANT_ID, CREATE_DATE, 
+    CHANGE_DATE, CREATOR_ID, DEL_FLAG
+  </sql>
+  <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategoryQuota" >
+    select
+    distinct
+    <include refid="Base_Column_List" />
+    from SYS_CATEGORY_QUOTA
+    <include refid="Where_Clause" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from SYS_CATEGORY_QUOTA
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from SYS_CATEGORY_QUOTA
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategoryQuota" >
+    delete from SYS_CATEGORY_QUOTA
+    <include refid="Where_Clause" />
+  </delete>
+  <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategoryQuota" >
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      select SEQ_SYS_CATEGORY_QUOTA.nextval as id from sys.dual
+    </selectKey>
+    insert into SYS_CATEGORY_QUOTA (ID, SYS_CATEGORY_ID, CPU_QUOTA, 
+      MEMORY_QUOTA, STORAGE_QUOTA, TENANT_ID, 
+      CREATE_DATE, CHANGE_DATE, CREATOR_ID,
+      DEL_FLAG)
+    values (#{id,jdbcType=DECIMAL}, #{sysCategoryId,jdbcType=DECIMAL}, #{cpuQuota,jdbcType=DECIMAL}, 
+      #{memoryQuota,jdbcType=DECIMAL}, #{storageQuota,jdbcType=DECIMAL}, #{tenantId,jdbcType=DECIMAL}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{changeDate,jdbcType=TIMESTAMP}, #{creatorId,jdbcType=DECIMAL}, 
+      #{delFlag,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategoryQuota" >
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      select SEQ_SYS_CATEGORY_QUOTA.nextval as id from sys.dual
+    </selectKey>
+    insert into SYS_CATEGORY_QUOTA
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="sysCategoryId != null" >
+        SYS_CATEGORY_ID,
+      </if>
+      <if test="cpuQuota != null" >
+        CPU_QUOTA,
+      </if>
+      <if test="memoryQuota != null" >
+        MEMORY_QUOTA,
+      </if>
+      <if test="storageQuota != null" >
+        STORAGE_QUOTA,
+      </if>
+      <if test="tenantId != null" >
+        TENANT_ID,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE,
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="sysCategoryId != null" >
+        #{sysCategoryId,jdbcType=DECIMAL},
+      </if>
+      <if test="cpuQuota != null" >
+        #{cpuQuota,jdbcType=DECIMAL},
+      </if>
+      <if test="memoryQuota != null" >
+        #{memoryQuota,jdbcType=DECIMAL},
+      </if>
+      <if test="storageQuota != null" >
+        #{storageQuota,jdbcType=DECIMAL},
+      </if>
+      <if test="tenantId != null" >
+        #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategoryQuota" resultType="java.lang.Integer" >
+    select count(*) from SYS_CATEGORY_QUOTA
+    <include refid="Where_Clause" />
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategoryQuota" >
+    update SYS_CATEGORY_QUOTA
+    <set >
+      <if test="sysCategoryId != null" >
+        SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL},
+      </if>
+      <if test="cpuQuota != null" >
+        CPU_QUOTA = #{cpuQuota,jdbcType=DECIMAL},
+      </if>
+      <if test="memoryQuota != null" >
+        MEMORY_QUOTA = #{memoryQuota,jdbcType=DECIMAL},
+      </if>
+      <if test="storageQuota != null" >
+        STORAGE_QUOTA = #{storageQuota,jdbcType=DECIMAL},
+      </if>
+      <if test="tenantId != null" >
+        TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysCategoryQuota" >
+    update SYS_CATEGORY_QUOTA
+    set SYS_CATEGORY_ID = #{sysCategoryId,jdbcType=DECIMAL},
+      CPU_QUOTA = #{cpuQuota,jdbcType=DECIMAL},
+      MEMORY_QUOTA = #{memoryQuota,jdbcType=DECIMAL},
+      STORAGE_QUOTA = #{storageQuota,jdbcType=DECIMAL},
+      TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysObjSrightMapper" >
+  <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysObjSright" >
+    <id column="OBJ_FRIGHT_ID" property="objFrightId" jdbcType="DECIMAL" />
+    <result column="OBJ_ID" property="objId" jdbcType="DECIMAL" />
+    <result column="OBJ_TYPE" property="objType" jdbcType="VARCHAR" />
+    <result column="GROUP_ID" property="groupId" jdbcType="DECIMAL" />
+    <result column="GROUP_ROLE_ID" property="groupRoleId" jdbcType="DECIMAL" />
+    <result column="CATEGORY_ID" property="categoryId" jdbcType="DECIMAL" />
+    <result column="OPERATES" property="operates" jdbcType="VARCHAR" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="And_Del_Flag_0" >
+      and DEL_FLAG = 0
+  </sql>
+  <sql id="Where_Clause" >
+    <where >
+      <include refid="And_Del_Flag_0" />
+      <if test="objId != null" >
+         and OBJ_ID = #{objId,jdbcType=DECIMAL}
+      </if>
+      <if test="objType != null" >
+         and OBJ_TYPE = #{objType,jdbcType=VARCHAR}
+      </if>
+      <if test="groupId != null" >
+         and GROUP_ID = #{groupId,jdbcType=DECIMAL}
+      </if>
+      <if test="groupRoleId != null" >
+         and GROUP_ROLE_ID = #{groupRoleId,jdbcType=DECIMAL}
+      </if>
+      <if test="categoryId != null" >
+         and CATEGORY_ID = #{categoryId,jdbcType=DECIMAL}
+      </if>
+      <if test="operates != null" >
+         and OPERATES = #{operates,jdbcType=VARCHAR}
+      </if>
+      <if test="tenantId != null" >
+         and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+      <if test="createDate != null" >
+         and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+         and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+         and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+      <if test="delFlag != null" >
+         and DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    OBJ_FRIGHT_ID, OBJ_ID, OBJ_TYPE, GROUP_ID, GROUP_ROLE_ID, CATEGORY_ID, OPERATES, 
+    TENANT_ID, CREATE_DATE, CHANGE_DATE, CREATOR_ID, DEL_FLAG
+  </sql>
+  <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysObjSright" >
+    select
+    distinct
+    <include refid="Base_Column_List" />
+    from SYS_OBJ_SRIGHT
+    <include refid="Where_Clause" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from SYS_OBJ_SRIGHT
+    where OBJ_FRIGHT_ID = #{objFrightId,jdbcType=DECIMAL}
+    <include refid="And_Del_Flag_0" />
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    update SYS_OBJ_SRIGHT
+    set DEL_FLAG = 1
+    where OBJ_FRIGHT_ID = #{objFrightId,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysObjSright" >
+    update SYS_OBJ_SRIGHT
+    set DEL_FLAG = 1
+    <include refid="Where_Clause" />
+  </delete>
+  <delete id="deleteByGroupId" parameterType="java.lang.Long" >
+    update SYS_OBJ_SRIGHT
+    set DEL_FLAG = 1
+    where GROUP_ID = #{groupId,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysObjSright" >
+    <selectKey keyProperty="objFrightId" order="BEFORE" resultType="java.lang.Long">
+      select SEQ_SYS_OBJ_SRIGHT.nextval as objFrightId from sys.dual
+    </selectKey>
+    insert into SYS_OBJ_SRIGHT (OBJ_FRIGHT_ID, OBJ_ID, OBJ_TYPE, 
+      GROUP_ID, GROUP_ROLE_ID, CATEGORY_ID, 
+      OPERATES, TENANT_ID, CREATE_DATE, 
+      CHANGE_DATE, CREATOR_ID, DEL_FLAG
+      )
+    values (#{objFrightId,jdbcType=DECIMAL}, #{objId,jdbcType=DECIMAL}, #{objType,jdbcType=VARCHAR}, 
+      #{groupId,jdbcType=DECIMAL}, #{groupRoleId,jdbcType=DECIMAL}, #{categoryId,jdbcType=DECIMAL}, 
+      #{operates,jdbcType=VARCHAR}, #{tenantId,jdbcType=DECIMAL}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{changeDate,jdbcType=TIMESTAMP}, #{creatorId,jdbcType=DECIMAL}, #{delFlag,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysObjSright" >
+    <selectKey keyProperty="objFrightId" order="BEFORE" resultType="java.lang.Long">
+      select SEQ_SYS_OBJ_SRIGHT.nextval as objFrightId from sys.dual
+    </selectKey>
+    insert into SYS_OBJ_SRIGHT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="objFrightId != null" >
+        OBJ_FRIGHT_ID,
+      </if>
+      <if test="objId != null" >
+        OBJ_ID,
+      </if>
+      <if test="objType != null" >
+        OBJ_TYPE,
+      </if>
+      <if test="groupId != null" >
+        GROUP_ID,
+      </if>
+      <if test="groupRoleId != null" >
+        GROUP_ROLE_ID,
+      </if>
+      <if test="categoryId != null" >
+        CATEGORY_ID,
+      </if>
+      <if test="operates != null" >
+        OPERATES,
+      </if>
+      <if test="tenantId != null" >
+        TENANT_ID,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE,
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="objFrightId != null" >
+        #{objFrightId,jdbcType=DECIMAL},
+      </if>
+      <if test="objId != null" >
+        #{objId,jdbcType=DECIMAL},
+      </if>
+      <if test="objType != null" >
+        #{objType,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=DECIMAL},
+      </if>
+      <if test="groupRoleId != null" >
+        #{groupRoleId,jdbcType=DECIMAL},
+      </if>
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=DECIMAL},
+      </if>
+      <if test="operates != null" >
+        #{operates,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null" >
+        #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysObjSright" resultType="java.lang.Integer" >
+    select count(*) from SYS_OBJ_SRIGHT
+    <include refid="Where_Clause" />
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysObjSright" >
+    update SYS_OBJ_SRIGHT
+    <set >
+      <if test="objId != null" >
+        OBJ_ID = #{objId,jdbcType=DECIMAL},
+      </if>
+      <if test="objType != null" >
+        OBJ_TYPE = #{objType,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null" >
+        GROUP_ID = #{groupId,jdbcType=DECIMAL},
+      </if>
+      <if test="groupRoleId != null" >
+        GROUP_ROLE_ID = #{groupRoleId,jdbcType=DECIMAL},
+      </if>
+      <if test="categoryId != null" >
+        CATEGORY_ID = #{categoryId,jdbcType=DECIMAL},
+      </if>
+      <if test="operates != null" >
+        OPERATES = #{operates,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null" >
+        TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where OBJ_FRIGHT_ID = #{objFrightId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysObjSright" >
+    update SYS_OBJ_SRIGHT
+    set OBJ_ID = #{objId,jdbcType=DECIMAL},
+      OBJ_TYPE = #{objType,jdbcType=VARCHAR},
+      GROUP_ID = #{groupId,jdbcType=DECIMAL},
+      GROUP_ROLE_ID = #{groupRoleId,jdbcType=DECIMAL},
+      CATEGORY_ID = #{categoryId,jdbcType=DECIMAL},
+      OPERATES = #{operates,jdbcType=VARCHAR},
+      TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+    where OBJ_FRIGHT_ID = #{objFrightId,jdbcType=DECIMAL}
+  </update>
+
+  <!--查询对象授权及工组信息 t1.GROUP_ID = #{groupId, jdbcType=INTEGER} and -->
+  <select id="selectGroupDetail" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysObjSrightBO">
+    select t1.OBJ_ID as objId, t1.GROUP_ID as groupId, t1.OPERATES as operates, t2.GROUP_NAME as groupName
+    from SYS_OBJ_SRIGHT t1
+    inner join SYS_GROUP t2 on t2.GROUP_ID = t1.GROUP_ID
+    where t1.OBJ_ID = #{objId, jdbcType=INTEGER}
+    <if test="groupId != null">
+      and t1.GROUP_ID = #{groupId, jdbcType=INTEGER}
+    </if>
+    and t1.DEL_FLAG = 0 and t2.DEL_FLAG = 0
+  </select>
+
+  <select id="selectObjSrightByParams" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysObjSrightBO">
+    select t1.OBJ_ID as objId, t1.GROUP_ID as groupId, t1.OPERATES as operates
+    from SYS_OBJ_SRIGHT t1
+    where t1.OBJ_ID = #{objId, jdbcType=INTEGER}
+    <if test="list != null">
+      and t1.GROUP_ID in
+      <foreach collection="list" item="groupId" open="(" close=")" separator=",">
+        #{groupId}
+      </foreach>
+    </if>
+    and t1.DEL_FLAG = 0
+  </select>
+
+</mapper>

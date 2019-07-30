@@ -1,0 +1,20 @@
+          stage('uninstall etcd') {
+              steps {   
+                sh &apos;&apos;&apos;if [ ! -d ${WORKSPACE} ]; then
+                    mkdir ${WORKSPACE}
+                fi&apos;&apos;&apos;
+
+                sh &apos;&apos;&apos;scp root@{{tenant_harbor_path}}/etcd.tar.gz .;tar -zxvf etcd.tar.gz                 &apos;&apos;&apos;
+sh &apos;&apos;&apos;echo \&apos;[etcd]
+{{etcd_each_line_data}}
+
+
+[etcd:vars]
+
+ETCD_HOME={{etcd_home}}\&apos; &gt; ${WORKSPACE}/etcd/uninstall_hosts
+&apos;&apos;&apos;
+
+
+                ansiblePlaybook installation: &apos;{{ansible_alias}}&apos;, inventory: &apos;etcd/uninstall_hosts&apos;, playbook: &apos;etcd/uninstall.yaml&apos;
+              }
+          }                

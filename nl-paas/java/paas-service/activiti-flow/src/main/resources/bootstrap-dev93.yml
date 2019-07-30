@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: activiti-flow
+  cloud:
+    config:
+      enabled: true
+      discovery:
+        enabled: true
+        service-id: CONFIG-CENTER
+      name: common,activiti-flow
+  profiles:
+    active: dev93
+
+eureka:
+  instance:
+    non-secure-port: ${server.port:8097}
+    prefer-ip-address: true
+    status-page-url-path: ${server.context-path}/info
+    health-check-url-path: ${server.context-path}/health
+  client:
+    service-url:
+      defaultZone: http://euraka-server1:8761/eureka/,http://euraka-server2:8761/eureka/,http://euraka-server3:8761/eureka/
+
+management:
+  security:
+    enabled: false

@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysTenantMapper">
+    <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenant">
+        <id column="ID" property="id" jdbcType="DECIMAL"/>
+        <result column="TENANT_NAME" property="tenantName" jdbcType="VARCHAR"/>
+        <result column="TENANT_CODE" property="tenantCode" jdbcType="VARCHAR"/>
+        <result column="TENANT_DESC" property="tenantDesc" jdbcType="VARCHAR"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL"/>
+        <result column="DEL_FLAG" property="delFlag" jdbcType="DECIMAL"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="AST_ADDRESS" property="astAddress" jdbcType="VARCHAR"/>
+        <result column="AST_USERNAME" property="astUsername" jdbcType="VARCHAR"/>
+        <result column="AST_PASSWORD" property="astPassword" jdbcType="VARCHAR"/>
+        <result column="IMAGE_PROJECT" property="imageProject" jdbcType="VARCHAR"/>
+        <result column="IMAGE_USERNAME" property="imageUsername" jdbcType="VARCHAR"/>
+        <result column="IMAGE_PASSWORD" property="imagePassword" jdbcType="VARCHAR"/>
+        <result column="SUPPLIER_STATUS" property="supplierStatus" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Where_Clause">
+        <where>
+        	and ID != -1
+            and DEL_FLAG = 0
+            <if test="tenantName != null">
+                and TENANT_NAME = #{tenantName,jdbcType=VARCHAR}
+            </if>
+            <if test="tenantCode != null">
+                and TENANT_CODE = #{tenantCode,jdbcType=VARCHAR}
+            </if>
+            <if test="tenantDesc != null">
+                and TENANT_DESC = #{tenantDesc,jdbcType=VARCHAR}
+            </if>
+            <if test="createDate != null">
+                and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="changeDate != null">
+                and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="creatorId != null">
+                and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+            </if>
+            <if test="delFlag != null">
+                and DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+            </if>
+            <if test="status != null">
+                and STATUS = #{status,jdbcType=VARCHAR}
+            </if>
+            <if test="astAddress != null">
+                and AST_ADDRESS = #{astAddress,jdbcType=VARCHAR}
+            </if>
+            <if test="astUsername != null">
+                and AST_USERNAME = #{astUsername,jdbcType=VARCHAR}
+            </if>
+            <if test="astPassword != null">
+                and AST_PASSWORD = #{astPassword,jdbcType=VARCHAR}
+            </if>
+            <if test="imageProject != null">
+                and IMAGE_PROJECT = #{imageProject,jdbcType=VARCHAR}
+            </if>
+            <if test="imageUsername != null">
+                and IMAGE_USERNAME = #{imageUsername,jdbcType=VARCHAR}
+            </if>
+            <if test="imagePassword != null">
+                and IMAGE_PASSWORD = #{imagePassword,jdbcType=VARCHAR}
+            </if>
+            <if test="supplierStatus != null">
+                and SUPPLIER_STATUS = #{supplierStatus,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    ID, TENANT_NAME, TENANT_DESC, TENANT_CODE, CREATE_DATE, CHANGE_DATE, CREATOR_ID, DEL_FLAG, STATUS,
+    AST_ADDRESS, AST_USERNAME, AST_PASSWORD, IMAGE_PROJECT, IMAGE_USERNAME, IMAGE_PASSWORD, SUPPLIER_STATUS
+  </sql>
+    <select id="selectBySelective" resultMap="BaseResultMap"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenant">
+        select
+        distinct
+        <include refid="Base_Column_List"/>
+        from SYS_TENANT
+        <include refid="Where_Clause"/>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from SYS_TENANT
+        where ID = #{id,jdbcType=DECIMAL}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from SYS_TENANT
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+    <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenant">
+        delete from SYS_TENANT
+        <include refid="Where_Clause"/>
+    </delete>
+    <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenant">
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+            select SEQ_SYS_TENANT.nextval as id from sys.dual
+        </selectKey>
+        insert into SYS_TENANT (ID, TENANT_NAME, TENANT_CODE,TENANT_DESC,
+        CREATE_DATE, CHANGE_DATE, CREATOR_ID,
+        STATUS, AST_ADDRESS,
+        AST_USERNAME, AST_PASSWORD, IMAGE_PROJECT,
+        IMAGE_USERNAME, IMAGE_PASSWORD, SUPPLIER_STATUS)
+        values (#{id,jdbcType=DECIMAL}, #{tenantName,jdbcType=VARCHAR}, #{tenantCode,jdbcType=VARCHAR},#{tenantDesc,jdbcType=VARCHAR},
+        sysdate, sysdate, #{creatorId,jdbcType=DECIMAL},
+        #{status,jdbcType=VARCHAR}, #{astAddress,jdbcType=VARCHAR},
+        #{astUsername,jdbcType=VARCHAR}, #{astPassword,jdbcType=VARCHAR}, #{imageProject,jdbcType=VARCHAR},
+        #{imageUsername,jdbcType=VARCHAR}, #{imagePassword,jdbcType=VARCHAR}, #{supplierStatus,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenant">
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+            select SEQ_SYS_TENANT.nextval as id from sys.dual
+        </selectKey>
+        insert into SYS_TENANT
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+      <if test="tenantCode != null" >
+        TENANT_CODE,
+      </if>
+            <if test="tenantName != null">
+                TENANT_NAME,
+            </if>
+            <if test="tenantDesc != null">
+                TENANT_DESC,
+            </if>
+            <if test="createDate != null">
+                CREATE_DATE,
+            </if>
+            <if test="changeDate != null">
+                CHANGE_DATE,
+            </if>
+            <if test="creatorId != null">
+                CREATOR_ID,
+            </if>
+            <if test="delFlag != null">
+                DEL_FLAG,
+            </if>
+            <if test="status != null">
+                STATUS,
+            </if>
+            <if test="astAddress != null">
+                AST_ADDRESS,
+            </if>
+            <if test="astUsername != null">
+                AST_USERNAME,
+            </if>
+            <if test="astPassword != null">
+                AST_PASSWORD,
+            </if>
+            <if test="imageProject != null">
+                IMAGE_PROJECT,
+            </if>
+            <if test="imageUsername != null">
+                IMAGE_USERNAME,
+            </if>
+            <if test="imagePassword != null">
+                IMAGE_PASSWORD,
+            </if>
+            <if test="supplierStatus != null">
+                SUPPLIER_STATUS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=DECIMAL},
+            </if>
+      <if test="tenantCode != null" >
+        #{tenantCode,jdbcType=VARCHAR},
+      </if>
+            <if test="tenantName != null">
+                #{tenantName,jdbcType=VARCHAR},
+            </if>
+            <if test="tenantDesc != null">
+                #{tenantDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="changeDate != null">
+                #{changeDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=DECIMAL},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="astAddress != null">
+                #{astAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="astUsername != null">
+                #{astUsername,jdbcType=VARCHAR},
+            </if>
+            <if test="astPassword != null">
+                #{astPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="imageProject != null">
+                #{imageProject,jdbcType=VARCHAR},
+            </if>
+            <if test="imageUsername != null">
+                #{imageUsername,jdbcType=VARCHAR},
+            </if>
+            <if test="imagePassword != null">
+                #{imagePassword,jdbcType=VARCHAR},
+            </if>
+            <if test="supplierStatus != null">
+                #{supplierStatus,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenant"
+            resultType="java.lang.Integer">
+        select count(*) from SYS_TENANT
+        <include refid="Where_Clause"/>
+    </select>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenant">
+        update SYS_TENANT
+        <set>
+      <if test="tenantCode != null" >
+        TENANT_CODE = #{tenantCode,jdbcType=VARCHAR},
+      </if>
+            <if test="tenantName != null">
+                TENANT_NAME = #{tenantName,jdbcType=VARCHAR},
+            </if>
+            <if test="tenantDesc != null">
+                TENANT_DESC = #{tenantDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="changeDate != null">
+                CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creatorId != null">
+                CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+            </if>
+            <if test="delFlag != null">
+                DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null">
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="astAddress != null">
+                AST_ADDRESS = #{astAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="astUsername != null">
+                AST_USERNAME = #{astUsername,jdbcType=VARCHAR},
+            </if>
+            <if test="astPassword != null">
+                AST_PASSWORD = #{astPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="imageProject != null">
+                IMAGE_PROJECT = #{imageProject,jdbcType=VARCHAR},
+            </if>
+            <if test="imageUsername != null">
+                IMAGE_USERNAME = #{imageUsername,jdbcType=VARCHAR},
+            </if>
+            <if test="imagePassword != null">
+                IMAGE_PASSWORD = #{imagePassword,jdbcType=VARCHAR},
+            </if>
+            <if test="supplierStatus != null">
+                SUPPLIER_STATUS = #{supplierStatus,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=DECIMAL}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenant">
+    update SYS_TENANT
+    set TENANT_CODE = #{tenantCode,jdbcType=VARCHAR},
+      TENANT_NAME = #{tenantName,jdbcType=VARCHAR},
+      TENANT_DESC = #{tenantDesc,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+      STATUS = #{status,jdbcType=VARCHAR},
+      AST_ADDRESS = #{astAddress,jdbcType=VARCHAR},
+      AST_USERNAME = #{astUsername,jdbcType=VARCHAR},
+      AST_PASSWORD = #{astPassword,jdbcType=VARCHAR},
+      IMAGE_PROJECT = #{imageProject,jdbcType=VARCHAR},
+      IMAGE_USERNAME = #{imageUsername,jdbcType=VARCHAR},
+      IMAGE_PASSWORD = #{imagePassword,jdbcType=VARCHAR},
+      SUPPLIER_STATUS = #{supplierStatus,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+
+    <select id="findBaseAll" resultMap="BaseResultMap">
+    select ID, TENANT_NAME
+    from SYS_TENANT
+    WHERE DEL_FLAG = 0
+    ORDER BY ID
+  </select>
+    <select id="countByTenantName" resultType="java.lang.Integer">
+        select count(1) from SYS_TENANT
+        where del_flag = 0
+        and tenant_name = #{tenantName,jdbcType=VARCHAR}
+        <if test="tenantId != null">
+            <![CDATA[ and id <> #{tenantId} ]]>
+        </if>
+    </select>
+
+    <select id="getSysTenantsByIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_tenant t where t.id in (
+        <foreach collection="ids" item="item" index="index" separator=",">
+            #{item}
+        </foreach>
+        )
+    </select>
+
+    <select id="selectTenantBo" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysTenantBo">
+        select tenant.id tenantId,tenant.tenant_name tenantName,tenant.tenant_code tenantCode,to_char(tenant.create_date,'yyyy-MM-dd hh24:mi:ss')
+        createDate,tenant.ast_address astAddress, tenant.image_project imageProject, tenant.status,tenant.tenant_desc description,
+        (select listagg(t2.username,',') within group(order by t2.username) from sys_tenant_member t inner join sys_user
+        t2 on t.user_id = t2.user_id
+        where t.is_admin = 1 and t.tenant_id = tenant.id and t2.del_flag = 0 and t2.status = 'enabled') tenantAdmins
+        from sys_tenant tenant
+        where tenant.del_flag = 0
+        and tenant.status = 1
+        and tenant.id != -1
+        <if test="isAllTenants == null or isAllTenants == false">
+        	and tenant.id > 100
+        </if>
+        <if test="includePlatformMgr != null and includePlatformMgr == false">
+            and tenant.id != 2
+        </if>
+        <if test="tenantName != null">
+            and tenant.tenant_name like '%'||#{tenantName,jdbcType=VARCHAR}||'%'
+        </if>
+        <if test="createDateB != null">
+            and tenant.create_date >= to_date(#{createDateB},'yyyy-MM-dd hh24:mi:ss')
+        </if>
+        <if test="createDateE != null">
+            <![CDATA[ and tenant.create_date <= to_date(#{createDateE},'yyyy-MM-dd hh24:mi:ss') ]]>
+        </if>
+        order by tenant.create_date desc,tenant.tenant_name asc
+    </select>
+
+    <select id="selectTenantBoById" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysTenantBo">
+        select tenant.id tenantId,tenant.tenant_name tenantName,tenant.tenant_code tenantCode,to_char(tenant.create_date,'yyyy-MM-dd hh24:mi:ss')
+        createDate,tenant.ast_address astAddress, tenant.image_project imageProject, tenant.status,tenant.tenant_desc description,
+        (select listagg(t2.username,',') within group(order by t2.username) from sys_tenant_member t inner join sys_user
+        t2 on t.user_id = t2.user_id
+        where t.is_admin = 1 and t.tenant_id = tenant.id and t2.del_flag = 0 and t2.status = 'enabled') tenantAdmins
+        from sys_tenant tenant
+        where tenant.id = #{tenantId}
+        and tenant.del_flag = 0
+        and tenant.status = 1
+        and tenant.id != -1
+    </select>
+
+    <select id="getSysTenantUsers" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.TenantUserBO">
+        select distinct t.id id,t2.user_id userId,t2.username userName,t2.account account,t2.dept dept,
+        t2.status status,t2.phone phone,t2.description description,t.create_date createDate, t.is_admin isAdmin, t.tenant_id tenantId
+        from sys_tenant_member t inner join sys_user t2 on t.user_id = t2.user_id
+        where 1 = 1 and t2.del_flag = 0
+        and t.status = 1 and t2.status = 'enabled' 
+        <if test="tenantId != null">
+            and t.tenant_id = #{tenantId}
+        </if>
+        <if test="isAdmin != null">
+            and t.is_admin = #{isAdmin}
+        </if>
+        <if test="userName != null">
+            and t2.username like '%'||#{userName}||'%'
+        </if>
+        order by t.create_date desc
+    </select>
+
+    <select id="getNoMemberUsers" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.TenantUserBO">
+        select distinct t2.user_id userId,t2.username userName,t2.account account,t2.dept dept,
+        t2.status status,t2.phone phone,t2.description description,t2.create_date createDate
+        from sys_user t2
+        where 1 = 1 and t2.status = 'enabled' and t2.del_flag = 0
+        and t2.user_id not in (11,12,13)
+        <if test="tenantId != null">
+            and t2.USER_ID not in (select t.USER_ID from SYS_TENANT_MEMBER t where t.TENANT_ID = #{tenantId,jdbcType=DECIMAL} and t.DEL_FLAG = 0 and t.STATUS = 1)
+        </if>
+        <if test="userNameLike != null">
+        	and t2.username like '%'||#{userNameLike,jdbcType=VARCHAR}||'%'
+        </if>
+    </select>
+    
+    <select id="getAllTenantsCanJoin" resultMap="BaseResultMap">
+         select
+        distinct
+        <include refid="Base_Column_List"/>
+        from SYS_TENANT t 
+        where
+        t.del_flag = 0
+        and t.status = 1 
+        and t.id != -1
+        and t.id not in (
+			select x.tenant_id from sys_role_user x where x.user_id = #{userId,jdbcType=DECIMAL} and x.status = 1 and x.del_flag = 0
+		)
+		order by t.tenant_name
+    </select>
+
+    <select id="getUserAddSysTenants" resultMap="BaseResultMap">
+        select
+        distinct
+        <include refid="Base_Column_List"/>
+        from SYS_TENANT t
+        where
+        t.del_flag = 0
+        and t.status = 1
+        and t.id not in (0, 1, -1)
+    </select>
+
+</mapper>

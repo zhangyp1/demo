@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysTenantMemberMapper">
+    <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantMember">
+        <id column="ID" property="id" jdbcType="DECIMAL"/>
+        <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="USER_ID" property="userId" jdbcType="DECIMAL"/>
+        <result column="IS_ADMIN" property="isAdmin" jdbcType="DECIMAL"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL"/>
+        <result column="DEL_FLAG" property="delFlag" jdbcType="DECIMAL"/>
+        <result column="WORK_TYPE" property="workType" jdbcType="VARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Where_Clause">
+        <where>
+            and DEL_FLAG = 0
+            and tenant_id in (select id from sys_tenant sys_tenant where sys_tenant.id = tenant_id and sys_tenant.del_flag = 0 and sys_tenant.id not in (-1))
+            and user_id in (select user_id from sys_user sys_user where sys_user.user_id = user_id and sys_user.del_flag =0)
+            <if test="tenantId != null">
+                and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+            </if>
+            <if test="userId != null">
+                and USER_ID = #{userId,jdbcType=DECIMAL}
+            </if>
+            <if test="isAdmin != null">
+                and IS_ADMIN = #{isAdmin,jdbcType=DECIMAL}
+            </if>
+            <if test="createDate != null">
+                and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="changeDate != null">
+                and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="creatorId != null">
+                and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+            </if>
+            <if test="delFlag != null">
+                and DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+            </if>
+            <if test="status != null">
+                and STATUS = #{status,jdbcType=VARCHAR}
+            </if>
+            <if test="workType != null">
+                and WORK_TYPE = #{workType,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    ID, TENANT_ID, USER_ID, IS_ADMIN, CREATE_DATE, CHANGE_DATE, CREATOR_ID, DEL_FLAG,STATUS,WORK_TYPE
+  </sql>
+    <select id="selectBySelective" resultMap="BaseResultMap"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantMember">
+        select
+        distinct
+        'true' as QUERYID,
+        <include refid="Base_Column_List"/>
+        from SYS_TENANT_MEMBER
+        <include refid="Where_Clause"/>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from SYS_TENANT_MEMBER
+        where ID = #{id,jdbcType=DECIMAL}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from SYS_TENANT_MEMBER
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+    <delete id="deleteBySelective"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantMember">
+        delete from SYS_TENANT_MEMBER
+        <include refid="Where_Clause"/>
+    </delete>
+    <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantMember">
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+            select SEQ_SYS_TENANT_MEMBER.nextval as id from sys.dual
+        </selectKey>
+        insert into SYS_TENANT_MEMBER (ID, TENANT_ID, USER_ID,
+        IS_ADMIN, CREATE_DATE, CHANGE_DATE,
+        CREATOR_ID, DEL_FLAG,STATUS,WORK_TYPE)
+        values (#{id,jdbcType=DECIMAL}, #{tenantId,jdbcType=DECIMAL}, #{userId,jdbcType=DECIMAL},
+        #{isAdmin,jdbcType=DECIMAL}, #{createDate,jdbcType=TIMESTAMP}, #{changeDate,jdbcType=TIMESTAMP},
+        #{creatorId,jdbcType=DECIMAL}, #{delFlag,jdbcType=DECIMAL},{status,jdbcType=VARCHAR},
+        #{workType,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantMember">
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+            select SEQ_SYS_TENANT_MEMBER.nextval as id from sys.dual
+        </selectKey>
+        insert into SYS_TENANT_MEMBER
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="tenantId != null">
+                TENANT_ID,
+            </if>
+            <if test="userId != null">
+                USER_ID,
+            </if>
+            <if test="isAdmin != null">
+                IS_ADMIN,
+            </if>
+            CREATE_DATE,
+            <if test="changeDate != null">
+                CHANGE_DATE,
+            </if>
+            <if test="creatorId != null">
+                CREATOR_ID,
+            </if>
+            <if test="delFlag != null">
+                DEL_FLAG,
+            </if>
+            <if test="status != null">
+                STATUS,
+            </if>
+            <if test="workType != null">
+                WORK_TYPE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=DECIMAL},
+            </if>
+            <if test="tenantId != null">
+                #{tenantId,jdbcType=DECIMAL},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=DECIMAL},
+            </if>
+            <if test="isAdmin != null">
+                #{isAdmin,jdbcType=DECIMAL},
+            </if>
+            sysdate,
+            <if test="changeDate != null">
+                #{changeDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=DECIMAL},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="workType != null">
+                #{workType,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantMember"
+            resultType="java.lang.Integer">
+        select count(*) from SYS_TENANT_MEMBER
+        <include refid="Where_Clause"/>
+        and user_id not in (14,15)
+    </select>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantMember">
+        update SYS_TENANT_MEMBER
+        <set>
+            <if test="tenantId != null">
+                TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+            </if>
+            <if test="userId != null">
+                USER_ID = #{userId,jdbcType=DECIMAL},
+            </if>
+            <if test="isAdmin != null">
+                IS_ADMIN = #{isAdmin,jdbcType=DECIMAL},
+            </if>
+            <if test="createDate != null">
+                CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="changeDate != null">
+                CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creatorId != null">
+                CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+            </if>
+            <if test="delFlag != null">
+                DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null">
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="workType != null">
+                WORK_TYPE = #{workType,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=DECIMAL}
+    </update>
+    <update id="updateByPrimaryKey"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysTenantMember">
+    update SYS_TENANT_MEMBER
+    set TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      USER_ID = #{userId,jdbcType=DECIMAL},
+      IS_ADMIN = #{isAdmin,jdbcType=DECIMAL},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+      STATUS = #{status,jdbcType=VARCHAR},
+      WORK_TYPE = #{workType,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+
+    <select id="getMembersByTenant" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysTenanMemberBO">
+        select t2.user_id memberId,t2.username memberName,t2.account account,
+        decode(t2.del_flag,0,1,0) status,
+        t2.phone phone,'' email,t2.dept dept,t2.description description from sys_user t2
+        where 1 = 1 and t2.status = 'enabled'
+        <if test="memberName != null">
+            and t2.username = #{memberName}
+        </if>
+        and t2.user_id in (select t.user_id from sys_tenant_member t where t.del_flag = 0 and t.tenant_id = #{tenantId})
+    </select>
+
+    <select id="listSysTenantByUserId" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysTenantRoleBo">
+         select distinct
+         r.ID as id, r.TENANT_NAME as tenantName, r.TENANT_DESC as tenantDesc, r.CREATE_DATE as createDate, r.CHANGE_DATE as changeDate, r.CREATOR_ID as creatorId,
+         r.DEL_FLAG as delFlag, r.STATUS as status, r.AST_ADDRESS as astAddress, r.AST_USERNAME as astUsername, r.AST_PASSWORD as astPassword,
+         r.IMAGE_PROJECT as imageProject, r.IMAGE_USERNAME as imageUsername, r.IMAGE_PASSWORD as imagePassword, rl.role_name as roleName
+        from sys_tenant_member l, sys_tenant r, sys_role_user ru, sys_role rl
+        where l.TENANT_ID = r.ID and l.USER_ID = #{userId,jdbcType=DECIMAL} and ru.user_id = #{userId,jdbcType=DECIMAL}
+        and ru.tenant_id = l.tenant_id and ru.role_id = rl.role_id and rl.role_type != 2
+        and l.DEL_FLAG = 0 and r.DEL_FLAG = 0 and ru.DEL_FLAG = 0 and rl.DEL_FLAG = 0
+    </select>
+
+    <select id="selectMemberById" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.TenantUserBO" parameterType="java.lang.Long">
+        select t.id id,t2.user_id userId,t2.username userName,t2.account account,t2.dept dept,
+        t2.status status,t2.phone phone,t2.description description,t3.tenant_name tenantName,
+        decode(t.is_admin,0,'否',1,'是') isAdmin,t.create_date createDate
+        from sys_tenant_member t join sys_user t2 on t.user_id = t2.user_id
+        join sys_tenant t3 on t.tenant_id = t3.id
+        where 1=1 and t.id = #{id,jdbcType=DECIMAL} and t2.status = 'enabled' 
+    </select>
+
+    <delete id="deleteByTenantId" parameterType="java.lang.Long">
+      delete from SYS_TENANT_MEMBER
+      where TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+    </delete>
+</mapper>

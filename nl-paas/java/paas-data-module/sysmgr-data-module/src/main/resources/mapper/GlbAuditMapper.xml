@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.GlbAuditMapper" >
+
+    <select id="listGlbAudit" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbAudit" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbAudit" >
+      select
+      B.AUDIT_LOG_ID auditLogId,
+      B.IP_ADDRESS ip,
+      B. PF_MODULE auditModule,
+      B.VERSION auditVersion,
+      B.AUDIT_CATEGORY auditCategory,
+      B.EXECUTIVE_DESC auditDesc,
+      B.CREATE_DATE createTime,
+
+      B.operate_account operate_account,
+      B.obeject_type object_type,
+      B.obeject_name object_name,
+      B.operate_name operate_name
+      FROM
+      (select
+      t1.AUDIT_LOG_ID ,
+      t1.IP_ADDRESS ,
+      t1. PF_MODULE ,
+      t1.VERSION ,
+      t1.AUDIT_CATEGORY ,
+      t1.EXECUTIVE_DESC ,
+      t1.CREATE_DATE ,
+
+      t2.operate_account,
+      t2.obeject_type,
+      t3.obeject_name,
+      t4.operate_name
+      FROM GLB_AUDIT_LOG t1 left join
+      (select b.AUDIT_LOG_ID,a.ATTR_VALUE as operate_account ,b.ATTR_VALUE as obeject_type
+      FROM GLB_AUDIT_LOG_ATTR a,GLB_AUDIT_LOG_ATTR b
+      where a.ATTR_KEY='operate_account' and b.ATTR_KEY='object_type'  and a.AUDIT_LOG_ID=b.AUDIT_LOG_ID ) t2
+      on t1.AUDIT_LOG_ID=t2.AUDIT_LOG_ID
+      left join
+      (select AUDIT_LOG_ID,ATTR_VALUE as obeject_name
+      FROM GLB_AUDIT_LOG_ATTR
+      where ATTR_KEY='object_name'  )t3
+      on t1.AUDIT_LOG_ID=t3.AUDIT_LOG_ID left join
+      (select AUDIT_LOG_ID,ATTR_VALUE as operate_name
+      FROM GLB_AUDIT_LOG_ATTR
+      where ATTR_KEY='operate_name'  )t4
+      on t1.AUDIT_LOG_ID=t4.AUDIT_LOG_ID  )B
+      where 1=1
+      <if test="auditModule != null and auditModule != ''">
+      and  PF_MODULE=#{auditModule}
+      </if>
+      <if test="auditVersion != null and auditVersion != ''">
+      and   VERSION=#{auditVersion}
+      </if>
+      <if test="auditCategory != null and auditCategory != ''">
+      and   AUDIT_CATEGORY=#{auditCategory}
+      </if>
+      <if test="ip != null and ip != ''">
+      and  IP_ADDRESS=#{ip}
+      </if>
+      <if test="startTime != null and startTime != ''">
+      and  CREATE_DATE >=to_date(#{startTime,jdbcType=VARCHAR},'yyyy-MM-dd HH24:MI:SS')
+      </if>
+      <if test="endTime != null and endTime != ''">
+        and  to_date(#{endTime,jdbcType=VARCHAR},'yyyy-MM-dd HH24:MI:SS')>= CREATE_DATE
+      </if>
+      <if test="object_name != null and object_name != ''">
+        and  obeject_name=#{object_name}
+      </if>
+      <if test="operate_account != null and operate_account != ''">
+      and  operate_account like '%'||#{operate_account}||'%'
+
+    </if>
+      <if test="operate_name != null and operate_name != ''">
+        and  operate_name LIKE '%'||#{operate_name}||'%'
+      </if>
+      order by AUDIT_LOG_ID desc
+    </select>
+
+    <select id="listGlbAuditObjOperate" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbAuditLogAttr" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbAuditLogAttr" >
+      select
+      AUDIT_LOG_ID auditLogId,
+      ATTR_KEY attrKey,
+      ATTR_VALUE attrValue
+      from
+      GLB_AUDIT_LOG_ATTR
+
+        <if test="auditLogId != null">
+          where   AUDIT_LOG_ID=#{auditLogId}
+        </if>
+    </select>
+
+  <insert id="saveAudit" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbAudit"
+           keyProperty="auditLogId">
+    <selectKey resultType="Long" order="BEFORE" keyProperty="auditLogId">
+      SELECT SEQ_GLB_AUDIT_LOG.NEXTVAL as auditLogId from DUAL
+    </selectKey>
+
+    insert into GLB_AUDIT_LOG (AUDIT_LOG_ID, IP_ADDRESS, PF_MODULE,
+    VERSION, AUDIT_CATEGORY, EXECUTIVE_DESC,
+    CREATE_DATE, CHANGE_DATE)
+    values (#{auditLogId,jdbcType=INTEGER}, #{ip,jdbcType=VARCHAR}, #{auditModule,jdbcType=VARCHAR},
+    #{auditVersion,jdbcType=VARCHAR}, #{auditCategory,jdbcType=VARCHAR}, #{auditDesc,jdbcType=VARCHAR},
+    #{createTime,jdbcType=TIMESTAMP}, #{changeTime,jdbcType=TIMESTAMP})
+
+  </insert>
+
+  <insert id="saveAuditAttr" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbAuditLogAttr" >
+    insert into GLB_AUDIT_LOG_ATTR (AUDIT_LOG_ATTR_ID, AUDIT_LOG_ID, ATTR_KEY,
+    ATTR_VALUE)
+    values (SEQ_GLB_AUDIT_LOG_ATTR.NEXTVAL,#{auditLogId,jdbcType=INTEGER}, #{attrKey,jdbcType=VARCHAR},
+    #{attrValue,jdbcType=TIMESTAMP})
+  </insert>
+  <select id="getUserByName" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysUser" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysUser">
+    select
+	    USER_ID userId,
+	    USERNAME username,
+	    ACCOUNT account,
+	    PASSWORD password,
+	    DEPT dept,
+	    STATUS status
+    FROM SYS_USER
+    where ACCOUNT=#{account,jdbcType=VARCHAR}
+  </select>
+</mapper>

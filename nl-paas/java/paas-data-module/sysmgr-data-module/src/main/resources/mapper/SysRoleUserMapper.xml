@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysRoleUserMapper" >
+  <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysRoleUser" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ROLE_ID" property="roleId" jdbcType="DECIMAL" />
+    <result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="SysRoleUserRespBoMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysRoleUserRespBo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ROLE_ID" property="roleId" jdbcType="DECIMAL" />
+    <result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+    <result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+    <result column="ACCOUNT" property="account" jdbcType="VARCHAR" />
+    <result column="ROLE_USER_ID" property="roleUserId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="And_Del_Flag_0" >
+      and DEL_FLAG = 0
+  </sql>
+  <sql id="Where_Clause" >
+    <where >
+      <include refid="And_Del_Flag_0" />
+      <if test="roleId != null" >
+         and ROLE_ID = #{roleId,jdbcType=DECIMAL}
+      </if>
+      <if test="userId != null" >
+         and USER_ID = #{userId,jdbcType=DECIMAL}
+      </if>
+      <if test="tenantId != null" >
+         and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+      <if test="createDate != null" >
+         and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+         and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+         and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+      <if test="status != null" >
+         and STATUS = #{status,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, ROLE_ID, USER_ID, TENANT_ID, CREATE_DATE, CHANGE_DATE, CREATOR_ID, STATUS
+  </sql>
+  <select id="selectBySelective" resultMap="SysRoleUserRespBoMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysRoleUserReqBo" >
+    select
+    distinct
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from SYS_ROLE_USER
+    <include refid="Where_Clause" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="SysRoleUserRespBoMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from SYS_ROLE_USER
+    where ID = #{id,jdbcType=DECIMAL}
+    <include refid="And_Del_Flag_0" />
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    update SYS_ROLE_USER
+    set DEL_FLAG = 1
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysRoleUserReqBo" >
+    update SYS_ROLE_USER
+    set DEL_FLAG = 1
+    <include refid="Where_Clause" />
+  </delete>
+  <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysRoleUser" >
+  	<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+        select SEQ_SYS_ROLE_USER.nextval as id from sys.dual
+    </selectKey>
+    insert into SYS_ROLE_USER (ID, ROLE_ID, USER_ID, 
+      TENANT_ID, CREATE_DATE, CHANGE_DATE, 
+      CREATOR_ID, STATUS)
+    values (#{id,jdbcType=DECIMAL}, #{roleId,jdbcType=DECIMAL}, #{userId,jdbcType=DECIMAL}, 
+      #{tenantId,jdbcType=DECIMAL}, #{createDate,jdbcType=TIMESTAMP}, #{changeDate,jdbcType=TIMESTAMP}, 
+      #{creatorId,jdbcType=DECIMAL}, #{status,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysRoleUser" >
+  	<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+        select SEQ_SYS_ROLE_USER.nextval as id from sys.dual
+    </selectKey>
+    insert into SYS_ROLE_USER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="roleId != null" >
+        ROLE_ID,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="tenantId != null" >
+        TENANT_ID,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE,
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=DECIMAL},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=DECIMAL},
+      </if>
+      <if test="tenantId != null" >
+        #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysRoleUserReqBo" resultType="java.lang.Integer" >
+    select count(*) from SYS_ROLE_USER
+    <include refid="Where_Clause" />
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysRoleUser" >
+    update SYS_ROLE_USER
+    <set >
+      <if test="roleId != null" >
+        ROLE_ID = #{roleId,jdbcType=DECIMAL},
+      </if>
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=DECIMAL},
+      </if>
+      <if test="tenantId != null" >
+        TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysRoleUser" >
+    update SYS_ROLE_USER
+    set ROLE_ID = #{roleId,jdbcType=DECIMAL},
+      USER_ID = #{userId,jdbcType=DECIMAL},
+      TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      STATUS = #{status,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+
+  <!--批量新增 -->
+  <insert id="batchInsert">
+    insert into SYS_ROLE_USER (ID, ROLE_ID, USER_ID,
+    TENANT_ID, CREATE_DATE, CHANGE_DATE,
+    CREATOR_ID, STATUS)
+    SELECT A.*
+    FROM(
+    <foreach item="item" index="index" collection="list" separator="UNION ALL">
+      SELECT
+      #{item.userId,jdbcType=DECIMAL} as ID, #{roleId,jdbcType=DECIMAL} as ROLE_ID,
+      #{item.userId,jdbcType=DECIMAL} as USER_ID, #{item.tenantId,jdbcType=DECIMAL} as TENANT_ID,
+      sysdate as CREATE_DATE, sysdate as CHANGE_DATE, #{item.creatorId,jdbcType=DECIMAL} as CREATOR_ID,
+      0 as STATUS
+      FROM dual
+    </foreach>
+    ) A
+  </insert>
+  
+  <select id="getRoleUsersByTenant" resultMap="SysRoleUserRespBoMap">
+  	select t.id role_user_id,t.user_id,u.username user_name,u.account,t.role_id,r.role_name
+  	from sys_role_user t
+	inner join sys_role r on r.role_id = t.role_id 
+	inner join sys_user u on u.user_id = t.user_id
+	where t.tenant_id = #{tenantId,jdbcType=DECIMAL}
+	and t.status = 1 and u.status = 'enabled'
+	and r.role_type = 1
+	and t.del_flag = 0 and r.del_flag = 0 and u.del_flag = 0
+  </select>
+</mapper>

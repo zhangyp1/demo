@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.MsgTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgType" >
+    <id column="MSG_TYPE_ID" property="msgTypeId" jdbcType="DECIMAL" />
+    <result column="TYPE_NAME" property="typeName" jdbcType="VARCHAR" />
+    <result column="TYPE_DESC" property="typeDesc" jdbcType="VARCHAR" />
+    <result column="MANUAL_RELEASE" property="manualRelease" jdbcType="DECIMAL" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Where_Clause" >
+    <where >
+      DEL_FLAG = 0
+      <if test="typeName != null and typeName !=''" >
+         and TYPE_NAME like '%'||#{typeName,jdbcType=VARCHAR}||'%'
+      </if>
+      <if test="typeDesc != null" >
+         and TYPE_DESC = #{typeDesc,jdbcType=VARCHAR}
+      </if>
+      <if test="manualRelease != null" >
+         and MANUAL_RELEASE = #{manualRelease,jdbcType=DECIMAL}
+      </if>
+      <if test="creatorId != null" >
+         and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+      <if test="createDate != null" >
+         and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+         and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="delFlag != null" >
+         and DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    MSG_TYPE_ID, TYPE_NAME, TYPE_DESC, MANUAL_RELEASE, CREATOR_ID, CREATE_DATE, CHANGE_DATE, 
+    DEL_FLAG
+  </sql>
+  <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgType" >
+    select
+    distinct
+    <include refid="Base_Column_List" />
+    from MSG_TYPE
+    <include refid="Where_Clause" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from MSG_TYPE
+    where MSG_TYPE_ID = #{msgTypeId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from MSG_TYPE
+    where MSG_TYPE_ID = #{msgTypeId,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgType" >
+    delete from MSG_TYPE
+    <include refid="Where_Clause" />
+  </delete>
+  <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgType" >
+    <selectKey keyProperty="msgTypeId" order="BEFORE" resultType="java.lang.Long">
+      select SEQ_MSG_TYPE.nextval as msgTypeId from sys.dual
+    </selectKey>
+    insert into MSG_TYPE (MSG_TYPE_ID, TYPE_NAME, TYPE_DESC,
+      MANUAL_RELEASE, CREATOR_ID, CREATE_DATE, 
+      CHANGE_DATE, DEL_FLAG)
+    values (#{msgTypeId,jdbcType=DECIMAL}, #{typeName,jdbcType=VARCHAR}, #{typeDesc,jdbcType=VARCHAR}, 
+      #{manualRelease,jdbcType=DECIMAL}, #{creatorId,jdbcType=DECIMAL}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{changeDate,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgType" >
+    <selectKey keyProperty="msgTypeId" order="BEFORE" resultType="java.lang.Long">
+      select SEQ_MSG_TYPE.nextval as msgTypeId from sys.dual
+    </selectKey>
+    insert into MSG_TYPE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="msgTypeId != null" >
+        MSG_TYPE_ID,
+      </if>
+      <if test="typeName != null" >
+        TYPE_NAME,
+      </if>
+      <if test="typeDesc != null" >
+        TYPE_DESC,
+      </if>
+      <if test="manualRelease != null" >
+        MANUAL_RELEASE,
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="msgTypeId != null" >
+        #{msgTypeId,jdbcType=DECIMAL},
+      </if>
+      <if test="typeName != null" >
+        #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="typeDesc != null" >
+        #{typeDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="manualRelease != null" >
+        #{manualRelease,jdbcType=DECIMAL},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgType" resultType="java.lang.Integer" >
+    select count(*) from MSG_TYPE
+    <include refid="Where_Clause" />
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgType" >
+    update MSG_TYPE
+    <set >
+      <if test="typeName != null" >
+        TYPE_NAME = #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="typeDesc != null" >
+        TYPE_DESC = #{typeDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="manualRelease != null" >
+        MANUAL_RELEASE = #{manualRelease,jdbcType=DECIMAL},
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where MSG_TYPE_ID = #{msgTypeId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgType" >
+    update MSG_TYPE
+    set TYPE_NAME = #{typeName,jdbcType=VARCHAR},
+      TYPE_DESC = #{typeDesc,jdbcType=VARCHAR},
+      MANUAL_RELEASE = #{manualRelease,jdbcType=DECIMAL},
+      CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+    where MSG_TYPE_ID = #{msgTypeId,jdbcType=DECIMAL}
+  </update>
+</mapper>

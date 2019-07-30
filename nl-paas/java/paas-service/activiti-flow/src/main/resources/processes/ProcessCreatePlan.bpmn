@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="ProcessCreatePlan" name="方案创建流程" isExecutable="true">
+    <startEvent id="startevent1" name="开始创建"></startEvent>
+    <userTask id="sendTask" name="派发" activiti:candidateGroups="${groupId}">
+      <documentation>sendTask</documentation>
+    </userTask>
+    <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="sendTask"></sequenceFlow>
+    <userTask id="appLayout" name="应用编排-${group.workItem}" activiti:candidateGroups="${group.groupId}">
+      <documentation>appLayout</documentation>
+      <extensionElements>
+        <activiti:formProperty id="workItem" name="工作项" type="string" variable="${group.workItem}"></activiti:formProperty>
+        <activiti:formProperty id="demandId" name="需求id" type="string" variable="${group.demandId}"></activiti:formProperty>
+      </extensionElements>
+      <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="${groups}" activiti:elementVariable="group">
+        <loopCardinality>${loopCount}</loopCardinality>
+      </multiInstanceLoopCharacteristics>
+    </userTask>
+    <sequenceFlow id="flow2" sourceRef="sendTask" targetRef="appLayout"></sequenceFlow>
+    <serviceTask id="createDeployProcess" name="动态创建部署子流程" activiti:class="com.newland.paas.paasservice.activitiflow.delegate.DynamicCreateDeployment">
+      <documentation>createDeployProcess</documentation>
+    </serviceTask>
+    <sequenceFlow id="flow3" sourceRef="orderLayout" targetRef="createDeployProcess"></sequenceFlow>
+    <userTask id="testAll" name="全局测试" activiti:candidateGroups="${groupId}">
+      <documentation>testAll</documentation>
+    </userTask>
+    <userTask id="confirm" name="上线完成" activiti:async="true" activiti:candidateGroups="${groupId}">
+      <documentation>confirm</documentation>
+    </userTask>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <userTask id="orderLayout" name="顺序编排" activiti:candidateGroups="${groupId}">
+      <documentation>orderLayout</documentation>
+    </userTask>
+    <sequenceFlow id="flow16" sourceRef="appLayout" targetRef="orderLayout"></sequenceFlow>
+    <userTask id="checkOutPack" name="导出上线方案包" activiti:candidateGroups="${groupId}">
+      <documentation>checkOutPack</documentation>
+    </userTask>
+    <sequenceFlow id="flow18" sourceRef="createDeployProcess" targetRef="checkOutPack"></sequenceFlow>
+    <userTask id="preImportPackage" name="预发布环境导入上线包完成" activiti:candidateGroups="${groupId}">
+      <documentation>preImportPackage</documentation>
+    </userTask>
+    <sequenceFlow id="flow23" sourceRef="testAll" targetRef="preImportPackage"></sequenceFlow>
+    <userTask id="preDevelopment" name="预发布环境部署完成" activiti:candidateGroups="${groupId}">
+      <documentation>preDevelopment</documentation>
+    </userTask>
+    <sequenceFlow id="flow24" sourceRef="preImportPackage" targetRef="preDevelopment"></sequenceFlow>
+    <userTask id="preTest" name="预发布环境测试完成" activiti:candidateGroups="${groupId}">
+      <documentation>preTest</documentation>
+    </userTask>
+    <sequenceFlow id="flow25" sourceRef="preDevelopment" targetRef="preTest"></sequenceFlow>
+    <userTask id="preCountersign" name="预发布环境会签完成" activiti:candidateGroups="${groupId}">
+      <documentation>preCountersign</documentation>
+    </userTask>
+    <sequenceFlow id="flow26" sourceRef="preTest" targetRef="preCountersign"></sequenceFlow>
+    <userTask id="productImportPackage" name="生产环境导入上线包完成" activiti:candidateGroups="${groupId}">
+      <documentation>productImportPackage</documentation>
+    </userTask>
+    <sequenceFlow id="flow27" sourceRef="preCountersign" targetRef="productImportPackage"></sequenceFlow>
+    <userTask id="productDevelopment" name="生产环境部署完成" activiti:candidateGroups="${groupId}">
+      <documentation>productDevelopment</documentation>
+    </userTask>
+    <sequenceFlow id="flow28" sourceRef="productImportPackage" targetRef="productDevelopment"></sequenceFlow>
+    <userTask id="productCheck" name="生产环境验证完成" activiti:candidateGroups="${groupId}">
+      <documentation>productCheck</documentation>
+    </userTask>
+    <sequenceFlow id="flow29" sourceRef="productDevelopment" targetRef="productCheck"></sequenceFlow>
+    <userTask id="productCreateReport" name="生产环境生成上线报告完成" activiti:candidateGroups="${groupId}">
+      <documentation>productCreateReport</documentation>
+    </userTask>
+    <sequenceFlow id="flow30" sourceRef="productCheck" targetRef="productCreateReport"></sequenceFlow>
+    <sequenceFlow id="flow31" sourceRef="productCreateReport" targetRef="confirm"></sequenceFlow>
+    <sequenceFlow id="flow32" sourceRef="confirm" targetRef="endevent1"></sequenceFlow>
+    <callActivity id="development" name="部署" calledElement="${subProcessId}">
+      <documentation>devlopment</documentation>
+      <extensionElements>
+        <activiti:in source="planCode" target="planCode"></activiti:in>
+        <activiti:in source="skip" target="skip"></activiti:in>
+        <activiti:in source="exceptionskip" target="exceptionskip"></activiti:in>
+      </extensionElements>
+    </callActivity>
+    <sequenceFlow id="flow33" sourceRef="checkOutPack" targetRef="development"></sequenceFlow>
+    <sequenceFlow id="flow34" sourceRef="development" targetRef="testAll"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_ProcessCreatePlan">
+    <bpmndi:BPMNPlane bpmnElement="ProcessCreatePlan" id="BPMNPlane_ProcessCreatePlan">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="260.0" y="1.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sendTask" id="BPMNShape_sendTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="225.0" y="71.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="appLayout" id="BPMNShape_appLayout">
+        <omgdc:Bounds height="55.0" width="166.0" x="195.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="createDeployProcess" id="BPMNShape_createDeployProcess">
+        <omgdc:Bounds height="55.0" width="116.0" x="220.0" y="310.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="testAll" id="BPMNShape_testAll">
+        <omgdc:Bounds height="55.0" width="105.0" x="225.0" y="580.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="confirm" id="BPMNShape_confirm">
+        <omgdc:Bounds height="55.0" width="105.0" x="225.0" y="1410.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="260.0" y="1500.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="orderLayout" id="BPMNShape_orderLayout">
+        <omgdc:Bounds height="55.0" width="105.0" x="225.0" y="230.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="checkOutPack" id="BPMNShape_checkOutPack">
+        <omgdc:Bounds height="55.0" width="105.0" x="225.0" y="390.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="preImportPackage" id="BPMNShape_preImportPackage">
+        <omgdc:Bounds height="55.0" width="161.0" x="197.0" y="670.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="preDevelopment" id="BPMNShape_preDevelopment">
+        <omgdc:Bounds height="55.0" width="126.0" x="215.0" y="770.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="preTest" id="BPMNShape_preTest">
+        <omgdc:Bounds height="55.0" width="121.0" x="217.0" y="860.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="preCountersign" id="BPMNShape_preCountersign">
+        <omgdc:Bounds height="55.0" width="121.0" x="217.0" y="960.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="productImportPackage" id="BPMNShape_productImportPackage">
+        <omgdc:Bounds height="55.0" width="161.0" x="197.0" y="1050.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="productDevelopment" id="BPMNShape_productDevelopment">
+        <omgdc:Bounds height="55.0" width="105.0" x="225.0" y="1150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="productCheck" id="BPMNShape_productCheck">
+        <omgdc:Bounds height="55.0" width="105.0" x="225.0" y="1230.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="productCreateReport" id="BPMNShape_productCreateReport">
+        <omgdc:Bounds height="55.0" width="176.0" x="190.0" y="1320.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="development" id="BPMNShape_development">
+        <omgdc:Bounds height="55.0" width="105.0" x="225.0" y="490.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="277.0" y="36.0"></omgdi:waypoint>
+        <omgdi:waypoint x="277.0" y="71.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="277.0" y="126.0"></omgdi:waypoint>
+        <omgdi:waypoint x="278.0" y="150.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="277.0" y="285.0"></omgdi:waypoint>
+        <omgdi:waypoint x="278.0" y="310.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow16" id="BPMNEdge_flow16">
+        <omgdi:waypoint x="278.0" y="205.0"></omgdi:waypoint>
+        <omgdi:waypoint x="277.0" y="230.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow18" id="BPMNEdge_flow18">
+        <omgdi:waypoint x="278.0" y="365.0"></omgdi:waypoint>
+        <omgdi:waypoint x="277.0" y="390.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow23" id="BPMNEdge_flow23">
+        <omgdi:waypoint x="277.0" y="635.0"></omgdi:waypoint>
+        <omgdi:waypoint x="277.0" y="670.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow24" id="BPMNEdge_flow24">
+        <omgdi:waypoint x="277.0" y="725.0"></omgdi:waypoint>
+        <omgdi:waypoint x="278.0" y="770.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow25" id="BPMNEdge_flow25">
+        <omgdi:waypoint x="278.0" y="825.0"></omgdi:waypoint>
+        <omgdi:waypoint x="277.0" y="860.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow26" id="BPMNEdge_flow26">
+        <omgdi:waypoint x="277.0" y="915.0"></omgdi:waypoint>
+        <omgdi:waypoint x="277.0" y="960.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow27" id="BPMNEdge_flow27">
+        <omgdi:waypoint x="277.0" y="1015.0"></omgdi:waypoint>
+        <omgdi:waypoint x="277.0" y="1050.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow28" id="BPMNEdge_flow28">
+        <omgdi:waypoint x="277.0" y="1105.0"></omgdi:waypoint>
+        <omgdi:waypoint x="277.0" y="1150.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow29" id="BPMNEdge_flow29">
+        <omgdi:waypoint x="277.0" y="1205.0"></omgdi:waypoint>
+        <omgdi:waypoint x="277.0" y="1230.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow30" id="BPMNEdge_flow30">
+        <omgdi:waypoint x="277.0" y="1285.0"></omgdi:waypoint>
+        <omgdi:waypoint x="278.0" y="1320.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow31" id="BPMNEdge_flow31">
+        <omgdi:waypoint x="278.0" y="1375.0"></omgdi:waypoint>
+        <omgdi:waypoint x="277.0" y="1410.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow32" id="BPMNEdge_flow32">
+        <omgdi:waypoint x="277.0" y="1465.0"></omgdi:waypoint>
+        <omgdi:waypoint x="277.0" y="1500.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow33" id="BPMNEdge_flow33">
+        <omgdi:waypoint x="277.0" y="445.0"></omgdi:waypoint>
+        <omgdi:waypoint x="277.0" y="490.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow34" id="BPMNEdge_flow34">
+        <omgdi:waypoint x="277.0" y="545.0"></omgdi:waypoint>
+        <omgdi:waypoint x="277.0" y="580.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

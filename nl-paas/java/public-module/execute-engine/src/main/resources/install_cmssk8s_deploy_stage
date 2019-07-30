@@ -1,0 +1,79 @@
+
+        stage('create workspace') {
+            steps {
+                sh '''if [ -d ${WORKSPACE} ]; then
+                    rm -rf ${WORKSPACE}
+                fi
+                mkdir ${WORKSPACE} '''
+            }
+        }
+        
+        stage('install suk8s') {
+            steps {
+                sh "/usr/bin/sshpass -p ${params.ast_sshd_password} scp ${params.ast_sshd_user}@${params.tenant_harbor_path}/cmss_k8s.tar.gz ."
+                sh "tar -zxvf cmss_k8s.tar.gz --strip-components 1"
+                sh "chmod 755 cluster_meth.py"
+                sh "python cluster_meth.py 'createcluster'  '${params.clusterName}'  '${params.req_body}'>pythonStatusFile.txt "
+                script {
+                   def statusCode = readFile 'pythonStatusFile.txt'
+                   //shell返回有回车换行，因此要substring
+                   statusCode = statusCode.substring(0, (int)(statusCode.length()-1))
+                   echo statusCode
+                   if (statusCode.contains('500')) {
+                      error 'CMSS install k8s failed!'
+                   } else {
+                      echo 'CMSS install k8s successfully!'
+                   }
+               }
+
+                sh "echo '[k8s_master_float]'>>printhosts"
+	            sh "echo '${params.k8s_master_float_ip}'>>printhosts"
+	            sh "echo [all:vars]>>printhosts"
+	            sh "echo 'K8S_MASTER_FLOAT_IP=${params.k8s_master_float_ip}'>>printhosts"
+
+                 ansiblePlaybook installation: "${params.ansible_alias}", inventory: 'printhosts', playbook: "k8s_print.yaml"
+            }
+        }
+
+
+        stage('install tenantZone') {
+            when { expression { return params.tenantZone } }
+            steps {
+                 sh "/usr/bin/sshpass -p ${params.ast_sshd_password} scp ${params.ast_sshd_user}@${params.tenant_harbor_path}/k8s_namespace.tar.gz ."
+                 sh "tar -zxvf k8s_namespace.tar.gz --strip-components 1"
+                 sh "echo '[k8s_master_float]'>>zonehosts"
+                 sh "echo '${params.k8s_master_float_ip}'>>zonehosts"
+                 sh "echo [all:vars]>>zonehosts"
+                 sh "echo 'K8S_HOME=${params.k8s_home}'>>zonehosts"
+                 sh "echo 'NAME_SPACE=${params.name_space}'>>zonehosts"
+                 sh "echo 'CPU_LIMIT=${params.limit_cpu}'>>zonehosts"
+                 sh "echo 'MEMORY_LIMIT=${params.limit_memory}'>>zonehosts"
+                 sh "echo 'DOCKER_SERVER=${params.docker_image_reposity}'>>zonehosts"
+                 sh "echo 'DOCKER_USERNAME=${params.docker_username}'>>zonehosts"
+                 sh "echo 'DOCKER_PASSWORD=${params.docker_password}'>>zonehosts"
+                 sh "echo 'DOCKER_SERVER_NAME_SPACE=${params.docker_server_name_space}'>>zonehosts"
+                 sh "echo 'DOCKER_USERNAME_NAME_SPACE=${params.docker_username_name_space}'>>zonehosts"
+                 sh "echo 'DOCKER_PASSWORD_NAME_SPACE=${params.docker_password_name_space}'>>zonehosts"
+                 ansiblePlaybook installation: "${params.ansible_alias}", inventory: 'zonehosts', playbook: "create_name_space.yaml"
+            }
+        }
+
+         stage('install prometheus') {
+              steps {
+                  sh "/usr/bin/sshpass -p ${params.ast_sshd_password} scp ${params.ast_sshd_user}@${params.tenant_harbor_path}/k8s_prometheus.tar.gz ."
+                  sh "tar -zxvf k8s_prometheus.tar.gz --strip-components 1"
+                  sh "chmod 755 ansible_run.sh; sh ansible_run.sh --appclusterMaster='${params.k8s_master_float_ip}'  --appclusterNode='${params.k8s_work_address}'  --registryHost='${params.docker_image_reposity}'  --k8s_home='${params.k8s_home}'  --harbor_user='${params.imageUsername}' --harbor_pwd='${params.imagePassword}' --harbor_proj='${params.imageProjectDir}'"
+              }
+           }
+
+
+         stage('install fluentd') {
+              steps {
+                 sh "/usr/bin/sshpass -p ${params.ast_sshd_password} scp ${params.ast_sshd_user}@${params.tenant_harbor_path}/fluentd_appcluster_install.tar.gz ."
+                 sh "tar -zxvf fluentd_appcluster_install.tar.gz"
+                 sh "cd fluentd_appcluster_install;chmod 755 ./ansible_run.sh;mkdir -p /nl/paas/logs/;chmod -R 777 /nl;sh ./ansible_run.sh '${params.appclusterNode}'  '${params.registryHost}'  '${params.logClusterId}'  ${params.logClusterKafkaClusterBrokerList}  '${params.k8sLogPath}' '${params.imageUsername}' '${params.imagePassword}' '${params.imageProjectDir}'"
+             }
+         }
+
+
+

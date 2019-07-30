@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    connectionProperties: tns=LOCAL
+    filters: LOCAL
+    url: jdbc:oracle:thin:@10.1.8.15:1521:oracle12c
+    username: paas2
+    password: U%HYKs#n_3
+    initial-size: 3
+    max-active: 5
+    min-idle: 1
+    testWhileIdle: true
+    validationQuery: SELECT 1 FROM DUAL

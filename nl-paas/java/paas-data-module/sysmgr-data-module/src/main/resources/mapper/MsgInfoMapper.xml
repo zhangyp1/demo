@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.MsgInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgInfo" >
+    <id column="MSG_ID" property="msgId" jdbcType="DECIMAL" />
+    <result column="MSG_TITLE" property="msgTitle" jdbcType="VARCHAR" />
+    <result column="MSG_TYPE_ID" property="msgTypeId" jdbcType="DECIMAL" />
+    <result column="MSG_STATUS" property="msgStatus" jdbcType="DECIMAL" />
+    <result column="RECEIVER_RANGE" property="receiverRange" jdbcType="VARCHAR" />
+    <result column="RECEIVERS" property="receivers" jdbcType="VARCHAR" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="DECIMAL" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgInfo" extends="BaseResultMap" >
+    <result column="MSG_CONTENT" property="msgContent" jdbcType="CLOB" />
+  </resultMap>
+  <sql id="Where_Clause" >
+    <where >
+      DEL_FLAG = 0
+      <if test="msgTitle != null and msgTitle!=''" >
+         and MSG_TITLE like '%'||#{msgTitle,jdbcType=VARCHAR}||'%'
+      </if>
+      <if test="msgTypeId != null" >
+         and MSG_TYPE_ID = #{msgTypeId,jdbcType=DECIMAL}
+      </if>
+      <if test="msgStatus != null" >
+         and MSG_STATUS = #{msgStatus,jdbcType=DECIMAL}
+      </if>
+      <if test="receiverRange != null" >
+         and RECEIVER_RANGE = #{receiverRange,jdbcType=VARCHAR}
+      </if>
+      <if test="receivers != null" >
+         and RECEIVERS = #{receivers,jdbcType=VARCHAR}
+      </if>
+      <if test="tenantId != null" >
+         and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+      <if test="creatorId != null" >
+         and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+      <if test="createDate != null" >
+         and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+         and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="delFlag != null" >
+         and DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+      </if>
+      <if test="msgContent != null" >
+         and MSG_CONTENT = #{msgContent,jdbcType=CLOB}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    MSG_ID, MSG_TITLE, MSG_TYPE_ID, MSG_STATUS, RECEIVER_RANGE, RECEIVERS, TENANT_ID, 
+    CREATOR_ID, CREATE_DATE, CHANGE_DATE, DEL_FLAG
+  </sql>
+  <sql id="Blob_Column_List" >
+    MSG_CONTENT
+  </sql>
+  <select id="selectBySelectiveWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgInfo" >
+    select
+    distinct
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from MSG_INFO
+    <include refid="Where_Clause" />
+  </select>
+  <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgInfo" >
+    select
+    distinct
+    <include refid="Base_Column_List" />
+    from MSG_INFO
+    <include refid="Where_Clause" />
+    order by MSG_STATUS asc, CREATE_DATE desc
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from MSG_INFO
+    where MSG_ID = #{msgId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from MSG_INFO
+    where MSG_ID = #{msgId,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgInfo" >
+    delete from MSG_INFO
+    <include refid="Where_Clause" />
+  </delete>
+  <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgInfo" >
+    <selectKey keyProperty="msgId" order="BEFORE" resultType="java.lang.Long">
+      select SEQ_MSG_INFO.nextval as msgId from sys.dual
+    </selectKey>
+    insert into MSG_INFO (MSG_ID, MSG_TITLE, MSG_TYPE_ID,
+      MSG_STATUS, RECEIVER_RANGE, RECEIVERS, 
+      TENANT_ID, CREATOR_ID, CREATE_DATE, 
+      CHANGE_DATE, DEL_FLAG, MSG_CONTENT
+      )
+    values (#{msgId,jdbcType=DECIMAL}, #{msgTitle,jdbcType=VARCHAR}, #{msgTypeId,jdbcType=DECIMAL}, 
+      #{msgStatus,jdbcType=DECIMAL}, #{receiverRange,jdbcType=VARCHAR}, #{receivers,jdbcType=VARCHAR}, 
+      #{tenantId,jdbcType=DECIMAL}, #{creatorId,jdbcType=DECIMAL}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{changeDate,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=DECIMAL}, #{msgContent,jdbcType=CLOB}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgInfo" >
+    <selectKey keyProperty="msgId" order="BEFORE" resultType="java.lang.Long">
+      select SEQ_MSG_INFO.nextval as msgId from sys.dual
+    </selectKey>
+    insert into MSG_INFO
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="msgId != null" >
+        MSG_ID,
+      </if>
+      <if test="msgTitle != null" >
+        MSG_TITLE,
+      </if>
+      <if test="msgTypeId != null" >
+        MSG_TYPE_ID,
+      </if>
+      <if test="msgStatus != null" >
+        MSG_STATUS,
+      </if>
+      <if test="receiverRange != null" >
+        RECEIVER_RANGE,
+      </if>
+      <if test="receivers != null" >
+        RECEIVERS,
+      </if>
+      <if test="tenantId != null" >
+        TENANT_ID,
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+      <if test="msgContent != null" >
+        MSG_CONTENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="msgId != null" >
+        #{msgId,jdbcType=DECIMAL},
+      </if>
+      <if test="msgTitle != null" >
+        #{msgTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="msgTypeId != null" >
+        #{msgTypeId,jdbcType=DECIMAL},
+      </if>
+      <if test="msgStatus != null" >
+        #{msgStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="receiverRange != null" >
+        #{receiverRange,jdbcType=VARCHAR},
+      </if>
+      <if test="receivers != null" >
+        #{receivers,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null" >
+        #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=DECIMAL},
+      </if>
+      <if test="msgContent != null" >
+        #{msgContent,jdbcType=CLOB},
+      </if>
+    </trim>
+  </insert>
+  <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgInfo" resultType="java.lang.Integer" >
+    select count(*) from MSG_INFO
+    <include refid="Where_Clause" />
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgInfo" >
+    update MSG_INFO
+    <set >
+      <if test="msgTitle != null" >
+        MSG_TITLE = #{msgTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="msgTypeId != null" >
+        MSG_TYPE_ID = #{msgTypeId,jdbcType=DECIMAL},
+      </if>
+      <if test="msgStatus != null" >
+        MSG_STATUS = #{msgStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="receiverRange != null" >
+        RECEIVER_RANGE = #{receiverRange,jdbcType=VARCHAR},
+      </if>
+      <if test="receivers != null" >
+        RECEIVERS = #{receivers,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null" >
+        TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+      </if>
+      <if test="msgContent != null" >
+        MSG_CONTENT = #{msgContent,jdbcType=CLOB},
+      </if>
+    </set>
+    where MSG_ID = #{msgId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgInfo" >
+    update MSG_INFO
+    set MSG_TITLE = #{msgTitle,jdbcType=VARCHAR},
+      MSG_TYPE_ID = #{msgTypeId,jdbcType=DECIMAL},
+      MSG_STATUS = #{msgStatus,jdbcType=DECIMAL},
+      RECEIVER_RANGE = #{receiverRange,jdbcType=VARCHAR},
+      RECEIVERS = #{receivers,jdbcType=VARCHAR},
+      TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+      MSG_CONTENT = #{msgContent,jdbcType=CLOB}
+    where MSG_ID = #{msgId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.MsgInfo" >
+    update MSG_INFO
+    set MSG_TITLE = #{msgTitle,jdbcType=VARCHAR},
+      MSG_TYPE_ID = #{msgTypeId,jdbcType=DECIMAL},
+      MSG_STATUS = #{msgStatus,jdbcType=DECIMAL},
+      RECEIVER_RANGE = #{receiverRange,jdbcType=VARCHAR},
+      RECEIVERS = #{receivers,jdbcType=VARCHAR},
+      TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+    where MSG_ID = #{msgId,jdbcType=DECIMAL}
+  </update>
+</mapper>

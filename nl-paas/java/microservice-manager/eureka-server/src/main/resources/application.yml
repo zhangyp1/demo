@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    active: dev
+eureka:
+  server:
+    # 清理间隔（单位毫秒，默认是60*1000）
+    eviction-interval-timer-in-ms: ${EVICTION_INTERVAL_TIMER_IN_MS:60000}
+    # 集群之间相互更新节点信息的时间频率（单位毫秒，默认是30*1000）
+    peer-eureka-nodes-update-interval-ms: ${PEER_EUREKA_NODES_UPDATE_INTERVAL_MS:30000}
+  client:
+    # 客户端从Eureka Server集群里更新Eureka Server信息的频率（默认300秒），【用于eureka界面查看实例列表】
+    eureka-service-url-poll-interval-seconds: ${EUREKA_SERVICE_URL_POLL_INTERVAL_SECONDS:300}
+management:
+  security:
+    enabled: false

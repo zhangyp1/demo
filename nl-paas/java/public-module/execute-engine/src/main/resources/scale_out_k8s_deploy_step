@@ -1,0 +1,40 @@
+
+        stage('create workspace') {
+            steps {
+                sh '''if [ -d ${WORKSPACE} ]; then
+                    rm -rf ${WORKSPACE}
+                fi
+                mkdir ${WORKSPACE} '''
+            }
+        }
+        
+        stage('copy file') {
+            steps {
+                sh "/usr/bin/sshpass -p ${params.ast_sshd_password} scp ${params.ast_sshd_user}@${params.tenant_harbor_path}/k8s_scale_out.tar.gz ."
+                sh "tar -zxvf k8s_scale_out.tar.gz --strip-components 1"
+            }
+        }
+        
+        stage('generate hosts') {
+            steps {
+                writeFile file: 'k8s_worker_ip', text: "${params.k8s_worker_ip}"
+                writeFile file: 'k8s_master_float_ip', text: "${k8s_master_float_ip}"
+                writeFile file: 'etcd_ip', text: "${params.etcd_ip}"             
+                sh "chmod 755 generate_host.sh; sh generate_host.sh"
+                sh "echo 'K8S_MASTER_FLOAT_IP=${params.k8s_master_float_ip}'>>hosts"
+                sh "echo 'K8S_HOME=${params.k8s_home}'>>hosts"
+                sh "echo 'DOCKER_IMAGE_REPOSITY=${params.docker_image_reposity}'>>hosts"
+                sh "echo -n '${params.ip_host_map}'>>${WORKSPACE}/k8s/k8s_label_node.yaml"
+                sh "echo '}'>>${WORKSPACE}/k8s/k8s_label_node.yaml"
+            }
+        }
+        
+        stage('install k8s') {
+            steps { 
+                ansiblePlaybook installation: '${param.ansible_alias}', inventory: 'hosts', playbook: 'install_k8s.yaml'
+            }
+        }
+
+
+
+

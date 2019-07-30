@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.GlbDictQuotaMapper" >
+  <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbDictQuota" >
+    <result column="QUOTA_CODE" property="quotaCode" jdbcType="VARCHAR" />
+    <result column="UNIT" property="unit" jdbcType="VARCHAR" />
+    <result column="MIN" property="min" jdbcType="DECIMAL" />
+    <result column="MAX" property="max" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Where_Clause" >
+    <where >
+      <if test="quotaCode != null" >
+         and QUOTA_CODE = #{quotaCode,jdbcType=VARCHAR}
+      </if>
+      <if test="unit != null" >
+         and UNIT = #{unit,jdbcType=VARCHAR}
+      </if>
+      <if test="min != null" >
+         and MIN = #{min,jdbcType=DECIMAL}
+      </if>
+      <if test="max != null" >
+         and MAX = #{max,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    QUOTA_CODE, UNIT, MIN, MAX
+  </sql>
+  <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbDictQuota" >
+    select
+    distinct
+    <include refid="Base_Column_List" />
+    from GLB_DICT_QUOTA
+    <include refid="Where_Clause" />
+  </select>
+  <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbDictQuota" >
+    delete from GLB_DICT_QUOTA
+    <include refid="Where_Clause" />
+  </delete>
+  <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbDictQuota" >
+    insert into GLB_DICT_QUOTA (QUOTA_CODE, UNIT, MIN, 
+      MAX)
+    values (#{quotaCode,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, #{min,jdbcType=DECIMAL}, 
+      #{max,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbDictQuota" >
+    insert into GLB_DICT_QUOTA
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="quotaCode != null" >
+        QUOTA_CODE,
+      </if>
+      <if test="unit != null" >
+        UNIT,
+      </if>
+      <if test="min != null" >
+        MIN,
+      </if>
+      <if test="max != null" >
+        MAX,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="quotaCode != null" >
+        #{quotaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="min != null" >
+        #{min,jdbcType=DECIMAL},
+      </if>
+      <if test="max != null" >
+        #{max,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.GlbDictQuota" resultType="java.lang.Integer" >
+    select count(*) from GLB_DICT_QUOTA
+    <include refid="Where_Clause" />
+  </select>
+</mapper>

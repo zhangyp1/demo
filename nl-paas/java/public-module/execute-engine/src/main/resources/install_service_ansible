@@ -1,0 +1,16 @@
+---
+    - hosts: k8s_master_float
+      tasks:
+
+       - name: create temp dir
+         shell: mktemp -d
+         register: temp_dir
+
+       - name: copy service yaml
+         template: src={{service_yaml}} dest={{temp_dir.stdout_lines.0}}/install.yaml
+
+       - name: install service
+         shell: "/usr/local/bin/kubectl create -f {{temp_dir.stdout_lines.0}}/install.yaml"
+
+       - name: remove temp dir
+         file: path={{temp_dir.stdout_lines.0}} state=absent

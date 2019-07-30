@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysGroupLimitMapper" >
+  <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysGroupLimit" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="GROUP_ID" property="groupId" jdbcType="DECIMAL" />
+    <result column="QUOTA_ITEM" property="quotaItem" jdbcType="DECIMAL" />
+    <result column="QUOTA_VALUE" property="quotaValue" jdbcType="DECIMAL" />
+    <result column="QUOTA_CALC_TYPE" property="quotaCalcType" jdbcType="DECIMAL" />
+    <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Where_Clause" >
+    <where >
+      <if test="groupId != null" >
+         and GROUP_ID = #{groupId,jdbcType=DECIMAL}
+      </if>
+      <if test="quotaItem != null" >
+         and QUOTA_ITEM = #{quotaItem,jdbcType=DECIMAL}
+      </if>
+      <if test="quotaValue != null" >
+         and QUOTA_VALUE = #{quotaValue,jdbcType=DECIMAL}
+      </if>
+      <if test="quotaCalcType != null" >
+         and QUOTA_CALC_TYPE = #{quotaCalcType,jdbcType=DECIMAL}
+      </if>
+      <if test="tenantId != null" >
+         and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+      </if>
+      <if test="createDate != null" >
+         and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+         and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+         and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+      <if test="delFlag != null" >
+         and DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, GROUP_ID, QUOTA_ITEM, QUOTA_VALUE, QUOTA_CALC_TYPE, TENANT_ID, CREATE_DATE, CHANGE_DATE, 
+    CREATOR_ID, DEL_FLAG
+  </sql>
+  <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysGroupLimit" >
+    select
+    distinct
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from SYS_GROUP_LIMIT
+    <include refid="Where_Clause" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from SYS_GROUP_LIMIT
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from SYS_GROUP_LIMIT
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysGroupLimit" >
+    delete from SYS_GROUP_LIMIT
+    <include refid="Where_Clause" />
+  </delete>
+  <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysGroupLimit" >
+    insert into SYS_GROUP_LIMIT (ID, GROUP_ID, QUOTA_ITEM, 
+      QUOTA_VALUE, QUOTA_CALC_TYPE, TENANT_ID, 
+      CREATE_DATE, CHANGE_DATE, CREATOR_ID, 
+      DEL_FLAG)
+    values (#{id,jdbcType=DECIMAL}, #{groupId,jdbcType=DECIMAL}, #{quotaItem,jdbcType=DECIMAL}, 
+      #{quotaValue,jdbcType=DECIMAL}, #{quotaCalcType,jdbcType=DECIMAL}, #{tenantId,jdbcType=DECIMAL}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{changeDate,jdbcType=TIMESTAMP}, #{creatorId,jdbcType=DECIMAL}, 
+      #{delFlag,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysGroupLimit" >
+    insert into SYS_GROUP_LIMIT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="groupId != null" >
+        GROUP_ID,
+      </if>
+      <if test="quotaItem != null" >
+        QUOTA_ITEM,
+      </if>
+      <if test="quotaValue != null" >
+        QUOTA_VALUE,
+      </if>
+      <if test="quotaCalcType != null" >
+        QUOTA_CALC_TYPE,
+      </if>
+      <if test="tenantId != null" >
+        TENANT_ID,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE,
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=DECIMAL},
+      </if>
+      <if test="quotaItem != null" >
+        #{quotaItem,jdbcType=DECIMAL},
+      </if>
+      <if test="quotaValue != null" >
+        #{quotaValue,jdbcType=DECIMAL},
+      </if>
+      <if test="quotaCalcType != null" >
+        #{quotaCalcType,jdbcType=DECIMAL},
+      </if>
+      <if test="tenantId != null" >
+        #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysGroupLimit" resultType="java.lang.Integer" >
+    select count(*) from SYS_GROUP_LIMIT
+    <include refid="Where_Clause" />
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysGroupLimit" >
+    update SYS_GROUP_LIMIT
+    <set >
+      <if test="groupId != null" >
+        GROUP_ID = #{groupId,jdbcType=DECIMAL},
+      </if>
+      <if test="quotaItem != null" >
+        QUOTA_ITEM = #{quotaItem,jdbcType=DECIMAL},
+      </if>
+      <if test="quotaValue != null" >
+        QUOTA_VALUE = #{quotaValue,jdbcType=DECIMAL},
+      </if>
+      <if test="quotaCalcType != null" >
+        QUOTA_CALC_TYPE = #{quotaCalcType,jdbcType=DECIMAL},
+      </if>
+      <if test="tenantId != null" >
+        TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysGroupLimit" >
+    update SYS_GROUP_LIMIT
+    set GROUP_ID = #{groupId,jdbcType=DECIMAL},
+      QUOTA_ITEM = #{quotaItem,jdbcType=DECIMAL},
+      QUOTA_VALUE = #{quotaValue,jdbcType=DECIMAL},
+      QUOTA_CALC_TYPE = #{quotaCalcType,jdbcType=DECIMAL},
+      TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.newland.paas</groupId>
+		<artifactId>paas-all</artifactId>
+		<version>1.1.0-SNAPSHOT</version>
+	</parent>
+	<groupId>com.newland.paas.paastool</groupId>
+	<artifactId>paastool</artifactId>
+	<packaging>pom</packaging>
+
+	<!-- 子模块 -->
+	<modules>	
+		<module>build-tools</module>
+		<module>testngmocktool</module>
+		<module>execsql</module>
+		 <module>etcdtool</module>
+		 <module>config-tool</module>
+		<module>synprovider</module>
+	</modules>
+</project>

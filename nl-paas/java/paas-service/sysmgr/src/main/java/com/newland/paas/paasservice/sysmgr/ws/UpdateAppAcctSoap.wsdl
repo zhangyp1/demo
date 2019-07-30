@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:ser="http://service.base.app.core.a4.asiainfo.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="UpdateAppAcctSoap" targetNamespace="http://service.base.app.core.a4.asiainfo.com">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://service.base.app.core.a4.asiainfo.com">
+      <xsd:element name="UpdateAppAcctSoap">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="RequestInfo" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="UpdateAppAcctSoapResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="UpdateAppAcctSoapReturn" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="UpdateAppAcctSoapRequest">
+    <wsdl:part element="ser:UpdateAppAcctSoap" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="UpdateAppAcctSoapResponse">
+    <wsdl:part element="ser:UpdateAppAcctSoapResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:portType name="UpdateAppAcctSoap">
+    <wsdl:operation name="UpdateAppAcctSoap">
+      <wsdl:input message="ser:UpdateAppAcctSoapRequest"/>
+      <wsdl:output message="ser:UpdateAppAcctSoapResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="UpdateAppAcctSoapSOAP" type="ser:UpdateAppAcctSoap">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="UpdateAppAcctSoap">
+      <soap:operation soapAction="http://service.base.app.core.a4.asiainfo.com/UpdateAppAcctSoap"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="UpdateAppAcctSoap">
+    <wsdl:port binding="ser:UpdateAppAcctSoapSOAP" name="UpdateAppAcctSoapSOAP">
+      <soap:address location="http://www.example.org/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

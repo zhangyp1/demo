@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: sysmgr
+  cloud:
+    config:
+      enabled: true
+      discovery:
+        enabled: true
+        service-id: CONFIG-CENTER
+      name: common,sysmgr
+  profiles:
+    active: dev
+
+eureka:
+  instance:
+    non-secure-port: ${server.port:8096}
+    prefer-ip-address: true
+    status-page-url-path: ${server.context-path}/info
+    health-check-url-path: ${server.context-path}/health
+    # 续约更新时间间隔（默认30秒）
+    lease-renewal-interval-in-seconds: ${LEASE_RENEWAL_INTERVAL_IN_SECONDS:30}
+    # 续约到期时间（默认90秒）
+    lease-expiration-duration-in-seconds: ${LEASE_EXPIRATION_DURATION_IN_SECONDS:90}
+  client:
+    service-url:
+      defaultZone: http://euraka-server1:8761/eureka/,http://euraka-server2:8761/eureka/,http://euraka-server3:8761/eureka/
+    # 客户端从Eureka Server集群里更新Eureka Server信息的频率（默认300秒）
+    eureka-service-url-poll-interval-seconds: ${EUREKA_SERVICE_URL_POLL_INTERVAL_SECONDS:300}
+    # 定义从注册中心获取实例注册服务的信息（默认30秒）
+    registry-fetch-interval-seconds: ${REGISTRY_FETCH_INTERVAL_SECONDS:30}
+management:
+  security:
+    enabled: false
+swagger2:
+  title: 系统管理API文档
+  version: 1.0
+  description: 描述
+  basePackage:
+    - com.newland.paas.paasservice.sysmgr.controller
+app:
+  version: @paas.build.version@

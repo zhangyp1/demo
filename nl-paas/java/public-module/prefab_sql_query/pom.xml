@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.newland.paas.publicmodule</groupId>
+    <artifactId>publicmodule</artifactId>
+    <version>1.1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>prefab_sql_query</artifactId>
+  <name>prefab_sql_query</name>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+        <dependency>
+            <groupId>com.newland.paas.publicmodule</groupId>
+            <artifactId>log</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.newland.paas.publicmodule</groupId>
+            <artifactId>common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.newland.paas.publicmodule</groupId>
+            <artifactId>spring-boot-common</artifactId>
+        </dependency>
+      <dependency>
+          <groupId>com.newland.paas.publicmodule</groupId>
+          <artifactId>data_access_module</artifactId>
+          <version>1.1.0-SNAPSHOT</version>
+      </dependency>
+  </dependencies>
+</project>

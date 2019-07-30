@@ -1,0 +1,26 @@
+spring:
+  profiles:
+    active: jdbc
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    filters:
+    connectionProperties: tns=LOCAL
+    url: jdbc:oracle:thin:@172.32.150.13:1521:nlpass01
+    username: paastest
+    password: Paas1015
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    initial-size: 3
+    min-idle: 1
+    max-active: 5
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    non-secure-port: ${server.port:8888}
+    metadata-map:
+      instanceId: ${spring.application.name}:${random.value}
+  client:
+    service-url:
+      defaultZone: http://euraka-server1:8761/eureka/,http://euraka-server2:8761/eureka/,http://euraka-server3:8761/eureka/

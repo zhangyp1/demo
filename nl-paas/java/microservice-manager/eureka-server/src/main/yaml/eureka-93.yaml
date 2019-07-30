@@ -1,0 +1,194 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: eureka-server1
+  namespace: manage
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: euraka1-app
+        track: stable
+    spec:
+      containers:
+      - name: euraka1-server
+        image: harbor.paas.nl:5000/paas_platform/nl.paas.eureka-server:2.3
+        imagePullPolicy: Always
+        env:
+        - name: PF_NODE_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: SPRING_PROFILES_ACTIVE
+          value: dev93server1
+        - name: EVICTION_INTERVAL_TIMER_IN_MS
+          value: "10000"
+        - name: PEER_EUREKA_NODES_UPDATE_INTERVAL_MS
+          value: "5000"
+        - name: EUREKA_SERVICE_URL_POLL_INTERVAL_SECONDS
+          value: "20"
+        - name: JVM_OPTS
+          value: "-XX:MaxRAMFraction=2"
+        - name: LOG_PATH
+          value: "/nl/paas/jdklogs"
+        ports:
+        - containerPort: 8761
+        resources:
+           requests:
+             cpu: 1
+             memory: 2Gi
+           limits:
+             cpu: 1
+             memory: 2Gi
+        volumeMounts:
+        - name: localtime
+          mountPath: /etc/localtime
+        - name: localpath
+          mountPath: /nl/paas
+      volumes:
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+      - name: localpath
+        hostPath:
+          path: /dcoslog/nl/paas
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: euraka-server1
+  namespace: manage
+spec:
+  type: NodePort
+  selector:
+    app: euraka1-app
+  ports:
+  - name: euraka1-http
+    port: 8761
+    protocol: TCP
+    targetPort: 8761
+    nodePort: 32001
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: eureka-server2
+  namespace: manage
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: euraka2-app
+        track: stable
+    spec:
+      containers:
+      - name: euraka2-server
+        image: 10.1.8.16:5000/nl.paas.eureka-server:2.3
+        imagePullPolicy: Always
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: dev93server2
+        - name: JVM_OPTS
+          value: "-XX:MaxRAMFraction=2"
+        - name: LOG_PATH
+          value: "/nl/paas/jdklogs"
+        ports:
+        - containerPort: 8761
+        resources:
+           requests:
+             cpu: 1
+             memory: 2Gi
+           limits:
+             cpu: 1
+             memory: 2Gi
+        volumeMounts:
+        - name: localtime
+          mountPath: /etc/localtime
+        - name: localpath
+          mountPath: /nl/paas
+      volumes:
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+      - name: localpath
+        hostPath:
+          path: /dcoslog/nl/paas
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: euraka-server2
+  namespace: manage
+spec:
+  type: NodePort
+  selector:
+    app: euraka2-app
+  ports:
+  - name: euraka2-http
+    port: 8761
+    protocol: TCP
+    targetPort: 8761
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: eureka-server3
+  namespace: manage
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: euraka3-app
+        track: stable
+    spec:
+      containers:
+      - name: euraka3-server
+        image: 10.1.8.16:5000/nl.paas.eureka-server:2.3
+        imagePullPolicy: Always
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: dev93server3
+        - name: JVM_OPTS
+          value: "-XX:MaxRAMFraction=2"
+        - name: LOG_PATH
+          value: "/nl/paas/jdklogs"
+        ports:
+        - containerPort: 8761
+        resources:
+           requests:
+             cpu: 1
+             memory: 2Gi
+           limits:
+             cpu: 1
+             memory: 2Gi
+        volumeMounts:
+        - name: localtime
+          mountPath: /etc/localtime
+        - name: localpath
+          mountPath: /nl/paas
+      volumes:
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+      - name: localpath
+        hostPath:
+          path: /dcoslog/nl/paas
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: euraka-server3
+  namespace: manage
+spec:
+  type: NodePort
+  selector:
+    app: euraka3-app
+  ports:
+  - name: euraka3-http
+    port: 8761
+    protocol: TCP
+    targetPort: 8761

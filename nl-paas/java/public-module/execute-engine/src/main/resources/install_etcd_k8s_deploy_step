@@ -1,0 +1,100 @@
+
+        stage('create workspace') {
+            steps {
+                sh '''if [ -d ${WORKSPACE} ]; then
+                    rm -rf ${WORKSPACE}
+                fi
+                mkdir ${WORKSPACE} '''
+            }
+        }
+        
+        stage('copy file') {
+            steps {                
+                sh "/usr/bin/sshpass -p ${params.ast_sshd_password} scp ${params.ast_sshd_user}@${params.tenant_harbor_path}/k8s_install.tar.gz ."
+                sh "tar -zxvf k8s_install.tar.gz --strip-components 1" 
+            }
+        }
+        
+        stage('generate ca') {
+            steps {   
+                writeFile file: 'ssl/k8s_worker_ip', text: "${params.k8s_worker_ip}"
+                writeFile file: 'ssl/k8s_master_ip', text: "${params.k8s_master_ip}"
+                writeFile file: 'ssl/k8s_master_float_ip', text: "${k8s_master_float_ip}"
+                writeFile file: 'ssl/etcd_ip', text: "${params.etcd_ip}"
+                sh 'tar -zcvf ${WORKSPACE}/ssl.tar.gz ./ssl'
+                
+                script {
+                    generate_ca_ip = sh returnStdout: true ,script: 'awk -F, \'{print $1}\' ssl/k8s_master_ip'
+                }                
+                sh "echo '[generate_ca]\n${generate_ca_ip}'>generate_ca_hosts"
+                ansiblePlaybook installation: '${param.ansible_alias}', inventory: 'generate_ca_hosts', playbook: 'generate_ca.yaml'
+            }
+        }  
+        
+        stage('generate hosts') {
+            steps { 
+                sh "chmod 755 generate_host.sh; sh generate_host.sh"
+                sh "echo 'ETCD_HOME=${params.etcd_home}'>>hosts"
+                sh "echo 'K8S_MASTER_FLOAT_IP=${params.k8s_master_float_ip}'>>hosts"
+                sh "echo 'K8S_HOME=${params.k8s_home}'>>hosts"
+                sh "echo 'DOCKER_IMAGE_REPOSITY=${params.docker_image_reposity}'>>hosts"
+                
+                
+                sh "echo 'NAME_SPACE=${params.name_space}'>>hosts"
+                sh "echo 'REQUESTS_CPU=${params.requests_cpu}'>>hosts"
+                sh "echo 'REQUEST_MEMORY=${params.request_memory}'>>hosts"
+                sh "echo 'LIMIT_CPU=${params.limit_cpu}'>>hosts"
+                sh "echo 'LIMIT_MEMORY=${params.limit_memory}'>>hosts"
+                sh "echo 'INGRESS_WORKER=${params.ingress_worker}'>>hosts" 
+                sh "echo 'IMAGEPROJECT=${params.imageProject}'>>hosts" 
+                sh "echo -n '${params.ip_host_map}'>>${WORKSPACE}/k8s/k8s_label_node.yaml"
+                sh "echo '}'>>${WORKSPACE}/k8s/k8s_label_node.yaml"
+                sh "echo -n '${params.ip_masterhost_map}'>>${WORKSPACE}/k8s/k8s_cordon_node.yaml"
+                sh "echo '}'>>${WORKSPACE}/k8s/k8s_cordon_node.yaml"
+            }
+        }
+        
+        stage('install k8s') {
+            steps { 
+                ansiblePlaybook installation: '${param.ansible_alias}', inventory: 'hosts', playbook: 'install_etcd_k8s.yaml'
+            }
+        }
+
+        stage('install tenantZone') {
+            when { expression { return params.tenantZone } }
+            steps {
+                 sh "/usr/bin/sshpass -p ${params.ast_sshd_password} scp ${params.ast_sshd_user}@${params.tenant_harbor_path}/k8s_namespace.tar.gz ."
+                 sh "tar -zxvf k8s_namespace.tar.gz --strip-components 1" 
+                 sh "echo '[k8s_master_float]'>>zonehosts"
+	             sh "echo '${params.k8s_master_float_ip}'>>zonehosts"
+	             sh "echo [all:vars]>>zonehosts"
+	             sh "echo 'K8S_HOME=${params.k8s_home}'>>zonehosts"     
+	             sh "echo 'NAME_SPACE=${params.name_space}'>>zonehosts"
+	             sh "echo 'CPU_LIMIT=${params.limit_cpu}'>>zonehosts"
+	             sh "echo 'MEMORY_LIMIT=${params.limit_memory}'>>zonehosts"
+	             sh "echo 'DOCKER_SERVER=${params.docker_image_reposity}'>>zonehosts"
+	             sh "echo 'DOCKER_USERNAME=${params.docker_username}'>>zonehosts"
+	             sh "echo 'DOCKER_PASSWORD=${params.docker_password}'>>zonehosts"
+	             sh "echo 'DOCKER_SERVER_NAME_SPACE=${params.docker_server_name_space}'>>zonehosts"
+	             sh "echo 'DOCKER_USERNAME_NAME_SPACE=${params.docker_username_name_space}'>>zonehosts"
+	             sh "echo 'DOCKER_PASSWORD_NAME_SPACE=${params.docker_password_name_space}'>>zonehosts"
+	             ansiblePlaybook installation: "${params.ansible_alias}", inventory: 'zonehosts', playbook: "create_name_space.yaml"
+            }
+        }
+        
+     stage('install prometheus') {
+         steps {
+             sh "/usr/bin/sshpass -p ${params.ast_sshd_password} scp ${params.ast_sshd_user}@${params.tenant_harbor_path}/k8s_prometheus.tar.gz ."
+             sh "tar -zxvf k8s_prometheus.tar.gz --strip-components 1" 
+              sh "chmod 755 ansible_run.sh; sh ansible_run.sh --appclusterMaster='${params.k8s_master_float_ip}'  --appclusterNode='${params.k8s_work_address}'  --registryHost='${params.docker_image_reposity}'  --k8s_home='${params.k8s_home}'  --harbor_user='${params.imageUsername}' --harbor_pwd='${params.imagePassword}' --harbor_proj='${params.imageProjectDir}'"
+         }
+      }
+
+
+     stage('install fluentd') {
+          steps {
+             sh "/usr/bin/sshpass -p ${params.ast_sshd_password} scp ${params.ast_sshd_user}@${params.tenant_harbor_path}/fluentd_appcluster_install.tar.gz ."
+             sh "tar -zxvf fluentd_appcluster_install.tar.gz"
+             sh "cd fluentd_appcluster_install;chmod 755 ./ansible_run.sh;mkdir -p /nl/paas/logs/;chmod -R 777 /nl;sh ./ansible_run.sh '${params.appclusterNode}'  '${params.registryHost}'  '${params.logClusterId}'  ${params.logClusterKafkaClusterBrokerList}  '${params.k8sLogPath}' '${params.imageUsername}' '${params.imagePassword}' '${params.imageProjectDir}'"
+         }
+     }

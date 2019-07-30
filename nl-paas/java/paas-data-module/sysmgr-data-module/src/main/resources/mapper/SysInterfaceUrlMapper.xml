@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysInterfaceUrlMapper" >
+  <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysInterfaceUrl" >
+    <id column="URL_ID" property="urlId" jdbcType="VARCHAR" />
+    <result column="SERVICE_ID" property="serviceId" jdbcType="VARCHAR" />
+    <result column="METHOD" property="method" jdbcType="VARCHAR" />
+    <result column="URI" property="uri" jdbcType="VARCHAR" />
+    <result column="CLASS_METHOD" property="classMethod" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Where_Clause" >
+    <where >
+      <if test="serviceId != null and serviceId != ''" >
+         and SERVICE_ID = #{serviceId,jdbcType=VARCHAR}
+      </if>
+      <if test="method != null and method != ''" >
+         and METHOD = #{method,jdbcType=VARCHAR}
+      </if>
+      <if test="uri != null and uri != ''" >
+         and URI like '%'||#{uri,jdbcType=VARCHAR}||'%'
+      </if>
+      <if test="classMethod != null and classMethod != ''" >
+         and CLASS_METHOD = #{classMethod,jdbcType=VARCHAR}
+      </if>
+      <if test="createDate != null" >
+         and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="changeDate != null" >
+         and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+         and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    URL_ID, SERVICE_ID, METHOD, URI, CLASS_METHOD, CREATE_DATE, CHANGE_DATE,
+    CREATOR_ID
+  </sql>
+  <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysInterfaceUrl" >
+    select
+    distinct
+    <include refid="Base_Column_List" />
+    from SYS_INTERFACE_URL
+    <include refid="Where_Clause" />
+    ORDER BY CREATE_DATE DESC
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from SYS_INTERFACE_URL
+    where URL_ID = #{urlId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from SYS_INTERFACE_URL
+    where URL_ID = #{urlId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysInterfaceUrl" >
+    delete from SYS_INTERFACE_URL
+    <include refid="Where_Clause" />
+  </delete>
+  <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysInterfaceUrl" >
+    insert into SYS_INTERFACE_URL (URL_ID, SERVICE_ID,
+      METHOD, URI, CLASS_METHOD, 
+      CREATE_DATE, CHANGE_DATE, CREATOR_ID
+      )
+    values (#{urlId,jdbcType=VARCHAR}, #{serviceId,jdbcType=VARCHAR},
+      #{method,jdbcType=VARCHAR}, #{uri,jdbcType=VARCHAR}, #{classMethod,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{changeDate,jdbcType=TIMESTAMP}, #{creatorId,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysInterfaceUrl" >
+    insert into SYS_INTERFACE_URL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="urlId != null" >
+        URL_ID,
+      </if>
+      <if test="serviceId != null" >
+        SERVICE_ID,
+      </if>
+      <if test="method != null" >
+        METHOD,
+      </if>
+      <if test="uri != null" >
+        URI,
+      </if>
+      <if test="classMethod != null" >
+        CLASS_METHOD,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE,
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="urlId != null" >
+        #{urlId,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceId != null" >
+        #{serviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null" >
+        #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="uri != null" >
+        #{uri,jdbcType=VARCHAR},
+      </if>
+      <if test="classMethod != null" >
+        #{classMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysInterfaceUrl" resultType="java.lang.Integer" >
+    select count(*) from SYS_INTERFACE_URL
+    <include refid="Where_Clause" />
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysInterfaceUrl" >
+    update SYS_INTERFACE_URL
+    <set >
+      <if test="serviceId != null" >
+        SERVICE_ID = #{serviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null" >
+        METHOD = #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="uri != null" >
+        URI = #{uri,jdbcType=VARCHAR},
+      </if>
+      <if test="classMethod != null" >
+        CLASS_METHOD = #{classMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDate != null" >
+        CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where URL_ID = #{urlId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysInterfaceUrl" >
+    update SYS_INTERFACE_URL
+    set SERVICE_ID = #{serviceId,jdbcType=VARCHAR},
+      METHOD = #{method,jdbcType=VARCHAR},
+      URI = #{uri,jdbcType=VARCHAR},
+      CLASS_METHOD = #{classMethod,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+    where URL_ID = #{urlId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectBySelectiveNotExist" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysMenuUrlBO" >
+    select
+    distinct
+    <include refid="Base_Column_List" />
+    from SYS_INTERFACE_URL
+    <where >
+      URL_ID not in (
+        SELECT url_id FROM sys_menu_url WHERE menu_id = #{menuId}
+      )
+      <if test="serviceId != null and serviceId != ''" >
+        and SERVICE_ID = #{serviceId,jdbcType=VARCHAR}
+      </if>
+      <if test="method != null and method != ''" >
+        and METHOD = #{method,jdbcType=VARCHAR}
+      </if>
+      <if test="uri != null and uri != ''" >
+        and URI like '%'||#{uri,jdbcType=VARCHAR}||'%'
+      </if>
+    </where>
+  </select>
+</mapper>

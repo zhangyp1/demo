@@ -1,0 +1,57 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: config-center
+  namespace: manage
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: config-center
+        track: stable
+    spec:
+      containers:
+      - name: config-center
+        image: harbor.paas.nl:5000/paas_platform/nl.paas.config-center:2.3
+        imagePullPolicy: Always
+        env:
+        - name: PF_NODE_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: SPRING_PROFILES_ACTIVE
+          value: dev93
+        - name: LEASE_RENEWAL_INTERVAL_IN_SECONDS
+          value: "5"
+        - name: LEASE_EXPIRATION_DURATION_IN_SECONDS
+          value: "14"
+        - name: EUREKA_SERVICE_URL_POLL_INTERVAL_SECONDS
+          value: "20"
+        - name: REGISTRY_FETCH_INTERVAL_SECONDS
+          value: "5"
+        - name: JVM_OPTS
+          value: "-XX:MaxRAMFraction=2"
+        - name: LOG_PATH
+          value: "/nl/paas/jdklogs"
+        ports:
+        - containerPort: 8888
+        resources:
+           requests:
+             cpu: 1
+             memory: 3Gi
+           limits:
+             cpu: 1
+             memory: 3Gi
+        volumeMounts:
+        - name: localtime
+          mountPath: /etc/localtime
+        - name: localpath
+          mountPath: /nl/paas
+      volumes:
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+      - name: localpath
+        hostPath:
+          path: /dcoslog/nl/paas

@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    active: dev
+swagger2:
+  title: 执行引擎API文档
+  version: 1.0
+  description: 描述
+  basePackage:
+    - com.newland.paas.paasservice.clumgr.controller

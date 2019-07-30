@@ -1,0 +1,40 @@
+        stage('create workspace') {
+            steps {
+                sh '''if [ -d ${WORKSPACE} ]; then
+                    rm -rf ${WORKSPACE}
+                fi
+                mkdir ${WORKSPACE} '''
+            }
+        }
+        
+        stage('copy file') {
+            steps {                
+                sh "/usr/bin/sshpass -p ${params.pubftp_password} scp ${params.pubftp_user_name}@${params.pubftp_address_path}/k8s_namespace.tar.gz ."
+                sh "tar -zxvf k8s_namespace.tar.gz --strip-components 1" 
+            }
+        }       
+        
+        stage('generate hosts') {
+            steps {
+                sh "echo '[k8s_master_float]'>>hosts"
+	            sh "echo '${params.k8s_master_float_ip}'>>hosts"   
+	            sh "echo [all:vars]>>hosts"
+	            sh "echo 'K8S_HOME=${params.k8s_home}'>>hosts"     
+	            sh "echo 'NAME_SPACE=${params.name_space}'>>hosts"
+	            sh "echo 'CPU_LIMIT=${params.limit_cpu}'>>hosts"
+	            sh "echo 'MEMORY_LIMIT=${params.limit_memory}'>>hosts"
+	            sh "echo 'DOCKER_SERVER=${params.docker_image_reposity}'>>hosts"
+	            sh "echo 'DOCKER_USERNAME=${params.docker_username}'>>hosts"
+	            sh "echo 'DOCKER_PASSWORD=${params.docker_password}'>>hosts"
+	            sh "echo 'DOCKER_SERVER_NAME_SPACE=${params.docker_server_name_space}'>>hosts"
+	            sh "echo 'DOCKER_USERNAME_NAME_SPACE=${params.docker_username_name_space}'>>hosts"
+	            sh "echo 'DOCKER_PASSWORD_NAME_SPACE=${params.docker_password_name_space}'>>hosts"
+            }
+        } 
+        
+        stage('{{params.install_step_name}}') {
+            steps {
+                //echo "${params.install_yaml_file}" 
+                ansiblePlaybook installation: "${params.ansible_alias}", inventory: 'hosts', playbook: "${params.install_yaml_file}"
+            }
+        }

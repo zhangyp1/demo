@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysUserGroupRoleMapper">
+    <resultMap id="BaseResultMap"
+               type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysUserGroupRole">
+        <id column="USER_GROUP_ROLE_ID" property="userGroupRoleId" jdbcType="DECIMAL"/>
+        <result column="USER_ID" property="userId" jdbcType="DECIMAL"/>
+        <result column="GROUP_ROLE_ID" property="groupRoleId" jdbcType="DECIMAL"/>
+        <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL"/>
+        <result column="DEL_FLAG" property="delFlag" jdbcType="DECIMAL"/>
+    </resultMap>
+    <resultMap id="SysUserGroupRoleRespBoMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysUserGroupRoleRespBo">
+        <id column="USER_GROUP_ROLE_ID" property="userGroupRoleId" jdbcType="DECIMAL"/>
+        <result column="USER_ID" property="userId" jdbcType="DECIMAL"/>
+        <result column="GROUP_ROLE_ID" property="groupRoleId" jdbcType="DECIMAL"/>
+        <result column="TENANT_ID" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL"/>
+        <result column="DEL_FLAG" property="delFlag" jdbcType="DECIMAL"/>
+
+        <result column="GROUP_ROLE_NAME" property="groupRoleName" jdbcType="VARCHAR"/>
+        <result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+        <result column="USER_DEPT" property="userDept" jdbcType="VARCHAR"/>
+        <result column="USER_PHONE" property="userPhone" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="And_Del_Flag_0" >
+      and DEL_FLAG = 0
+  </sql>
+    <sql id="Where_Clause">
+        <where>
+            <include refid="And_Del_Flag_0" />
+            <if test="userId != null">
+                and USER_ID = #{userId,jdbcType=DECIMAL}
+            </if>
+            <if test="groupRoleId != null">
+                and GROUP_ROLE_ID = #{groupRoleId,jdbcType=DECIMAL}
+            </if>
+            <if test="tenantId != null">
+                and TENANT_ID = #{tenantId,jdbcType=DECIMAL}
+            </if>
+            <if test="createDate != null">
+                and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="changeDate != null">
+                and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="creatorId != null">
+                and CREATOR_ID = #{creatorId,jdbcType=DECIMAL}
+            </if>
+            <if test="delFlag != null">
+                and DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+            </if>
+            <if test="notInUserIds != null and notInUserIds.length &gt; 0" >
+	         and USER_ID not in 
+	         <foreach collection="notInUserIds" item="userId" open="(" close=")" separator=",">
+		        #{userId}
+		      </foreach>
+	       </if>
+            <if test="groupRoleIds!= null and groupRoleIds.length > 0">
+                and GROUP_ROLE_ID in(
+                <foreach collection="groupRoleIds" item="groupRoleId" index="index" separator="," >
+                    #{groupRoleId, jdbcType=DECIMAL}
+                </foreach>
+                )
+            </if>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    USER_GROUP_ROLE_ID, USER_ID, GROUP_ROLE_ID, TENANT_ID, CREATE_DATE, CHANGE_DATE, 
+    CREATOR_ID, DEL_FLAG
+  </sql>
+    <select id="selectBySelective" resultMap="SysUserGroupRoleRespBoMap"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysUserGroupRoleReqBo">
+        select
+        distinct
+        <include refid="Base_Column_List"/>
+        from SYS_USER_GROUP_ROLE
+        <include refid="Where_Clause"/>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="SysUserGroupRoleRespBoMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from SYS_USER_GROUP_ROLE
+        where USER_GROUP_ROLE_ID = #{userGroupRoleId,jdbcType=DECIMAL}
+        <include refid="And_Del_Flag_0" />
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+      update SYS_USER_GROUP_ROLE
+      set DEL_FLAG = 1
+      where USER_GROUP_ROLE_ID = #{userGroupRoleId,jdbcType=DECIMAL}
+  </delete>
+    <delete id="deleteBySelective"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysUserGroupRoleReqBo">
+        update SYS_USER_GROUP_ROLE
+        set DEL_FLAG = 1
+        <include refid="Where_Clause"/>
+    </delete>
+    <insert id="insert" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysUserGroupRole">
+        <selectKey keyProperty="userGroupRoleId" order="BEFORE" resultType="java.lang.Long">
+            select SEQ_USER_GROUP_ROLE.nextval as id from sys.dual
+        </selectKey>
+        insert into SYS_USER_GROUP_ROLE (USER_GROUP_ROLE_ID, USER_ID, GROUP_ROLE_ID,
+        TENANT_ID, CREATE_DATE, CHANGE_DATE,
+        CREATOR_ID, DEL_FLAG)
+        values (#{userGroupRoleId,jdbcType=DECIMAL}, #{userId,jdbcType=DECIMAL}, #{groupRoleId,jdbcType=DECIMAL},
+        #{tenantId,jdbcType=DECIMAL}, #{createDate,jdbcType=TIMESTAMP}, #{changeDate,jdbcType=TIMESTAMP},
+        #{creatorId,jdbcType=DECIMAL}, #{delFlag,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysUserGroupRole">
+        <selectKey keyProperty="userGroupRoleId" order="BEFORE" resultType="java.lang.Long">
+            select SEQ_USER_GROUP_ROLE.nextval as id from sys.dual
+        </selectKey>
+        insert into SYS_USER_GROUP_ROLE
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userGroupRoleId != null">
+                USER_GROUP_ROLE_ID,
+            </if>
+            <if test="userId != null">
+                USER_ID,
+            </if>
+            <if test="groupRoleId != null">
+                GROUP_ROLE_ID,
+            </if>
+            <if test="tenantId != null">
+                TENANT_ID,
+            </if>
+            <if test="createDate != null">
+                CREATE_DATE,
+            </if>
+            <if test="changeDate != null">
+                CHANGE_DATE,
+            </if>
+            <if test="creatorId != null">
+                CREATOR_ID,
+            </if>
+            <if test="delFlag != null">
+                DEL_FLAG,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userGroupRoleId != null">
+                #{userGroupRoleId,jdbcType=DECIMAL},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=DECIMAL},
+            </if>
+            <if test="groupRoleId != null">
+                #{groupRoleId,jdbcType=DECIMAL},
+            </if>
+            <if test="tenantId != null">
+                #{tenantId,jdbcType=DECIMAL},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="changeDate != null">
+                #{changeDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=DECIMAL},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <select id="countBySelective"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysUserGroupRoleReqBo"
+            resultType="java.lang.Integer">
+        select count(*) from SYS_USER_GROUP_ROLE
+        <include refid="Where_Clause"/>
+    </select>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysUserGroupRole">
+        update SYS_USER_GROUP_ROLE
+        <set>
+            <if test="userId != null">
+                USER_ID = #{userId,jdbcType=DECIMAL},
+            </if>
+            <if test="groupRoleId != null">
+                GROUP_ROLE_ID = #{groupRoleId,jdbcType=DECIMAL},
+            </if>
+            <if test="tenantId != null">
+                TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+            </if>
+            <if test="createDate != null">
+                CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="changeDate != null">
+                CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creatorId != null">
+                CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+            </if>
+            <if test="delFlag != null">
+                DEL_FLAG = #{delFlag,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where USER_GROUP_ROLE_ID = #{userGroupRoleId,jdbcType=DECIMAL}
+    </update>
+    <update id="updateByPrimaryKey"
+            parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysUserGroupRole">
+    update SYS_USER_GROUP_ROLE
+    set USER_ID = #{userId,jdbcType=DECIMAL},
+      GROUP_ROLE_ID = #{groupRoleId,jdbcType=DECIMAL},
+      TENANT_ID = #{tenantId,jdbcType=DECIMAL},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP},
+      CREATOR_ID = #{creatorId,jdbcType=DECIMAL},
+      DEL_FLAG = #{delFlag,jdbcType=DECIMAL}
+    where USER_GROUP_ROLE_ID = #{userGroupRoleId,jdbcType=DECIMAL}
+  </update>
+
+    <select id="getUsersByGroupRole" resultMap="SysUserGroupRoleRespBoMap">
+    select t.user_id,u.username user_name,u.dept user_dept,t.create_date,u.phone user_phone
+    from sys_user_group_role t inner join sys_user u
+    on t.user_id = u.user_id
+    where 1=1 and t.group_role_id = #{groupRoleId,jdbcType=DECIMAL}
+    and u.status = 'enabled'
+    and u.del_flag = 0 and t.del_flag = 0
+  </select>
+
+    <select id="getGroupRolesByUser" resultMap="SysUserGroupRoleRespBoMap">
+    select t.group_role_id,r.group_role_name,t.create_date
+    from sys_user_group_role t inner join sys_group_role r
+    on t.group_role_id = r.group_role_id
+  	where t.user_id = #{userId,jdbcType=DECIMAL}
+  	and r.group_id = #{groupId,jdbcType=DECIMAL}
+  	and t.del_flag = 0 and r.del_flag = 0
+  </select>
+
+   <select id="getAllUsersByGroup" resultMap="SysUserGroupRoleRespBoMap">
+	    select distinct u.user_id,u.username user_name,u.dept user_dept,u.phone user_phone
+	    from sys_user u inner join sys_group_user t
+	    on u.user_id = t.user_id
+	  	where 1=1 
+	  	and t.group_id = #{groupId,jdbcType=DECIMAL}
+	  	and u.status = 'enabled'
+		and u.user_id not in(
+			select x.user_id from sys_user_group_role x where x.group_role_id = #{groupRoleId,jdbcType=DECIMAL} and x.del_flag = 0
+		)
+       <if test="userNameLike != null">
+           and u.username like '%'||#{userNameLike,jdbcType=VARCHAR}||'%'
+       </if>
+       and u.del_flag = 0
+       and t.del_flag = 0
+  </select>
+
+    <delete id="deleteByParams">
+        update SYS_USER_GROUP_ROLE
+        set DEL_FLAG = 1
+        where 1 = 1
+        <if test="userId != null">
+            and USER_ID = #{userId}
+        </if>
+        <if test="groupId != null">
+            and GROUP_ROLE_ID in (select GROUP_ROLE_ID from SYS_GROUP_ROLE where GROUP_ID = #{groupId} and DEL_FLAG = 0)
+        </if>
+    </delete>
+
+</mapper>

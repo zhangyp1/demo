@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.newland.paas.paasdatamodule.sysmgrdatamodule.dao.SysGroupObjMapper" >
+  <resultMap id="BaseResultMap" type="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysGroupObj" >
+    <result column="GROUP_ID" property="groupId" jdbcType="INTEGER" />
+    <result column="OBJ_ID" property="objId" jdbcType="INTEGER" />
+    <result column="OBJ_NAME" property="objName" jdbcType="VARCHAR" />
+    <result column="OBJ_TYPE" property="objType" jdbcType="VARCHAR" />
+    <result column="IS_SRIGHT" property="isSright" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="INTEGER" />
+    <result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="CREATOR_ID" property="creatorId" jdbcType="INTEGER" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="INTEGER" />
+  </resultMap>
+
+  <sql id="Where_Clause" >
+    <where >
+      <if test="groupId != null" >
+        and GROUP_ID = #{groupId,jdbcType=INTEGER}
+      </if>
+      <if test="objId != null" >
+        and OBJ_ID = #{objId,jdbcType=INTEGER}
+      </if>
+      <if test="objName != null" >
+        and OBJ_NAME = #{objName,jdbcType=VARCHAR}
+      </if>
+      <if test="objType != null" >
+        and OBJ_TYPE = #{objType,jdbcType=VARCHAR}
+      </if>
+      <if test="isSright != null" >
+        and IS_SRIGHT = #{isSright,jdbcType=VARCHAR}
+      </if>
+      <if test="createDate != null" >
+        and CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="status != null" >
+        and STATUS = #{status,jdbcType=INTEGER}
+      </if>
+      <if test="changeDate != null" >
+        and CHANGE_DATE = #{changeDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="creatorId != null" >
+        and CREATOR_ID = #{creatorId,jdbcType=INTEGER}
+      </if>
+      <if test="delFlag != null" >
+        and DEL_FLAG = #{delFlag,jdbcType=INTEGER}
+      </if>
+    </where>
+  </sql>
+
+  <sql id="Base_Column_List" >
+    GROUP_ID, OBJ_ID, OBJ_NAME, OBJ_TYPE, IS_SRIGHT, CREATE_DATE, STATUS, CHANGE_DATE, CREATOR_ID, DEL_FLAG
+  </sql>
+
+  <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysGroupObj" >
+    select
+    distinct
+    <include refid="Base_Column_List" />
+    from SYS_GROUP_OBJ
+    <include refid="Where_Clause" />
+  </select>
+
+  <select id="countBySelective" parameterType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.SysGroupObj" resultType="java.lang.Integer" >
+    select count(*) from SYS_GROUP_OBJ
+    <include refid="Where_Clause" />
+  </select>
+
+  <select id="selectDetailBySelective" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysGroupObjBO" >
+    select t1.GROUP_ID as groupId, t1.OBJ_ID as objId, t1.OBJ_NAME as objName, t1.OBJ_TYPE as objType,
+    t1.CREATE_DATE as createDate, t1.CREATOR_ID as creatorId, t2.USERNAME as userName, t3.DICT_NAME as objTypeName, t5.SYS_CATEGORY_NAME as sysCategoryName
+    from (select m.* from SYS_GROUP_OBJ m where m.STATUS = 0
+    <if test="params.objName != null and params.objName != ''" >
+      and m.OBJ_NAME like '%'||#{params.objName,jdbcType=VARCHAR}||'%'
+    </if>
+    <if test="list != null" >
+      and m.GROUP_ID in
+      <foreach collection="list" item="groupId" open="(" close=")" separator=",">
+        #{groupId}
+      </foreach>
+    </if>
+    <if test="params.objId != null" >
+      and m.OBJ_ID = #{params.objId,jdbcType=INTEGER}
+    </if>
+    order by m.OBJ_ID desc
+    ) t1
+    left join SYS_USER t2 on t2.USER_ID = t1.CREATOR_ID
+    left join (select * from GLB_DICT where DICT_PCODE = 'OBJECT_TYPE') t3 on t3.DICT_CODE = t1.OBJ_TYPE
+    left join V_SYS_OBJ t4 on t4.OBJ_ID = t1.OBJ_ID
+    left join SYS_CATEGORY t5 on t5.SYS_CATEGORY_ID = t4.SYS_CATEGORY_ID
+  </select>
+
+  <select id="selectVSysObjDetailBySelective" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysGroupObjBO" >
+    select GROUP_ID as groupId,OBJ_ID as objId,OBJ_NAME as objName,OBJ_TYPE as objType,CREATE_DATE as createDate,
+    CREATOR_ID as creatorId,USERNAME as userName,DICT_NAME as objTypeName,SYS_CATEGORY_NAME as sysCategoryName,is_sright as isSright from (
+      select t5.GROUP_ID,t1.OBJ_ID,t1.OBJ_NAME,t1.OBJ_TYPE,t1.CREATE_DATE,t1.CREATOR_ID,t2.USERNAME,t3.DICT_NAME,t5.SYS_CATEGORY_NAME,0 as is_sright
+      from v_sys_obj t1
+      left join SYS_USER t2
+      on t2.USER_ID = t1.CREATOR_ID
+      left join (select * from GLB_DICT where DICT_PCODE = 'OBJECT_TYPE') t3
+      on t3.DICT_CODE = t1.OBJ_TYPE
+      left join SYS_CATEGORY t5
+      on t5.SYS_CATEGORY_ID = t1.SYS_CATEGORY_ID
+      where t1.SYS_CATEGORY_ID is not null and t5.group_id is not null
+      <if test="params.objName != null and params.objName != ''" >
+        and t1.OBJ_NAME like '%'||#{params.objName,jdbcType=VARCHAR}||'%'
+      </if>
+      <if test="params.objType != null and params.objType != ''" >
+        and t1.OBJ_TYPE = #{params.objType,jdbcType=VARCHAR}
+      </if>
+      <if test="params.objId != null" >
+        and t1.OBJ_ID = #{params.objId}
+      </if>
+      <if test="groupIds != null" >
+        and t5.GROUP_ID in
+        <foreach collection="groupIds" item="groupId" open="(" close=")" separator=",">
+          #{groupId}
+        </foreach>
+      </if>
+      union all
+      select t1.GROUP_ID,t1.OBJ_ID,t4.OBJ_NAME,t1.OBJ_TYPE,t1.CREATE_DATE,t1.CREATOR_ID,t2.USERNAME,t3.DICT_NAME, t6.SYS_CATEGORY_NAME,1 as is_sright
+      from sys_obj_sright t1
+      left join SYS_USER t2 on t2.USER_ID = t1.CREATOR_ID
+      left join (select * from GLB_DICT where DICT_PCODE = 'OBJECT_TYPE') t3 on t3.DICT_CODE = t1.OBJ_TYPE
+      left join v_sys_obj t4 on t4.OBJ_ID = t1.OBJ_ID
+      left join SYS_CATEGORY t6
+      on t4.SYS_CATEGORY_ID = t6.SYS_CATEGORY_ID
+      where t4.OBJ_NAME is not null and t1.OBJ_ID not in (
+        select t1.OBJ_ID
+        from v_sys_obj t1
+        left join SYS_CATEGORY t2 on t2.SYS_CATEGORY_ID = t1.SYS_CATEGORY_ID
+        where t1.SYS_CATEGORY_ID is not null and t2.group_id is not null
+        <if test="params.objName != null and params.objName != ''" >
+          and t1.OBJ_NAME like '%'||#{params.objName,jdbcType=VARCHAR}||'%'
+        </if>
+        <if test="params.objType != null and params.objType != ''" >
+          and t1.OBJ_TYPE = #{params.objType,jdbcType=VARCHAR}
+        </if>
+        <if test="params.objId != null" >
+          and t1.OBJ_ID = #{params.objId}
+        </if>
+        <if test="groupIds != null" >
+          and t2.GROUP_ID in
+          <foreach collection="groupIds" item="groupId" open="(" close=")" separator=",">
+            #{groupId}
+          </foreach>
+        </if>
+      )
+      <if test="params.objName != null and params.objName != ''" >
+        and t4.OBJ_NAME like '%'||#{params.objName,jdbcType=VARCHAR}||'%'
+      </if>
+      <if test="params.objType != null and params.objType != ''" >
+        and t1.OBJ_TYPE = #{params.objType,jdbcType=VARCHAR}
+      </if>
+      <if test="params.objId != null" >
+        and t4.OBJ_ID = #{params.objId}
+      </if>
+      <if test="groupIds != null" >
+        and t1.GROUP_ID in
+        <foreach collection="groupIds" item="groupId" open="(" close=")" separator=",">
+          #{groupId}
+        </foreach>
+      </if>
+      and t1.DEL_FLAG = 0
+    )
+    where 1 = 1
+    <if test="objTypes != null" >
+      and OBJ_TYPE in
+      <foreach collection="objTypes" item="objType" open="(" close=")" separator=",">
+        #{objType}
+      </foreach>
+    </if>
+    order by CREATE_DATE desc
+  </select>
+
+  <select id="selectInGroupIds" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from SYS_GROUP_OBJ
+    where STATUS = 0 and OBJ_ID = #{params.objId,jdbcType=INTEGER}
+    <if test="params.isSright != null">
+      and IS_SRIGHT = #{params.isSright,jdbcType=VARCHAR}
+    </if>
+    and GROUP_ID in
+    <foreach collection="list" item="groupId" open="(" close=")" separator=",">
+      #{groupId}
+    </foreach>
+  </select>
+
+  <select id="selectGroupRoleOperates" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysObjFrightBO">
+    select t1.user_id as userId,t1.group_role_id as groupRoleId,t2.obj_id as objId,t2.operates as operates,t2.group_id as groupId
+    from sys_user_group_role t1 inner join v_sys_obj_empower t2
+    on t2.group_role_id = t1.group_role_id
+    where t1.user_id = #{userId,jdbcType=INTEGER} and t2.obj_id = #{objId,jdbcType=INTEGER}
+    and t1.DEL_FLAG = 0
+  </select>
+
+  <select id="getGroupObjDetaillist" resultType="com.newland.paas.paasdatamodule.sysmgrdatamodule.model.bo.SysGroupObjBO">
+	select t1.OBJ_ID as objId, t1.GROUP_ID as groupId, t2.GROUP_NAME as groupName, t2.whole_path as wholePath
+	from SYS_GROUP t2 left join SYS_OBJ_SRIGHT t1 on t2.GROUP_ID = t1.GROUP_ID
+	WHERE 1 = 1
+        <if test="objId != null">
+		and t1.OBJ_ID = #{objId, jdbcType=INTEGER}
+	</if>
+       and t1.DEL_FLAG = 0 and t2.DEL_FLAG = 0
+	union all
+	select null as objId, t1.GROUP_ID as groupId, t1.GROUP_NAME as groupName, t1.whole_path as wholePath
+	from SYS_GROUP t1
+	WHERE 1=1
+	<if test="groupId != null">
+		and t1.GROUP_ID = #{groupId, jdbcType=INTEGER}
+	</if>
+	and t1.DEL_FLAG = 0
+</select>
+
+</mapper>

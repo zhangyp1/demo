@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: activiti-flow
+  namespace: manage
+spec:
+  type: NodePort
+  selector:
+    app: activiti-flow
+  ports:
+  - name: activiti-flowhttp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+    nodePort: 32008
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: activiti-flow
+  namespace: manage
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: activiti-flow
+        track: stable
+    spec:
+      containers:
+      - name: activiti-flow
+        image: harbor.paas.nl:5000/paas_platform/nl.paas.activiti-flow:2.3
+        imagePullPolicy: Always
+        env:
+        - name: PF_NODE_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: SPRING_PROFILES_ACTIVE
+          value: dev93
+        - name: LEASE_RENEWAL_INTERVAL_IN_SECONDS
+          value: "5"
+        - name: LEASE_EXPIRATION_DURATION_IN_SECONDS
+          value: "14"
+        - name: EUREKA_SERVICE_URL_POLL_INTERVAL_SECONDS
+          value: "20"
+        - name: REGISTRY_FETCH_INTERVAL_SECONDS
+          value: "5"
+        - name: JVM_OPTS
+          value: "-XX:MaxRAMFraction=2"
+        - name: LOG_PATH
+          value: "/nl/paas/jdklogs"
+        ports:
+        - containerPort: 8080
+        resources:
+           requests:
+             cpu: 1
+             memory: 3Gi
+           limits:
+             cpu: 1
+             memory: 3Gi
+        volumeMounts:
+        - name: localtime
+          mountPath: /etc/localtime
+        - name: localpath
+          mountPath: /nl/paas
+      volumes:
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+      - name: localpath
+        hostPath:
+          path: /dcoslog/nl/paas
