@@ -643,7 +643,7 @@
 		<paas.build.version>2.3</paas.build.version>
 		<paas.version>1.1.0</paas.version>
 
-		<h2.version>1.4.196</h2.version>
+		<h2.version>2.1.210</h2.version>
 		<druid.version>1.0.17</druid.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
